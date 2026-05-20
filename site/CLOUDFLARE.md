@@ -86,15 +86,26 @@ export default {
 
 5. **Save** → redeploy → **Purge cache**.
 
-**Opção C — Deploy via Wrangler (Git)**
+**Opção C — Deploy via Wrangler (Git) — recomendado para este projeto Worker**
 
-Comando de implantação:
+| Campo | Valor |
+|--------|--------|
+| Comando da build | `npm ci && npm run deploy:cloudflare` |
+| Comando de implantação | *(vazio)* |
 
-```bash
-npm ci && npm run build:prod && npx wrangler deploy
-```
+Ou só implantação: `npm ci && npm run build:prod && npx wrangler deploy`
 
-O `site/wrangler.jsonc` já define `assets.directory = dist` e `binding = ASSETS`.
+O `site/wrangler.jsonc` publica **somente `dist/`** (sem script Worker → evita erro **1101** e `ASSETS` undefined).
+
+**Apague** qualquer código no editor do Worker no painel (Hello world ou `env.ASSETS.fetch`). O `wrangler deploy` substitui pelo deploy de assets.
+
+### Erro 1101 — Worker threw exception
+
+O domínio chama um Worker que **quebra** (ex.: `env.ASSETS` undefined). Corrija com:
+
+1. Limpar código do Worker no painel, **ou**
+2. `npm run build:prod && npx wrangler deploy` com `wrangler.jsonc` atual (sem `main` / sem `worker.js` obrigatório), **ou**
+3. Migrar para projeto **Pages** (sem Worker).
 
 ### Corrigir via Git (alternativa)
 
