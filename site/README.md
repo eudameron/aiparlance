@@ -74,11 +74,13 @@ Upload `dist/` to the host root for `aiparlance.org`.
 
 ## Deploy
 
-1. `npm run build:prod`
-2. Upload `dist/` to static hosting (Netlify, Vercel, Cloudflare Pages, Apache).
-3. Point `aiparlance.org` to the build root.
+**Cloudflare Pages:** passo a passo em [CLOUDFLARE.md](./CLOUDFLARE.md) (sem `wrangler deploy`).
 
-Ensure `/` → `/en` (see `src/pages/index.astro`), plus `sitemap.xml` and `robots.txt` at the site root.
+1. `npm run build:prod`
+2. Publicar `dist/` (Cloudflare Pages, Netlify, Vercel, Apache).
+3. Apontar `aiparlance.org` para a raiz do build.
+
+Ensure `/` → `/en` (`public/_redirects` + `src/pages/index.astro`), plus `sitemap.xml` and `robots.txt`.
 
 ## Brand assets
 
