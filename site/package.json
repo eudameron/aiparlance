@@ -1,0 +1,16 @@
+{
+  "name": "aiparlance-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "build:prod": "astro build --config astro.config-sample.mjs",
+    "preview": "astro preview",
+    "preview:prod": "astro preview --config astro.config-sample.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.7.10"
+  }
+}

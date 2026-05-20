@@ -1,0 +1,64 @@
+---
+import "@/styles/global.css";
+import type { Locale, Messages } from "@/i18n";
+import { alternateUrls } from "@/i18n";
+import { absoluteUrl, withBase } from "@/lib/paths";
+
+interface Props {
+  locale: Locale;
+  t: Messages;
+}
+
+const { locale, t } = Astro.props;
+const alternates = alternateUrls(Astro.site);
+const canonical = alternates[locale];
+const ogImage = absoluteUrl("logo.png", Astro.site);
+---
+
+<!doctype html>
+<html lang={t.lang} dir={t.dir}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.title}</title>
+    <meta name="description" content={t.description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={alternates.en} />
+    <link rel="alternate" hreflang="pt" href={alternates.pt} />
+    <link rel="alternate" hreflang="x-default" href={alternates.en} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={t.title} />
+    <meta property="og:description" content={t.description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={t.locale} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={t.title} />
+    <meta name="twitter:description" content={t.description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="theme-color" content="#050508" />
+    <link rel="icon" href={withBase("favicon.png")} type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        name: "AI Parlance",
+        description: t.description,
+        url: canonical,
+        programmingLanguage: "AI Parlance",
+        license: "https://www.apache.org/licenses/LICENSE-2.0",
+        codeRepository: "https://github.com/eudameron/aiparlance",
+      })}
+    />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

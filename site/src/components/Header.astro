@@ -1,0 +1,89 @@
+---
+import type { Locale, Messages } from "@/i18n";
+import { localePath } from "@/i18n";
+import { withBase } from "@/lib/paths";
+
+interface Props {
+  locale: Locale;
+  t: Messages;
+}
+
+const { locale, t } = Astro.props;
+const other: Locale = locale === "en" ? "pt" : "en";
+---
+
+<header class="header">
+  <div class="container header-inner">
+    <a href={localePath(locale)} class="logo-link" aria-label={t.siteName}>
+      <img src={withBase("logo-nav.png")} alt="" width="160" height="40" class="logo-img" />
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#benefits">{t.nav.benefits}</a>
+      <a href="#playground">{t.nav.playground}</a>
+      <a href={`https://docs.aiparlance.org/${locale}/introduction`} rel="noopener">{t.nav.docs}</a>
+      <a href="https://github.com/eudameron/aiparlance" rel="noopener noreferrer">{t.nav.github}</a>
+    </nav>
+    <div class="header-actions">
+      <a href={localePath(other)} class="lang-switch" hreflang={other} lang={other}>
+        {other === "en" ? "EN" : "PT"}
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(12px);
+    background: rgba(5, 5, 8, 0.85);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 0;
+  }
+  .logo-link {
+    display: flex;
+    text-decoration: none;
+  }
+  .logo-img {
+    height: 40px;
+    width: auto;
+  }
+  .nav {
+    display: none;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+  }
+  .nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .lang-switch {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+  }
+  .lang-switch:hover {
+    border-color: var(--accent-purple);
+    text-decoration: none;
+  }
+  @media (min-width: 768px) {
+    .nav {
+      display: flex;
+    }
+  }
+</style>

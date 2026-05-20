@@ -1,0 +1,189 @@
+---
+import type { Messages } from "@/i18n";
+import { defaultExample } from "@/lib/transpiler";
+
+interface Props {
+  t: Messages;
+}
+
+const { t } = Astro.props;
+const targets = Object.entries(t.playground.targets);
+---
+
+<section id="playground" class="section playground">
+  <div class="container">
+    <h2 class="section-title">{t.playground.title}</h2>
+    <p class="section-subtitle">{t.playground.subtitle}</p>
+
+    <div
+      class="playground-panel"
+      data-playground
+      data-msg-empty={t.playground.errorEmpty}
+      data-msg-parse={t.playground.errorParse}
+    >
+      <div class="playground-editor">
+        <label for="aip-source">{t.playground.inputLabel}</label>
+        <textarea
+          id="aip-source"
+          name="aip"
+          rows="14"
+          spellcheck="false"
+          placeholder={t.playground.inputPlaceholder}
+          data-input
+        >{defaultExample}</textarea>
+      </div>
+
+      <div class="playground-controls">
+        <label for="target-lang">{t.playground.targetLabel}</label>
+        <select id="target-lang" data-target>
+          {targets.map(([value, label]) => (
+            <option value={value}>{label}</option>
+          ))}
+        </select>
+        <button type="button" class="btn btn-primary" data-generate>{t.playground.generate}</button>
+        <button type="button" class="btn btn-ghost" data-reset>{t.playground.reset}</button>
+      </div>
+
+      <p class="playground-error" data-error hidden></p>
+
+      <div class="playground-output">
+        <label for="output-code">{t.playground.outputLabel}</label>
+        <pre><code id="output-code" data-output>// {t.playground.generate}</code></pre>
+      </div>
+
+      <p class="playground-disclaimer">{t.playground.disclaimer}</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { transpile, defaultExample } from "../lib/transpiler";
+
+  const root = document.querySelector("[data-playground]");
+  if (!root) throw new Error("Playground root not found");
+
+  const input = root.querySelector<HTMLTextAreaElement>("[data-input]")!;
+  const target = root.querySelector<HTMLSelectElement>("[data-target]")!;
+  const output = root.querySelector<HTMLElement>("[data-output]")!;
+  const errorEl = root.querySelector<HTMLElement>("[data-error]")!;
+  const generateBtn = root.querySelector<HTMLButtonElement>("[data-generate]")!;
+  const resetBtn = root.querySelector<HTMLButtonElement>("[data-reset]")!;
+
+  const messages = {
+    empty: root.dataset.msgEmpty ?? "Enter .aip source first.",
+    parse: root.dataset.msgParse ?? "Could not parse spec.",
+  };
+
+  function showError(msg: string) {
+    errorEl.textContent = msg;
+    errorEl.hidden = false;
+  }
+
+  function clearError() {
+    errorEl.hidden = true;
+    errorEl.textContent = "";
+  }
+
+  function run() {
+    clearError();
+    const source = input.value.trim();
+    if (!source) {
+      showError(messages.empty);
+      return;
+    }
+    const result = transpile(source, target.value as "go" | "php" | "python" | "sql");
+    if (!result.ok) {
+      showError(messages.parse);
+      output.textContent = "";
+      return;
+    }
+    output.textContent = result.code;
+  }
+
+  generateBtn.addEventListener("click", run);
+  resetBtn.addEventListener("click", () => {
+    input.value = defaultExample;
+    clearError();
+    output.textContent = "";
+  });
+  target.addEventListener("change", () => {
+    if (output.textContent?.trim() && !output.textContent.startsWith("//")) run();
+  });
+</script>
+
+<style>
+  .playground-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+  }
+  .playground-editor label,
+  .playground-output label,
+  .playground-controls label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+  }
+  textarea,
+  select {
+    width: 100%;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 220px;
+    line-height: 1.5;
+  }
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+  }
+  .playground-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+    margin: 1.25rem 0;
+  }
+  .playground-controls select {
+    width: auto;
+    min-width: 180px;
+  }
+  .playground-error {
+    color: #f87171;
+    font-size: 0.9rem;
+    margin: 0 0 1rem;
+  }
+  .playground-output pre {
+    margin: 0;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    overflow-x: auto;
+    max-height: 420px;
+  }
+  .playground-output code {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    white-space: pre;
+  }
+  .playground-disclaimer {
+    margin: 1rem 0 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+</style>

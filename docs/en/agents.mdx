@@ -1,0 +1,126 @@
+---
+title: Agents and prompts
+description: Guide for LLMs writing AI Parlance specs
+---
+
+# Agents and prompts
+
+Guide for LLMs and agents that **write** AI Parlance. Spec: [Specification](/en/specification). Core syntax: [Syntax](/en/syntax).
+
+---
+
+## How the AI should write `.aip`
+
+1. Predictable structure: `app` → `entity` → `crud` → `policy` → `workflow`
+2. Clear domain names; one language per file
+3. Explicit semantics (`required`, `belongs_to`, policy predicates)
+4. Avoid long imperative logic inside `workflow`
+5. Do not duplicate `auth` if already on `app`
+
+---
+
+## Minimal prompt → output
+
+**Prompt:**
+
+```txt
+Create a CRM with users, leads, and tasks.
+```
+
+**Expected output:**
+
+```aip
+app CRM @0.1 {
+  database postgres
+  auth jwt
+}
+
+entity User {
+  name: string required
+  email: email required unique
+}
+
+entity Lead {
+  name: string required
+  phone: phone required
+}
+
+entity Task {
+  title: string required
+  lead: belongs_to Lead optional
+}
+
+crud User
+crud Lead
+crud Task
+```
+
+Add policies and workflows only when the prompt asks for access rules or behavior.
+
+---
+
+## Prompting strategy
+
+Describe: entities, relations, business rules, who can do what.
+
+Avoid asking for: “generate in Go/TypeScript”, framework details, manual route boilerplate.
+
+```txt
+Domain: [description]
+Entities: [fields]
+Rules: [validation, duplicates, assignment]
+Access: [roles / resource owner]
+Events: [what triggers automation]
+```
+
+---
+
+## `ai_context`
+
+Semantic context for agents, validators, and RAG — not emitted as target code directly.
+
+```aip
+ai_context Lead {
+  description "
+    Leads from the marketing site.
+    No duplicate phone numbers after normalization.
+    Assign to the first available seller.
+  "
+}
+```
+
+---
+
+## Controlled grammar
+
+Few alternative forms for the same structure — see [grammar](/en/specification#grammar). Prefer inline validation on `entity` over duplicate `validation` blocks.
+
+---
+
+## Agent → software flow
+
+```txt
+Prompt → LLM → .aip → Validator → AST → Transpilers → artifacts
+```
+
+On validation failure, fix `.aip` — not generated Go/TS.
+
+---
+
+## Pre-delivery checklist
+
+- [ ] `app` with `database` and `auth` when using `authenticated` / `role`
+- [ ] every referenced `entity` exists
+- [ ] `owner_*` policies reference a real FK field
+- [ ] `workflow` has `when`
+- [ ] `emit` uses declared `event` types
+- [ ] canonical modifier order
+- [ ] `@0.1` on `app` when using beta blocks
+
+---
+
+## Full reference
+
+[examples/crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) — adapt, do not rewrite from scratch per chapter.
+
+Minimal Core: [examples/minimal.aip](https://github.com/eudameron/aiparlance/blob/main/examples/minimal.aip).

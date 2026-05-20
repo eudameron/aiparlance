@@ -1,0 +1,22 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies & build (site)
+node_modules/
+dist/
+.astro/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs & cache
+*.log
+.npm
+.cache
+
+# Editor (optional)
+.idea/
+*.swp

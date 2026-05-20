@@ -1,0 +1,210 @@
+---
+title: Syntax
+description: Core and Infra block reference for AI Parlance v0.1
+---
+
+# Syntax
+
+Reference for **Core** and **Infra** blocks (stable in v0.1). Full grammar: [Specification](/en/specification). CRM example: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip).
+
+**Security** and **Behavior** blocks: [Security](/en/security), [Workflows](/en/workflows).
+
+---
+
+## Conventions
+
+- Fields are declared **inside** `entity` (`name: type modifiers`).
+- Modifier order: `required` | `optional` → `unique` → `default(value)`.
+- Identifiers: `PascalCase` for entities/events; `snake_case` for fields.
+
+---
+
+## `app`
+
+```aip
+app CRM @0.1 {
+  database postgres
+  auth jwt
+}
+```
+
+| Member | Initial values |
+|---|---|
+| `database` | `postgres`, `mysql` |
+| `auth` | `jwt`, `session`, `api_key`, `oauth` |
+
+`auth` on `app` is the default; `api { }` may override HTTP exposure details.
+
+---
+
+## `entity`
+
+```aip
+entity User {
+  name: string required
+  email: email required unique
+  role: enum(admin, manager, seller) default(seller)
+  active: bool default(true)
+}
+```
+
+Implicit fields: [specification#implicit-fields](/en/specification#implicit-fields).
+
+```aip
+entity User {
+  timestamps   // optional marker; created_at/updated_at always injected
+  soft_delete  // adds deleted_at
+}
+```
+
+---
+
+## Types
+
+```aip
+string | text | int | float | bool
+datetime | date | uuid | email | phone | json
+```
+
+```aip
+status: enum(new, assigned, won, lost) default(new)
+```
+
+---
+
+## `relation`
+
+```aip
+entity Lead {
+  seller: belongs_to User optional
+}
+```
+
+| Relation (inline, v0.1) | Usage |
+|---|---|
+| `belongs_to` | FK to another entity |
+| `has_one` | 1:1 inverse (**roadmap**) |
+| `has_many` | 1:N (**roadmap**) |
+| `many_to_many` | N:N (**roadmap**) |
+
+`optional` marks nullable / optional FK.
+
+---
+
+## `crud`
+
+```aip
+crud Lead
+```
+
+Typical routes:
+
+```txt
+POST   /leads
+GET    /leads
+GET    /leads/:id
+PUT    /leads/:id
+DELETE /leads/:id
+```
+
+Artifacts depend on the [transpiler matrix](/en/specification#transpiler-matrix).
+
+---
+
+## Validation
+
+Prefer **inline** modifiers:
+
+```aip
+entity User {
+  name: string required
+  email: email required unique
+}
+```
+
+`validation` block (equivalent, for many rules):
+
+```aip
+validation User {
+  name required
+  email required unique
+}
+```
+
+---
+
+## `index`
+
+```aip
+index Lead {
+  status
+  created_at
+}
+```
+
+`unique` on a field already creates a constraint; use `index` for non-unique or composite lookups.
+
+---
+
+## `api`
+
+```aip
+api {
+  prefix "/v1"
+  format json
+}
+```
+
+HTTP auth inherits from `app.auth` unless overridden. Rate limit and CORS: [Security](/en/security).
+
+---
+
+## Summary (Core + Infra)
+
+| Block | Level | Function |
+|---|---|---|
+| `app` | Core | Application defaults |
+| `entity` | Core | Data model |
+| inline `enum(…)` | Core | Enum field types |
+| inline `belongs_to` | Core | Relationships (v0.1) |
+| `crud` | Core | REST operations |
+| inline / `validation` | Core | Field rules |
+| `index` | Infra | Database indexes |
+| `api` | Infra | HTTP config |
+| `seed` | Infra | Seed data — [Database](/en/database) |
+
+---
+
+## Blocks in other chapters
+
+| Block | Chapter |
+|---|---|
+| `policy`, `permission`, `auth` | [Security](/en/security) |
+| `workflow`, `event`, `lifecycle`, `job`, `queue` | [Workflows](/en/workflows) |
+| `ai_context` | [Agents](/en/agents) |
+
+---
+
+## Core example (no full CRM)
+
+```aip
+app Shop @0.1 {
+  database postgres
+  auth jwt
+}
+
+entity Product {
+  name: string required
+  price: float required
+  sku: string required unique
+}
+
+crud Product
+
+api {
+  prefix "/v1"
+  format json
+}
+```
+
+Full CRM with policy and workflow: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip).

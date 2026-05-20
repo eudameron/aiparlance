@@ -1,0 +1,24 @@
+---
+import type { Messages } from "@/i18n";
+
+interface Props {
+  t: Messages;
+}
+
+const { t } = Astro.props;
+---
+
+<section id="benefits" class="section">
+  <div class="container">
+    <h2 class="section-title">{t.benefits.title}</h2>
+    <p class="section-subtitle">{t.benefits.subtitle}</p>
+    <div class="card-grid">
+      {t.benefits.items.map((item) => (
+        <article class="card">
+          <h3>{item.title}</h3>
+          <p>{item.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

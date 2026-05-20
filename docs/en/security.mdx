@@ -1,0 +1,119 @@
+---
+title: Security
+description: Auth, policies, rate limiting, and CORS in AI Parlance
+---
+
+# Security
+
+**Security** layer (beta v0.1). Predicates: [Specification — Policies](/en/specification#policies). Example: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip).
+
+---
+
+## `auth`
+
+Global default on `app`:
+
+```aip
+app CRM @0.1 {
+  auth jwt
+}
+```
+
+| Strategy | Typical use |
+|---|---|
+| `jwt` | Stateless APIs (recommended initial) |
+| `session` | Cookie-based web apps |
+| `api_key` | Machine-to-machine |
+| `oauth` | Social login / IdP |
+
+Set JWT on `app` once; avoid duplicating `auth jwt` in `api` unless overriding.
+
+---
+
+## `policy`
+
+```aip
+policy Lead {
+  create authenticated
+  read owner_or_manager(Lead.seller)
+  update owner_or_manager(Lead.seller)
+  delete role(admin)
+}
+```
+
+`Lead.seller` must exist as `belongs_to User`.
+
+---
+
+## Roles and permissions
+
+```aip
+entity User {
+  role: enum(admin, manager, seller) default(seller)
+}
+
+(* Proposed — not in v0.1 grammar yet *)
+permission export_reports
+
+policy Report {
+  read permission(export_reports)
+}
+```
+
+The `permission(name)` **predicate** in `policy` is supported; top-level `permission` declarations are preview only.
+
+---
+
+## Predicates
+
+| Predicate | Description |
+|---|---|
+| `public` | No auth |
+| `authenticated` | Valid session/JWT |
+| `role(name)` | Global role |
+| `permission(name)` | Named permission |
+| `owner(field)` | Authenticated user matches `field` |
+| `owner_or_manager(field)` | Owner, manager, or admin |
+
+Arbitrary logic: a future `custom` block is reserved — do not mix hand-written SQL with generated policies in v0.1.
+
+---
+
+## `rate_limit` and CORS
+
+```aip
+api {
+  rate_limit 100/minute
+  cors {
+    allow "https://app.example.com"
+  }
+}
+```
+
+Per-route (**proposed** — not in v0.1 grammar):
+
+```aip
+endpoint Login {
+  rate_limit 5/minute
+}
+```
+
+---
+
+## SQL injection
+
+Transpilers must emit **parameterized queries** / ORM only. Does not cover hand-written `custom` code.
+
+---
+
+## Multi-target output
+
+| Target | Artifact |
+|---|---|
+| Go | JWT middleware, handler checks |
+| TypeScript | guards, decorators |
+| Python | dependencies / decorators |
+| PHP | policies, gates |
+| OpenAPI | `securitySchemes` |
+
+[`crm-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) already includes `policy Lead` and `api` with rate limit + CORS.

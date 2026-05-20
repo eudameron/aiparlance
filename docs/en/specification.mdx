@@ -1,0 +1,261 @@
+---
+title: Specification
+description: Normative grammar, builtins, policies, and stability levels for AI Parlance v0.1
+---
+
+# Specification
+
+Normative document for AI Parlance (**v0.1**). Defines grammar, semantics, builtins, policies, and block stability levels.
+
+Overview: [Introduction](/en/introduction). Syntax reference: [Syntax](/en/syntax).
+
+---
+
+## Glossary
+
+| Term | Meaning |
+|---|---|
+| **AI Parlance** | AI-first declarative language used as IR between intent and generated code. |
+| **Block** | Top-level construct (`entity`, `workflow`, …). |
+| **Transpiler** | Generator that converts AI Parlance (+ AST) into target artifacts (Go, SQL, …). |
+| **AST** | Syntax tree produced by the parser from `.aip` text; common transpiler input. |
+| **Builtin** | Reserved function or command (`now()`, `notify()`, …). |
+| **Predicate** | Boolean expression in `policy` (`authenticated`, `role(admin)`, …). |
+
+---
+
+## Scope and limits
+
+AI Parlance currently covers:
+
+- data and API modeling (CRUD)
+- declarative authorization
+- limited domain workflows and events
+
+It does not replace:
+
+- custom UI or design systems
+- complex algorithms or manual performance tuning
+- ad hoc integrations without a dedicated block
+- hand-written imperative SQL (a future `custom` block is reserved; not in v0.1)
+
+| Tool | Focus | AI Parlance |
+|---|---|---|
+| OpenAPI / AsyncAPI | HTTP / event contracts | Model + behavior + policy in one spec |
+| Prisma / DBML | Data schema | Entities + relations + multi-target migrations |
+| OPA / Cedar | Authorization | `policy` integrated with entities |
+| Temporal / Cadence | Imperative orchestration | Declarative `workflow` for common rules |
+
+---
+
+## Pipeline
+
+```txt
+Prompt or human edit
+↓
+.aip text
+↓
+Parser → AST
+↓
+Semantic validator
+↓
+Transpilers (per target)
+↓
+Go, SQL, OpenAPI, workers, …
+```
+
+`.aip` is the source; the AST is internal. Agents and humans edit `.aip`, not the AST directly.
+
+**Toolchain (v0.1):** parser, validator, and transpilers are **not published yet**. This document is the normative source; see [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf) for machine-oriented grammar.
+
+---
+
+## Required `app` block
+
+Every v0.1 spec must start with exactly one `app` block (version tag recommended):
+
+```aip
+app MyApp @0.1 {
+  database postgres
+}
+```
+
+Add `auth` when using `authenticated`, `role`, or `permission` in `policy`. Minimal example: [examples/minimal.aip](https://github.com/eudameron/aiparlance/blob/main/examples/minimal.aip).
+
+---
+
+## Grammar (EBNF summary) {#grammar}
+
+```ebnf
+program        = { block } ;
+block          = app_block | entity_block | crud_stmt | policy_block
+               | index_block | api_block | workflow_block | event_block
+               | lifecycle_block | seed_block | job_block | queue_block
+               | ai_context_block ;
+
+app_block      = "app" IDENT [ "@version" ] "{" app_member { app_member } "}" ;
+entity_block   = "entity" IDENT "{" { field_decl | entity_modifier } "}" ;
+field_decl     = IDENT ":" type_expr [ field_modifier { field_modifier } ] ;
+crud_stmt      = "crud" IDENT ;
+workflow_block = "workflow" IDENT "{" when_clause { stmt } "}" ;
+when_clause    = "when" IDENT "." lifecycle_event ;
+```
+
+Field modifier order: `required` | `optional` → `unique` → `default(...)`.
+
+Line comments: `//` to end of line (ignored by the parser).
+
+---
+
+## Stability levels
+
+| Level | Blocks | Status v0.1 |
+|---|---|---|
+| **Core** | `app`, `entity`, `crud`, inline field validation; inline `enum(…)` types; inline `belongs_to` relations | Stable |
+| **Infra** | `index`, `api`, migrations, `seed`, naming; entity modifiers `timestamps`, `soft_delete` | Stable |
+| **Security** | `auth` (on `app`), `policy`, predicates | Beta |
+| **Behavior** | `workflow`, `event`, `lifecycle`, `job`, `queue`; workflow statements (`emit`, `create`, …) | Beta |
+
+Top-level `enum { }` / `relation { }` blocks and `has_one` / `has_many` / `many_to_many` are **roadmap**, not v0.1.
+
+Beta blocks may change syntax between minor v0.x releases. Core is stable within v0.1; the overall spec remains **draft** until a reference toolchain ships.
+
+---
+
+## Implicit fields {#implicit-fields}
+
+Every `entity` receives automatically (unless `id: uuid` is explicit):
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | `uuid` | Primary key |
+| `created_at` | `datetime` | Always injected (Core default) |
+| `updated_at` | `datetime` | Always injected (Core default) |
+
+The `timestamps` modifier on `entity` is optional documentation sugar; it does not disable these fields.
+
+`soft_delete` on `entity` adds `deleted_at: datetime optional`.
+
+---
+
+## Builtins {#builtins}
+
+| Name | Usage | Effect |
+|---|---|---|
+| `now()` | expressions | Current UTC datetime |
+| `available_seller()` | workflow | Returns available `User` with seller role |
+| `assign` | `assign Lead.seller seller` | Sets relation / FK field |
+| `notify(recipient, message)` | workflow | Notification; `recipient` is a `User` variable, entity field, or string literal |
+| `LeadExists(phone)` | condition | Duplicate check on normalized phone |
+| `normalize_phone(value)` | expression | Normalizes phone for comparison |
+| `emit EventName { … }` | workflow | Publishes declared domain event |
+| `create Entity { … }` | workflow | Creates declared entity record |
+| `reject "msg"` | workflow | Business error abort |
+| `dispatch JobName` | workflow | Enqueues declared job |
+
+Unlisted builtins are invalid until added to the spec.
+
+---
+
+## Lifecycle
+
+System events (`when` triggers):
+
+```txt
+created | updated | deleted
+```
+
+```aip
+lifecycle Lead {
+  on created -> workflow LeadReceived
+  before create {
+    normalize_phone(Lead.phone)
+  }
+  after update {
+    notify(Lead.seller, "Lead updated")
+  }
+}
+```
+
+`when Lead.created` in `workflow` equals `on created` in `lifecycle`. Prefer `lifecycle` when an entity has multiple hooks.
+
+### Workflow statements (v0.1)
+
+Inside `workflow` / `lifecycle` hooks: `var`, `if` / `reject`, `assign`, `create`, `emit`, `notify`, `dispatch` (optional `after` + duration). Durations: `15m`, `1h`, `1d` (see [Workflows](/en/workflows)).
+
+Forward references are allowed: `emit` and `create` may reference `event` / `entity` blocks declared later in the file.
+
+---
+
+## Policies {#policies}
+
+Predicates supported in v0.1:
+
+| Predicate | Meaning |
+|---|---|
+| `public` | No authentication |
+| `authenticated` | Valid JWT/session |
+| `role(name)` | Global role of authenticated user |
+| `permission(name)` | Explicit granted permission |
+| `owner(field)` | `auth.user_id` matches `field` (FK or id) |
+| `owner_or_manager(field)` | `owner(field)` or `role(manager)` or `role(admin)` |
+
+```aip
+policy Lead {
+  read owner_or_manager(Lead.seller)
+}
+```
+
+Requires `Lead.seller` as `belongs_to User`.
+
+### Default access
+
+Entities without a `policy` block: transpilers should default to **`authenticated`** for CRUD when `app` has `auth`, or **`public`** when there is no `auth`. Explicit `policy` always wins.
+
+### Proposed (not in v0.1 grammar)
+
+- Top-level `permission name` declarations
+- `endpoint` blocks for per-route rate limits
+
+Documented in [Security](/en/security) as preview only until added to the grammar.
+
+---
+
+## Validation
+
+The semantic validator must reject:
+
+- missing or duplicate `app` block
+- references to missing `entity` / `event` / `job`
+- `policy` using `authenticated` or `role` without `auth` in `app`
+- `owner(field)` when `field` does not exist
+- `workflow` without `when`
+- duplicate or out-of-order modifiers (warning vs error per rule)
+- unregistered builtins
+
+---
+
+## Transpiler matrix {#transpiler-matrix}
+
+| Target | Artifacts | Status v0.1 |
+|---|---|---|
+| PostgreSQL | DDL, migrations, indexes | Planned (primary language target) |
+| MySQL | DDL, migrations | Planned (same `database mysql` in `app`; no transpiler yet) |
+| Go | structs, handlers, JWT middleware | Planned |
+| TypeScript | interfaces, guards | Planned |
+| Python | models, decorators | Planned |
+| PHP | classes, policies | Planned |
+| OpenAPI | paths, schemas, security | Planned |
+| Docs | Markdown / API reference | Planned |
+| Tests | CRUD fixtures | Planned |
+| Workers | queues, jobs from `workflow` | Planned |
+
+LLM inference cost applies to **editing `.aip`**, not offline transpilation.
+
+---
+
+## Reference spec
+
+Full CRM example: [examples/crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip)
+
+Domain chapters ([Database](/en/database), [Security](/en/security), [Workflows](/en/workflows)) document extensions relative to this file.

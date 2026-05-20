@@ -1,0 +1,79 @@
+// AI Parlance reference spec — CRM
+// Documented in docs/ (Mintlify). Normative details: spec/v0.1/
+
+app CRM @0.1 {
+  database postgres
+  auth jwt
+}
+
+entity User {
+  name: string required
+  email: email required unique
+  role: enum(admin, manager, seller) default(seller)
+  active: bool default(true)
+}
+
+entity Lead {
+  name: string required
+  email: email optional
+  phone: phone required
+  status: enum(new, assigned, contacted, won, lost) default(new)
+  seller: belongs_to User optional
+}
+
+entity Task {
+  title: string required
+  due_at: datetime optional
+  lead: belongs_to Lead optional
+}
+
+crud User
+crud Lead
+crud Task
+
+policy Lead {
+  create authenticated
+  read owner_or_manager(Lead.seller)
+  update owner_or_manager(Lead.seller)
+  delete role(admin)
+}
+
+index Lead {
+  status
+  phone
+}
+
+api {
+  prefix "/v1"
+  format json
+  rate_limit 100/minute
+  cors {
+    allow "https://app.example.com"
+  }
+}
+
+workflow LeadReceived {
+  when Lead.created
+
+  var seller = available_seller()
+
+  assign Lead.seller seller
+
+  create Task {
+    title: "Follow up"
+    due_at: now() + 15m
+    lead: Lead
+  }
+
+  notify(seller, "New lead assigned")
+
+  emit LeadAssigned {
+    lead: Lead
+    seller: seller
+  }
+}
+
+event LeadAssigned {
+  lead: Lead
+  seller: User
+}

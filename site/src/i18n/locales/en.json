@@ -1,0 +1,87 @@
+{
+  "lang": "en",
+  "locale": "en_US",
+  "dir": "ltr",
+  "siteName": "AI Parlance",
+  "title": "AI Parlance — AI-first IR for software generation",
+  "description": "Describe apps in compact .aip specs. Transpile to Go, PHP, Python, SQL, and more. Less boilerplate, fewer tokens, consistent multi-target output.",
+  "nav": {
+    "benefits": "Benefits",
+    "playground": "Try it",
+    "docs": "Documentation",
+    "github": "GitHub"
+  },
+  "hero": {
+    "badge": "v0.1 specification",
+    "title": "Intent first.",
+    "titleHighlight": "Code follows.",
+    "subtitle": "AI Parlance is an AI-first intermediate representation language. Humans and LLMs write compact .aip specs; transpilers generate production stacks.",
+    "ctaDocs": "Read the spec",
+    "ctaTry": "Try the playground",
+    "note": "Reference toolchain in development — playground output is illustrative."
+  },
+  "benefits": {
+    "title": "Why AI Parlance",
+    "subtitle": "Concentrate domain intent before implementation.",
+    "items": [
+      {
+        "title": "Smaller AI context",
+        "body": "Edit ~10 lines of .aip instead of hundreds of framework boilerplate per entity."
+      },
+      {
+        "title": "Multi-target from one spec",
+        "body": "Same definition feeds Go, PHP, Python, SQL, OpenAPI, and more."
+      },
+      {
+        "title": "Built-in domain blocks",
+        "body": "Entities, CRUD, policies, workflows, and events in one predictable structure."
+      },
+      {
+        "title": "Validate before generate",
+        "body": "Catch missing entities, policies without auth, and invalid builtins early."
+      },
+      {
+        "title": "LLM-friendly grammar",
+        "body": "Controlled syntax helps agents produce consistent specs, not drifting code."
+      },
+      {
+        "title": "Honest scope",
+        "body": "Focused on data-oriented APIs and automation — not custom UI or heavy algorithms."
+      }
+    ]
+  },
+  "pipeline": {
+    "title": "How it works",
+    "steps": ["Human or AI", ".aip spec", "AST + validation", "Transpilers", "Go · PHP · Python · SQL · …"]
+  },
+  "playground": {
+    "title": "Quick transpile demo",
+    "subtitle": "Paste a .aip spec, pick a target language, and preview illustrative output.",
+    "inputLabel": ".aip source",
+    "inputPlaceholder": "app Demo @0.1 {\n  database postgres\n}\n\nentity User {\n  name: string required\n  email: email required unique\n}\n\ncrud User",
+    "targetLabel": "Target language",
+    "targets": {
+      "go": "Go",
+      "php": "PHP",
+      "python": "Python",
+      "sql": "SQL (PostgreSQL)"
+    },
+    "outputLabel": "Generated output (preview)",
+    "generate": "Generate",
+    "reset": "Load example",
+    "disclaimer": "Preview only — not the production transpiler. Syntax coverage: app, entity, crud, basic fields.",
+    "errorEmpty": "Enter .aip source first.",
+    "errorParse": "Could not parse spec. Check entity and crud blocks."
+  },
+  "cta": {
+    "title": "Explore the specification",
+    "body": "Full grammar, security, workflows, and agent guides — in English and Portuguese.",
+    "button": "Open documentation"
+  },
+  "footer": {
+    "tagline": "AI-first intermediate representation.",
+    "docs": "Documentation",
+    "github": "Source on GitHub",
+    "license": "Apache 2.0"
+  }
+}

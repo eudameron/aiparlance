@@ -1,0 +1,115 @@
+---
+title: Database
+description: Infra extensions for schema, migrations, and naming in AI Parlance
+---
+
+# Database
+
+**Infra** extensions on the `entity` model. Base: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip). Spec: [Specification](/en/specification).
+
+---
+
+## Supported databases (v0.1)
+
+| Database | Language (`app`) | Transpiler v0.1 |
+|---|---|---|
+| PostgreSQL | `postgres` | Planned (primary) |
+| MySQL | `mysql` | Planned |
+| SQLite, MariaDB, MongoDB, … | Roadmap | — |
+
+You can declare `database mysql` in the spec today; DDL generation is not shipped yet ([transpiler matrix](/en/specification#transpiler-matrix)).
+
+```aip
+app CRM @0.1 {
+  database postgres
+}
+```
+
+---
+
+## Migrations
+
+Generated from `entity` with implicit fields in DDL.
+
+```sql
+CREATE TABLE users (
+  id UUID PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL
+);
+```
+
+---
+
+## `seed`
+
+```aip
+seed User {
+  name: "Administrator"
+  email: "admin@example.com"
+  role: admin
+}
+```
+
+---
+
+## Indexes and constraints
+
+```aip
+index Lead {
+  status
+  created_at
+}
+```
+
+| Modifier | SQL |
+|---|---|
+| `required` | `NOT NULL` |
+| `unique` | `UNIQUE` |
+| `belongs_to` | `REFERENCES …` |
+
+---
+
+## Naming
+
+| Entity | Table | FK |
+|---|---|---|
+| `User` | `users` | `user_id` |
+| `SalesOrder` | `sales_orders` | `sales_order_id` |
+
+Rules: lowercase, `snake_case`, plural table names.
+
+---
+
+## UUID and audit
+
+- `id`: `uuid` by default
+- `timestamps`: `created_at`, `updated_at`
+- `soft_delete`: nullable `deleted_at`
+
+---
+
+## Semantic types → PostgreSQL
+
+| AI Parlance | PostgreSQL |
+|---|---|
+| `email` | `TEXT` + app validation |
+| `json` | `JSONB` |
+| `datetime` | `TIMESTAMPTZ` |
+| `phone` | `TEXT` + normalization |
+
+---
+
+## Flow
+
+```txt
+entity / index / seed (.aip)
+↓
+AST
+↓
+Database Generator
+↓
+DDL / migrations / ORM
+```

@@ -1,0 +1,210 @@
+---
+title: Sintaxe
+description: Referência dos blocos Core e Infra do AI Parlance v0.1
+---
+
+# Sintaxe
+
+Referência dos blocos **Core** e **Infra** (estável em v0.1). Gramática: [Especificação](/pt/specification). CRM: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip).
+
+Blocos **Security** e **Behavior**: [Segurança](/pt/security), [Workflows](/pt/workflows).
+
+---
+
+## Convenções
+
+- Campos declarados **dentro** de `entity` (`nome: tipo modificadores`).
+- Ordem: `required` | `optional` → `unique` → `default(valor)`.
+- Identificadores: `PascalCase` para entidades e eventos; `snake_case` para campos.
+
+---
+
+## `app`
+
+```aip
+app CRM @0.1 {
+  database postgres
+  auth jwt
+}
+```
+
+| Membro | Valores iniciais |
+|---|---|
+| `database` | `postgres`, `mysql` |
+| `auth` | `jwt`, `session`, `api_key`, `oauth` |
+
+`auth` em `app` é o padrão; `api { }` pode sobrescrever detalhes HTTP. Toda spec v0.1 exige um bloco `app`.
+
+---
+
+## `entity`
+
+```aip
+entity User {
+  name: string required
+  email: email required unique
+  role: enum(admin, manager, seller) default(seller)
+  active: bool default(true)
+}
+```
+
+Campos implícitos: [specification#implicit-fields](/pt/specification#implicit-fields).
+
+```aip
+entity User {
+  timestamps   // marcador opcional; created_at/updated_at sempre injetados
+  soft_delete  // adiciona deleted_at
+}
+```
+
+---
+
+## Tipos
+
+```aip
+string | text | int | float | bool
+datetime | date | uuid | email | phone | json
+```
+
+```aip
+status: enum(new, assigned, won, lost) default(new)
+```
+
+---
+
+## `relation`
+
+```aip
+entity Lead {
+  seller: belongs_to User optional
+}
+```
+
+| Relação (inline, v0.1) | Uso |
+|---|---|
+| `belongs_to` | FK para outra entidade |
+| `has_one` | 1:1 inversa (**roadmap**) |
+| `has_many` | 1:N (**roadmap**) |
+| `many_to_many` | N:N (**roadmap**) |
+
+`optional` marca FK nullable.
+
+---
+
+## `crud`
+
+```aip
+crud Lead
+```
+
+Rotas típicas:
+
+```txt
+POST   /leads
+GET    /leads
+GET    /leads/:id
+PUT    /leads/:id
+DELETE /leads/:id
+```
+
+Artefatos: [matriz de transpiladores](/pt/specification#transpiler-matrix).
+
+---
+
+## Validação
+
+Prefira modificadores **inline**:
+
+```aip
+entity User {
+  name: string required
+  email: email required unique
+}
+```
+
+Bloco `validation` (equivalente, para muitas regras):
+
+```aip
+validation User {
+  name required
+  email required unique
+}
+```
+
+---
+
+## `index`
+
+```aip
+index Lead {
+  status
+  created_at
+}
+```
+
+`unique` no campo já cria constraint; use `index` para buscas compostas ou não únicas.
+
+---
+
+## `api`
+
+```aip
+api {
+  prefix "/v1"
+  format json
+}
+```
+
+Auth HTTP herda de `app.auth` salvo override. Rate limit e CORS: [Segurança](/pt/security).
+
+---
+
+## Tabela resumo (Core + Infra)
+
+| Bloco | Nível | Função |
+|---|---|---|
+| `app` | Core | Aplicação e defaults |
+| `entity` | Core | Modelo de dados |
+| `enum(…)` inline | Core | Tipos enumerados |
+| `belongs_to` inline | Core | Relações (v0.1) |
+| `crud` | Core | Operações REST |
+| inline / `validation` | Core | Regras de campo |
+| `index` | Infra | Índices |
+| `api` | Infra | HTTP |
+| `seed` | Infra | Dados iniciais — [Banco](/pt/database) |
+
+---
+
+## Blocos em outros capítulos
+
+| Bloco | Capítulo |
+|---|---|
+| `policy`, `auth` | [Segurança](/pt/security) |
+| `workflow`, `event`, `lifecycle`, `job`, `queue` | [Workflows](/pt/workflows) |
+| `ai_context` | [Agentes](/pt/agents) |
+
+---
+
+## Exemplo Core
+
+```aip
+app Shop @0.1 {
+  database postgres
+  auth jwt
+}
+
+entity Product {
+  name: string required
+  price: float required
+  sku: string required unique
+}
+
+crud Product
+
+api {
+  prefix "/v1"
+  format json
+}
+```
+
+CRM completo: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip).

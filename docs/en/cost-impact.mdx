@@ -1,0 +1,100 @@
+---
+title: Cost impact
+description: Token economics and honest comparisons for AI Parlance
+---
+
+# Development cost impact
+
+This chapter covers the economic argument for AI Parlance. Overview: [Introduction](/en/introduction). Spec: [Specification](/en/specification).
+
+---
+
+## Where cost shows up today
+
+LLMs spend tokens on:
+
+- context from already-generated code (models, handlers, routes, tests)
+- fixing cross-layer inconsistencies
+- structural repetition for each new endpoint or entity
+
+Most of that is **repeated infrastructure**, not business logic.
+
+---
+
+## Honest comparison (same scope)
+
+Scope: `User` entity with REST CRUD + validation + PostgreSQL migration.
+
+### AI Parlance (source edited by the AI)
+
+```aip
+app Demo @0.1 {
+  database postgres
+}
+
+entity User {
+  name: string required
+  email: email required unique
+}
+
+crud User
+```
+
+~6 lines in the spec; `id`, `created_at`, `updated_at` are implicit ([spec](/en/specification#implicit-fields)).
+
+### Go (illustrative transpiler output)
+
+Beyond the struct, a full stack often includes repository, service, handler, routes, validation, and migration — commonly **150–400+ lines** for an idiomatic CRUD.
+
+Token savings are in **generating and reviewing the model** (`.aip`), not transpilation (offline, deterministic).
+
+### TypeScript / Python / PHP
+
+Isolated interfaces or classes are short (~10–20 lines) but **do not equal** full CRUD — comparing only a struct to `crud User` is misleading.
+
+---
+
+## Smaller context for the AI
+
+Working on `.aip` keeps in context:
+
+- entities and relations
+- policies and workflows
+- rules in `ai_context`
+
+Instead of thousands of lines of framework-specific implementation.
+
+---
+
+## Multi-target without manual duplication
+
+The same spec in [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) feeds N transpilers — a change to `Lead` propagates to SQL, API, and guards without rewriting each stack.
+
+---
+
+## Financial impact (inference)
+
+Variables: generations per month, average diff size, price per token.
+
+High CRUD / low custom logic → higher ROI.
+
+Heavy UI or unique integrations → smaller gain on the `.aip` layer; AI Parlance does not replace that work.
+
+---
+
+## Limits of the cost argument
+
+- Transpilers must exist and be reliable — upfront engineering cost.
+- Complex `workflow` logic can approach imperative code size.
+- Future `custom` blocks reintroduce manual code outside compact metrics.
+
+---
+
+## Summary
+
+| Metric | Expected effect |
+|---|---|
+| Tokens when editing domain | Strong reduction |
+| Architectural consistency | Improves |
+| Transpilation cost | Offline, amortized |
+| UI / exotic integrations | Outside main scope |

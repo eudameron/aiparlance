@@ -1,0 +1,40 @@
+---
+import type { Locale, Messages } from "@/i18n";
+
+interface Props {
+  locale: Locale;
+  t: Messages;
+}
+
+const { locale, t } = Astro.props;
+---
+
+<section class="section cta">
+  <div class="container cta-box">
+    <h2 class="section-title">{t.cta.title}</h2>
+    <p>{t.cta.body}</p>
+    <a class="btn btn-primary" href={`https://docs.aiparlance.org/${locale}/introduction`}>
+      {t.cta.button}
+    </a>
+  </div>
+</section>
+
+<style>
+  .cta-box {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background-image: radial-gradient(
+      ellipse at 50% 0%,
+      rgba(168, 85, 247, 0.12),
+      transparent 60%
+    );
+  }
+  .cta-box p {
+    color: var(--text-muted);
+    max-width: 48ch;
+    margin: 0 auto 1.5rem;
+  }
+</style>

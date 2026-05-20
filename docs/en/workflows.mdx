@@ -1,0 +1,127 @@
+---
+title: Workflows and events
+description: Behavior layer for workflows, events, jobs, and queues
+---
+
+# Workflows and events
+
+**Behavior** layer (beta v0.1). Builtins: [Specification](/en/specification#builtins). Example: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip).
+
+---
+
+## `event`
+
+Domain event contract:
+
+```aip
+event LeadAssigned {
+  lead: Lead
+  seller: User
+}
+```
+
+Publish from a workflow with `emit` (do not redeclare `event` inside the workflow):
+
+```aip
+workflow LeadReceived {
+  when Lead.created
+  emit LeadAssigned {
+    lead: Lead
+    seller: seller
+  }
+}
+```
+
+---
+
+## `workflow`
+
+`when` trigger is required:
+
+```aip
+workflow LeadReceived {
+  when Lead.created
+
+  var seller = available_seller()
+
+  assign Lead.seller seller
+
+  create Task {
+    title: "Follow up"
+    due_at: now() + 15m
+    lead: Lead
+  }
+
+  notify(seller, "New lead assigned")
+
+  emit LeadAssigned {
+    lead: Lead
+    seller: seller
+  }
+}
+```
+
+`Task` must be declared as an `entity` in the reference spec. In `create`, `lead: Lead` refers to the instance from the `when` trigger.
+
+Durations: `15m`, `1h`, `1d` in expressions and in `dispatch Job after 15m`.
+
+Forward references are valid: `emit` may use `event` blocks declared later in the file.
+
+---
+
+## `lifecycle`
+
+Prefer when multiple hooks exist on one entity:
+
+```aip
+lifecycle Lead {
+  on created -> workflow LeadReceived
+  before create {
+    normalize_phone(Lead.phone)
+  }
+  after update {
+    notify(Lead.seller, "Lead updated")
+  }
+}
+```
+
+---
+
+## Conditions and errors
+
+```aip
+if LeadExists(phone) {
+  reject "Duplicate lead"
+}
+```
+
+---
+
+## `job` and `queue`
+
+```aip
+queue SendEmail
+
+job SendWelcomeEmail {
+  retries 3
+  timeout 1m
+}
+
+workflow UserCreated {
+  when User.created
+  dispatch SendWelcomeEmail
+}
+```
+
+Delayed dispatch: `dispatch SendReminder after 15m`.
+
+---
+
+## Best practices
+
+- Declare every `entity` used in `create`.
+- Use `emit` for publication; reserve `event { }` for type definition.
+- Keep workflows short; split long logic into jobs.
+- Prefer `lifecycle` for multiple hooks per entity.
+
+[`crm-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) contains `workflow LeadReceived`, `event LeadAssigned`, and `entity Task`.

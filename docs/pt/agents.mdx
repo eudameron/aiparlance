@@ -1,0 +1,122 @@
+---
+title: Agentes e prompts
+description: Guia para LLMs que escrevem specs AI Parlance
+---
+
+# Agentes e prompts
+
+Guia para LLMs e agentes que **escrevem** AI Parlance. Spec: [Especificação](/pt/specification). Sintaxe: [Sintaxe](/pt/syntax).
+
+---
+
+## Como a IA deve escrever `.aip`
+
+1. Estrutura previsível: `app` → `entity` → `crud` → `policy` → `workflow`
+2. Nomes claros; um idioma consistente por arquivo
+3. Semântica explícita (`required`, `belongs_to`, predicados)
+4. Evitar lógica imperativa longa em `workflow`
+5. Não repetir `auth` no bloco `api` se já estiver definido em `app`
+
+---
+
+## Prompt mínimo → saída
+
+**Prompt:** `Crie um CRM com usuários, leads e tarefas.`
+
+**Saída esperada:**
+
+```aip
+app CRM @0.1 {
+  database postgres
+  auth jwt
+}
+
+entity User {
+  name: string required
+  email: email required unique
+}
+
+entity Lead {
+  name: string required
+  phone: phone required
+}
+
+entity Task {
+  title: string required
+  lead: belongs_to Lead optional
+}
+
+crud User
+crud Lead
+crud Task
+```
+
+Policies e workflows só se o prompt pedir permissões ou comportamento.
+
+---
+
+## Estratégia de prompting
+
+Descrever: entidades, relações, regras de negócio, quem pode fazer o quê.
+
+Evitar: “gere em Go/TypeScript”, detalhes de framework, boilerplate de rotas.
+
+```txt
+Domínio: [descrição]
+Entidades: [campos]
+Regras: [validação, duplicidade, atribuição]
+Acesso: [papéis / dono do recurso]
+Eventos: [o que dispara automação]
+```
+
+---
+
+## `ai_context`
+
+Contexto semântico para agentes e validadores — não é emitido como código alvo.
+
+```aip
+ai_context Lead {
+  description "
+    Leads do site institucional.
+    Não permitir duplicidade por telefone normalizado.
+    Atribuir ao primeiro seller disponível.
+  "
+}
+```
+
+---
+
+## Gramática controlada
+
+Poucas formas alternativas para a mesma estrutura — ver [gramática](/pt/specification#grammar). Prefira validação inline em `entity` em vez de duplicar blocos `validation`.
+
+---
+
+## Fluxo agente → software
+
+```txt
+Prompt → LLM → .aip → Validador → AST → Transpiladores → artefatos
+```
+
+Em falha de validação, corrigir `.aip` — não o Go/TS gerado.
+
+---
+
+## Checklist antes de entregar
+
+- [ ] um bloco `app` com `database` (e `auth` se usar `authenticated` / `role`)
+- [ ] toda `entity` referenciada existe
+- [ ] policies `owner_*` apontam para FK real
+- [ ] `workflow` tem `when`
+- [ ] `emit` usa `event` declarado
+- [ ] ordem canônica de modificadores
+- [ ] `@0.1` em `app` ao usar blocos beta
+
+---
+
+## Referência completa
+
+[examples/crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) — adaptar, não reescrever do zero por capítulo.
+
+Mínimo Core: [examples/minimal.aip](https://github.com/eudameron/aiparlance/blob/main/examples/minimal.aip).

@@ -1,0 +1,151 @@
+---
+import type { Locale, Messages } from "@/i18n";
+
+interface Props {
+  locale: Locale;
+  t: Messages;
+}
+
+const { locale, t } = Astro.props;
+---
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="badge">{t.hero.badge}</span>
+      <h1>
+        {t.hero.title}
+        <span class="gradient-text">{t.hero.titleHighlight}</span>
+      </h1>
+      <p class="hero-sub">{t.hero.subtitle}</p>
+      <p class="hero-note">{t.hero.note}</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href={`https://docs.aiparlance.org/${locale}/introduction`}>
+          {t.hero.ctaDocs}
+        </a>
+        <a class="btn btn-ghost" href="#playground">{t.hero.ctaTry}</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="code-window">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <pre><code>{`app CRM @0.1 {
+  database postgres
+  auth jwt
+}
+
+entity Lead {
+  name: string required
+  phone: phone required
+}
+
+crud Lead`}</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: 4rem 0 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: -40% -20% auto;
+    height: 80%;
+    background: radial-gradient(
+      ellipse at 30% 20%,
+      rgba(34, 211, 238, 0.12),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 70% 40%,
+      rgba(168, 85, 247, 0.15),
+      transparent 50%
+    );
+    pointer-events: none;
+  }
+  .hero-grid {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+    position: relative;
+  }
+  @media (min-width: 900px) {
+    .hero-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--accent-cyan);
+    margin-bottom: 1.25rem;
+  }
+  h1 {
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+    line-height: 1.1;
+    margin: 0 0 1rem;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+  }
+  .hero-sub {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 48ch;
+    margin: 0 0 0.75rem;
+  }
+  .hero-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    opacity: 0.85;
+    margin: 0 0 1.75rem;
+  }
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .code-window {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .code-dots {
+    display: flex;
+    gap: 6px;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .code-dots span:nth-child(1) { background: #ef4444; }
+  .code-dots span:nth-child(2) { background: #eab308; }
+  .code-dots span:nth-child(3) { background: #22c55e; }
+  .code-window pre {
+    margin: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+  }
+  .code-window code {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--accent-cyan);
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+title: Introduction
+description: AI-first intermediate representation for AI-assisted software generation
+---
+
+# AI Parlance
+
+<Note>
+**v0.1 is specification-only.** Parser, validator, and transpilers are not published yet. This documentation defines the language; code generation is planned.
+</Note>
+
+AI Parlance is an AI-first language for **intermediate representation (IR)** in AI-assisted software generation — focused on data-oriented applications, APIs, authorization, and declarative automations.
+
+Humans, agents, and LLMs describe systems in `.aip`; transpilers turn the spec into concrete implementations.
+
+```txt
+Human or AI
+↓
+AI Parlance (.aip)
+↓
+AST + validation
+↓
+Transpilers
+↓
+Go, TypeScript, SQL, OpenAPI, …
+```
+
+Normative details: [Specification](/en/specification).
+
+---
+
+## Why it exists
+
+When models generate code directly in general-purpose languages, they face:
+
+- large amounts of boilerplate (CRUD, routes, validation, migrations)
+- inconsistency across stacks
+- large context → more tokens and more hallucination
+- business rules and permissions scattered in generated code
+
+AI Parlance concentrates **intent** in a compact semantic layer before implementation.
+
+---
+
+## What it describes (and what it does not)
+
+| Describes | Does not describe |
+|---|---|
+| entities, types, relations | custom UI |
+| CRUD, indexes, migrations | complex algorithms |
+| auth, policies | integrations without a dedicated block |
+| domain workflows and events | hand-written imperative SQL |
+
+---
+
+## Minimal example
+
+```aip
+app Demo @0.1 {
+  database postgres
+}
+
+entity User {
+  name: string required
+  email: email required unique
+}
+
+crud User
+```
+
+See [examples/minimal.aip](https://github.com/eudameron/aiparlance/blob/main/examples/minimal.aip). Every v0.1 spec requires one `app` block ([Specification](/en/specification)).
+
+One definition can feed multiple generators (see [transpiler matrix](/en/specification#transpiler-matrix)).
+
+---
+
+## AI-first principles
+
+The language prioritizes, in order:
+
+1. domain intent and semantics
+2. predictable structure for LLMs
+3. static validation before generation
+4. multi-target implementation via transpilers
+
+---
+
+## Documentation map
+
+| Page | Content |
+|---|---|
+| [Specification](/en/specification) | Grammar, builtins, policies, stability |
+| [Cost impact](/en/cost-impact) | Tokens, honest comparisons |
+| [Syntax](/en/syntax) | Core + Infra blocks |
+| [Database](/en/database) | Migrations, indexes, naming |
+| [Security](/en/security) | Auth, policies, rate limit |
+| [Workflows](/en/workflows) | Events, jobs, queues |
+| [Agents](/en/agents) | Prompts, `ai_context`, best practices |
+
+Reference spec: [examples/crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip).

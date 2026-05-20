@@ -1,0 +1,13 @@
+// AI Parlance minimal spec — Core only (v0.1)
+// Documented in docs/en/introduction.mdx and docs/pt/introduction.mdx
+
+app Demo @0.1 {
+  database postgres
+}
+
+entity User {
+  name: string required
+  email: email required unique
+}
+
+crud User

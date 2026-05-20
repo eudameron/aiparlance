@@ -1,0 +1,117 @@
+---
+title: Banco de dados
+description: Extensões Infra para schema, migrations e naming no AI Parlance
+---
+
+# Banco de dados
+
+Extensões **Infra** sobre `entity`. Base: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip). Spec: [Especificação](/pt/specification).
+
+---
+
+## Bancos suportados (v0.1)
+
+| Banco | Linguagem (`app`) | Transpiler v0.1 |
+|---|---|---|
+| PostgreSQL | `postgres` | Planejado (principal) |
+| MySQL | `mysql` | Planejado |
+| SQLite, MariaDB, MongoDB, … | Roadmap | — |
+
+É válido declarar `database mysql` na spec; geração de DDL ainda não foi publicada ([matriz de transpiladores](/pt/specification#transpiler-matrix)).
+
+```aip
+app CRM @0.1 {
+  database postgres
+}
+```
+
+---
+
+## Migrations
+
+Geradas a partir de `entity` com campos implícitos no DDL.
+
+```sql
+CREATE TABLE users (
+  id UUID PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL
+);
+```
+
+---
+
+## `seed`
+
+```aip
+seed User {
+  name: "Administrator"
+  email: "admin@example.com"
+  role: admin
+}
+```
+
+Valores `enum` em `seed` usam o identificador do variant sem aspas (`admin`, não `"admin"`).
+
+---
+
+## Índices e constraints
+
+```aip
+index Lead {
+  status
+  created_at
+}
+```
+
+| Modificador | SQL |
+|---|---|
+| `required` | `NOT NULL` |
+| `unique` | `UNIQUE` |
+| `belongs_to` | `REFERENCES …` |
+
+---
+
+## Naming
+
+| Entidade | Tabela | FK |
+|---|---|---|
+| `User` | `users` | `user_id` |
+| `SalesOrder` | `sales_orders` | `sales_order_id` |
+
+Regras: minúsculas, `snake_case`, tabelas no plural.
+
+---
+
+## UUID e auditoria
+
+- `id`: `uuid` por padrão
+- `created_at` / `updated_at`: sempre injetados (Core)
+- `soft_delete` em `entity`: `deleted_at` opcional
+
+---
+
+## Tipos semânticos → PostgreSQL
+
+| AI Parlance | PostgreSQL |
+|---|---|
+| `email` | `TEXT` + validação na app |
+| `json` | `JSONB` |
+| `datetime` | `TIMESTAMPTZ` |
+| `phone` | `TEXT` + normalização |
+
+---
+
+## Fluxo
+
+```txt
+entity / index / seed (.aip)
+↓
+AST
+↓
+Database Generator
+↓
+DDL / migrations / ORM
+```

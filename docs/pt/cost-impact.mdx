@@ -1,0 +1,92 @@
+---
+title: Impacto no custo
+description: Economia de tokens e comparativos honestos do AI Parlance
+---
+
+# Impacto no custo do desenvolvimento
+
+Este capítulo quantifica o argumento econômico do AI Parlance. Visão geral: [Introdução](/pt/introduction). Spec: [Especificação](/pt/specification).
+
+---
+
+## Onde o custo aparece hoje
+
+LLMs gastam tokens em:
+
+- contexto de código já gerado (models, handlers, rotas, testes)
+- correção de inconsistências entre camadas
+- repetição estrutural a cada novo endpoint ou entidade
+
+A maior parte é **infraestrutura repetida**, não lógica de negócio.
+
+---
+
+## Comparativo honesto (mesmo escopo)
+
+Escopo: entidade `User` com CRUD REST + validação + migration PostgreSQL.
+
+### AI Parlance (fonte editada pela IA)
+
+```aip
+app Demo @0.1 {
+  database postgres
+}
+
+entity User {
+  name: string required
+  email: email required unique
+}
+
+crud User
+```
+
+~6 linhas na spec; `id`, `created_at`, `updated_at` implícitos ([spec](/pt/specification#implicit-fields)).
+
+### Go (saída ilustrativa do transpiler)
+
+Além da struct, o stack completo costuma incluir repository, service, handler, rotas, validação e migration — frequentemente **150–400+ linhas** para um CRUD idiomático.
+
+A economia está na **geração e revisão do modelo** (`.aip`), não na transpilação (offline, determinística).
+
+### TypeScript / Python / PHP
+
+Interfaces ou classes isoladas são curtas (~10–20 linhas), mas **não equivalem** ao CRUD completo.
+
+---
+
+## Redução de contexto para a IA
+
+Trabalhar sobre `.aip` mantém no contexto entidades, policies, workflows e `ai_context` — em vez de milhares de linhas por framework.
+
+---
+
+## Multi-target sem duplicação manual
+
+A mesma spec em [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) alimenta N transpiladores.
+
+---
+
+## Impacto financeiro (inferência)
+
+Variáveis: gerações por mês, tamanho médio do diff, preço por token.
+
+Alto volume de CRUD e pouca lógica custom → maior ROI. UI pesada ou integrações únicas → ganho menor na camada `.aip` (fora do escopo principal).
+
+---
+
+## Limites do argumento de custo
+
+- Transpiladores precisam existir e ser confiáveis — custo de engenharia inicial.
+- `workflow` complexo pode aproximar código imperativo.
+- Blocos `custom` futuros reintroduzem código manual fora das métricas compactas.
+
+---
+
+## Resumo
+
+| Métrica | Efeito esperado |
+|---|---|
+| Tokens na edição do domínio | Redução forte |
+| Consistência arquitetural | Melhora |
+| Custo de transpilação | Offline, amortizado |
+| UI / integrações exóticas | Fora do escopo principal |

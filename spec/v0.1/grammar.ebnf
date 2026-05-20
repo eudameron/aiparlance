@@ -1,0 +1,70 @@
+(* AI Parlance v0.1 — grammar summary *)
+(* Normative prose: docs/en/specification.mdx · docs/pt/specification.mdx *)
+
+program        = app_block , { block } ;
+
+block          = entity_block | crud_stmt | policy_block
+               | index_block | api_block | workflow_block | event_block
+               | lifecycle_block | seed_block | job_block | queue_block
+               | ai_context_block
+               | validation_block ;   (* optional duplicate of inline rules *)
+
+(* --- Core --- *)
+
+app_block      = "app" IDENT [ "@version" ] "{" app_member { app_member } "}" ;
+app_member     = "database" ident | "auth" auth_strategy ;
+
+entity_block   = "entity" IDENT "{" { field_decl | entity_modifier } "}" ;
+entity_modifier = "timestamps" | "soft_delete" ;
+field_decl     = IDENT ":" type_expr [ field_modifier { field_modifier } ] ;
+type_expr      = primitive | "enum" "(" ident { "," ident } ")" | relation_type ;
+relation_type  = "belongs_to" IDENT [ "optional" ] ;
+field_modifier = "required" | "optional" | "unique" | "default" "(" value ")" ;
+
+crud_stmt      = "crud" IDENT ;
+
+validation_block = "validation" IDENT "{" { validation_rule } "}" ;
+validation_rule  = IDENT ( "required" | "unique" ) { "unique" } ;
+
+(* --- Infra --- *)
+
+index_block    = "index" IDENT "{" { IDENT } "}" ;
+api_block      = "api" "{" { api_member } "}" ;
+seed_block     = "seed" IDENT "{" { field_assign } "}" ;
+
+(* --- Security (beta) --- *)
+
+policy_block   = "policy" IDENT "{" { policy_rule } "}" ;
+policy_rule    = action predicate_expr ;
+action         = "create" | "read" | "update" | "delete" | IDENT ;
+
+(* --- Behavior (beta) --- *)
+
+workflow_block = "workflow" IDENT "{" when_clause { stmt } "}" ;
+when_clause    = "when" IDENT "." lifecycle_event ;
+lifecycle_block = "lifecycle" IDENT "{" lifecycle_member { lifecycle_member } "}" ;
+event_block    = "event" IDENT "{" { field_decl } "}" ;
+job_block      = "job" IDENT "{" job_member { job_member } "}" ;
+queue_block    = "queue" IDENT ;
+
+ai_context_block = "ai_context" IDENT "{" "description" string_literal "}" ;
+
+stmt           = var_stmt | if_stmt | assign_stmt | create_stmt | emit_stmt
+               | notify_stmt | reject_stmt | dispatch_stmt ;
+var_stmt       = "var" IDENT "=" expr ;
+if_stmt        = "if" expr "{" { stmt } "}" ;
+assign_stmt    = "assign" field_ref expr ;
+create_stmt    = "create" IDENT "{" { field_assign } "}" ;
+emit_stmt      = "emit" IDENT "{" { field_assign } "}" ;
+notify_stmt    = "notify" "(" expr "," string_literal ")" ;
+reject_stmt    = "reject" string_literal ;
+dispatch_stmt  = "dispatch" IDENT [ "after" duration ] ;
+
+duration       = NUMBER ("m" | "h" | "d") ;
+
+(* --- Proposed (documented preview; not validated in v0.1) --- *)
+(* permission_decl = "permission" IDENT ; *)
+(* endpoint_block  = "endpoint" IDENT "{" ... "}" ; *)
+
+(* field_modifier order: required|optional → unique → default *)
+(* line comments: // to end of line *)

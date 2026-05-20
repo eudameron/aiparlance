@@ -1,0 +1,57 @@
+---
+import type { Messages } from "@/i18n";
+
+interface Props {
+  t: Messages;
+  locale: string;
+}
+
+const { t, locale } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <p class="footer-brand">
+      <strong>AI Parlance</strong> — {t.footer.tagline}
+    </p>
+    <nav class="footer-nav">
+      <a href={`https://docs.aiparlance.org/${locale}/introduction`}>{t.footer.docs}</a>
+      <a href="https://github.com/eudameron/aiparlance" rel="noopener noreferrer">{t.footer.github}</a>
+      <span>{t.footer.license}</span>
+    </nav>
+    <p class="footer-copy">© {year} AI Parlance Contributors</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 0;
+    margin-top: 2rem;
+  }
+  .footer-inner {
+    text-align: center;
+  }
+  .footer-brand {
+    margin: 0 0 1rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.25rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+  .footer-nav a {
+    color: var(--text-muted);
+  }
+  .footer-copy {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+</style>

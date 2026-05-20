@@ -1,0 +1,69 @@
+---
+import type { Messages } from "@/i18n";
+
+interface Props {
+  t: Messages;
+}
+
+const { t } = Astro.props;
+---
+
+<section class="section pipeline">
+  <div class="container">
+    <h2 class="section-title">{t.pipeline.title}</h2>
+    <ol class="pipeline-steps">
+      {t.pipeline.steps.map((step, i) => (
+        <li>
+          <span class="step-num">{i + 1}</span>
+          <span class="step-label">{step}</span>
+          {i < t.pipeline.steps.length - 1 && <span class="step-arrow" aria-hidden="true">→</span>}
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .pipeline {
+    background: var(--bg-elevated);
+    border-block: 1px solid var(--border);
+  }
+  .pipeline-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 0.5rem;
+    align-items: center;
+  }
+  .pipeline-steps li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .step-num {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--gradient);
+    color: #050508;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-label {
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  .step-arrow {
+    color: var(--text-muted);
+    margin: 0 0.25rem;
+  }
+  @media (max-width: 640px) {
+    .step-arrow { display: none; }
+    .pipeline-steps { flex-direction: column; align-items: flex-start; }
+  }
+</style>

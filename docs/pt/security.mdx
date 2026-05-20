@@ -1,0 +1,121 @@
+---
+title: Segurança
+description: Auth, policies, rate limit e CORS no AI Parlance
+---
+
+# Segurança
+
+Camada **Security** (beta v0.1). Predicados: [Especificação — Políticas](/pt/specification#policies). Exemplo: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip).
+
+---
+
+## `auth`
+
+Padrão global em `app`:
+
+```aip
+app CRM @0.1 {
+  auth jwt
+}
+```
+
+| Estratégia | Uso típico |
+|---|---|
+| `jwt` | APIs stateless (recomendado) |
+| `session` | Apps web com cookie |
+| `api_key` | Integrações M2M |
+| `oauth` | Login social / IdP |
+
+Defina JWT em `app` uma vez; evite repetir `auth jwt` em `api` salvo override.
+
+---
+
+## `policy`
+
+```aip
+policy Lead {
+  create authenticated
+  read owner_or_manager(Lead.seller)
+  update owner_or_manager(Lead.seller)
+  delete role(admin)
+}
+```
+
+`Lead.seller` deve existir como `belongs_to User`.
+
+Entidades sem `policy`: padrão `authenticated` (com `auth` no `app`) ou `public` (sem `auth`) — ver [Especificação](/pt/specification#policies).
+
+---
+
+## Papéis e permissões
+
+```aip
+entity User {
+  role: enum(admin, manager, seller) default(seller)
+}
+
+(* Propostos — fora da gramática v0.1 *)
+permission export_reports
+
+policy Report {
+  read permission(export_reports)
+}
+```
+
+O predicado `permission(nome)` em `policy` é suportado; declaração top-level `permission` é apenas preview.
+
+---
+
+## Predicados
+
+| Predicado | Descrição |
+|---|---|
+| `public` | Sem auth |
+| `authenticated` | JWT/sessão válida |
+| `role(name)` | Papel global |
+| `permission(name)` | Permissão nomeada |
+| `owner(field)` | Usuário autenticado igual a `field` |
+| `owner_or_manager(field)` | Dono, manager ou admin |
+
+Lógica arbitrária: bloco `custom` reservado para o futuro — não misturar SQL manual com policies geradas no v0.1.
+
+---
+
+## `rate_limit` e CORS
+
+```aip
+api {
+  rate_limit 100/minute
+  cors {
+    allow "https://app.example.com"
+  }
+}
+```
+
+Por rota (**propostos** — fora da gramática v0.1):
+
+```aip
+endpoint Login {
+  rate_limit 5/minute
+}
+```
+
+---
+
+## SQL injection
+
+Transpiladores devem emitir queries **parametrizadas** / ORM. Código `custom` manual fica fora dessa garantia.
+
+---
+
+## Geração multi-target
+
+| Alvo | Artefato |
+|---|---|
+| Go | middleware JWT, checks em handlers |
+| TypeScript | guards, decorators |
+| Python | dependencies / decorators |
+| PHP | policies, gates |
+| OpenAPI | `securitySchemes` |
+
+[`crm-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) inclui `policy Lead` e `api` com rate limit + CORS.

@@ -1,0 +1,111 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "AI Parlance",
+  "description": "AI-first intermediate representation for AI-assisted software generation.",
+  "theme": "mint",
+  "colors": {
+    "primary": "#7C3AED",
+    "light": "#22D3EE",
+    "dark": "#6366F1"
+  },
+  "logo": {
+    "light": "/logo-nav.png",
+    "dark": "/logo-nav.png",
+    "href": "https://docs.aiparlance.org/en/introduction"
+  },
+  "favicon": "/favicon.png",
+  "seo": {
+    "metatags": {
+      "canonical": "https://docs.aiparlance.org",
+      "og:url": "https://docs.aiparlance.org"
+    }
+  },
+  "navigation": {
+    "languages": [
+      {
+        "language": "en",
+        "default": true,
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "en/introduction",
+              "en/cost-impact"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "en/specification",
+              "en/syntax"
+            ]
+          },
+          {
+            "group": "Domains",
+            "pages": [
+              "en/database",
+              "en/security",
+              "en/workflows"
+            ]
+          },
+          {
+            "group": "AI",
+            "pages": [
+              "en/agents"
+            ]
+          }
+        ]
+      },
+      {
+        "language": "pt",
+        "groups": [
+          {
+            "group": "Visão geral",
+            "pages": [
+              "pt/introduction",
+              "pt/cost-impact"
+            ]
+          },
+          {
+            "group": "Referência",
+            "pages": [
+              "pt/specification",
+              "pt/syntax"
+            ]
+          },
+          {
+            "group": "Domínios",
+            "pages": [
+              "pt/database",
+              "pt/security",
+              "pt/workflows"
+            ]
+          },
+          {
+            "group": "IA",
+            "pages": [
+              "pt/agents"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "aiparlance.org",
+        "href": "https://aiparlance.org"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/eudameron/aiparlance"
+      }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/eudameron/aiparlance"
+    }
+  }
+}

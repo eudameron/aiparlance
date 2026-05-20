@@ -1,0 +1,125 @@
+---
+title: Workflows e eventos
+description: Camada Behavior para workflows, eventos, jobs e filas
+---
+
+# Workflows e eventos
+
+Camada **Behavior** (beta v0.1). Builtins: [Especificação](/pt/specification#builtins). Exemplo: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip).
+
+---
+
+## `event`
+
+Contrato do evento de domínio:
+
+```aip
+event LeadAssigned {
+  lead: Lead
+  seller: User
+}
+```
+
+Publicar no workflow com `emit` (não redeclarar `event` dentro do workflow):
+
+```aip
+workflow LeadReceived {
+  when Lead.created
+  emit LeadAssigned {
+    lead: Lead
+    seller: seller
+  }
+}
+```
+
+---
+
+## `workflow`
+
+Gatilho `when` obrigatório:
+
+```aip
+workflow LeadReceived {
+  when Lead.created
+
+  var seller = available_seller()
+
+  assign Lead.seller seller
+
+  create Task {
+    title: "Follow up"
+    due_at: now() + 15m
+    lead: Lead
+  }
+
+  notify(seller, "New lead assigned")
+
+  emit LeadAssigned {
+    lead: Lead
+    seller: seller
+  }
+}
+```
+
+`Task` deve estar declarada como `entity`. Em `create`, `lead: Lead` referencia a instância do gatilho.
+
+Durações: `15m`, `1h`, `1d` em expressões e em `dispatch Job after 15m`.
+
+---
+
+## `lifecycle`
+
+Prefira quando houver vários ganchos na mesma entidade:
+
+```aip
+lifecycle Lead {
+  on created -> workflow LeadReceived
+  before create {
+    normalize_phone(Lead.phone)
+  }
+  after update {
+    notify(Lead.seller, "Lead atualizado")
+  }
+}
+```
+
+---
+
+## Condições e erros
+
+```aip
+if LeadExists(phone) {
+  reject "Lead duplicado"
+}
+```
+
+---
+
+## `job` e `queue`
+
+```aip
+queue SendEmail
+
+job SendWelcomeEmail {
+  retries 3
+  timeout 1m
+}
+
+workflow UserCreated {
+  when User.created
+  dispatch SendWelcomeEmail
+}
+```
+
+Agendamento: `dispatch SendReminder after 15m`.
+
+---
+
+## Boas práticas
+
+- Declarar toda `entity` usada em `create`.
+- Usar `emit` para publicação; reservar `event { }` para o tipo.
+- Workflows curtos; lógica longa em `job`.
+- Preferir `lifecycle` para vários ganchos por entidade.
+
+[`crm-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) contém `workflow LeadReceived`, `event LeadAssigned` e `entity Task`.

@@ -1,0 +1,259 @@
+---
+title: Especificação
+description: Gramática normativa, builtins, policies e níveis de estabilidade do AI Parlance v0.1
+---
+
+# Especificação
+
+Documento normativo do AI Parlance (**v0.1**). Define gramática, semântica, builtins, políticas e níveis de estabilidade dos blocos.
+
+Visão geral: [Introdução](/pt/introduction). Sintaxe: [Sintaxe](/pt/syntax).
+
+---
+
+## Glossário
+
+| Termo | Significado |
+|---|---|
+| **AI Parlance** | Linguagem declarativa AI-first usada como IR entre intenção e código gerado. |
+| **Bloco** | Construção de topo (`entity`, `workflow`, …). |
+| **Transpilador** | Gerador que converte AI Parlance (+ AST) em artefatos de um alvo (Go, SQL, …). |
+| **AST** | Árvore sintática produzida pelo parser a partir do texto `.aip`. |
+| **Builtin** | Função ou comando reservado (`now()`, `notify()`, …). |
+| **Predicado** | Expressão booleana em `policy` (`authenticated`, `role(admin)`, …). |
+
+---
+
+## Escopo e limites
+
+AI Parlance cobre hoje:
+
+- modelagem de dados e API (CRUD)
+- autorização declarativa
+- workflows e eventos de domínio limitados
+
+Não substitui:
+
+- UI custom ou design system
+- algoritmos complexos ou otimizações manuais
+- integrações ad hoc sem bloco dedicado
+- SQL imperativo escrito à mão (bloco `custom` reservado para o futuro; fora do v0.1)
+
+| Ferramenta | Foco | AI Parlance |
+|---|---|---|
+| OpenAPI / AsyncAPI | Contratos HTTP / eventos | Modelo + comportamento + policy numa spec |
+| Prisma / DBML | Schema de dados | Entidades + relações + migrations multi-target |
+| OPA / Cedar | Autorização | `policy` integrada ao modelo de entidades |
+| Temporal / Cadence | Orquestração imperativa | `workflow` declarativo para regras comuns |
+
+---
+
+## Pipeline
+
+```txt
+Prompt ou edição humana
+↓
+Texto .aip
+↓
+Parser → AST
+↓
+Validador semântico
+↓
+Transpiladores (por alvo)
+↓
+Go, SQL, OpenAPI, workers, …
+```
+
+O texto `.aip` é a fonte; a AST é representação interna.
+
+**Toolchain (v0.1):** parser, validador e transpiladores **ainda não publicados**. Este documento é a fonte normativa; gramática em [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf).
+
+---
+
+## Bloco `app` obrigatório
+
+Toda spec v0.1 deve começar com exatamente um bloco `app` (recomendado `@0.1`):
+
+```aip
+app MinhaApp @0.1 {
+  database postgres
+}
+```
+
+Inclua `auth` ao usar `authenticated`, `role` ou `permission` em `policy`. Exemplo mínimo: [examples/minimal.aip](https://github.com/eudameron/aiparlance/blob/main/examples/minimal.aip).
+
+---
+
+## Gramática (EBNF resumida) {#grammar}
+
+```ebnf
+program        = { block } ;
+block          = app_block | entity_block | crud_stmt | policy_block
+               | index_block | api_block | workflow_block | event_block
+               | lifecycle_block | seed_block | job_block | queue_block
+               | ai_context_block ;
+
+app_block      = "app" IDENT [ "@version" ] "{" app_member { app_member } "}" ;
+entity_block   = "entity" IDENT "{" { field_decl | entity_modifier } "}" ;
+field_decl     = IDENT ":" type_expr [ field_modifier { field_modifier } ] ;
+crud_stmt      = "crud" IDENT ;
+workflow_block = "workflow" IDENT "{" when_clause { stmt } "}" ;
+when_clause    = "when" IDENT "." lifecycle_event ;
+```
+
+Ordem de modificadores: `required` | `optional` → `unique` → `default(...)`.
+
+Comentários de linha: `//` até o fim da linha.
+
+---
+
+## Níveis de estabilidade
+
+| Nível | Blocos | Status v0.1 |
+|---|---|---|
+| **Core** | `app`, `entity`, `crud`, validação inline; tipos `enum(…)` inline; relações `belongs_to` inline | Estável |
+| **Infra** | `index`, `api`, migrations, `seed`, naming; modificadores `timestamps`, `soft_delete` em `entity` | Estável |
+| **Security** | `auth` (em `app`), `policy`, predicados | Beta |
+| **Behavior** | `workflow`, `event`, `lifecycle`, `job`, `queue`; statements em workflow (`emit`, `create`, …) | Beta |
+
+Blocos de topo `enum { }` / `relation { }` e `has_one` / `has_many` / `many_to_many` estão no **roadmap**, não no v0.1.
+
+Blocos beta podem mudar entre releases v0.x menores. O Core é estável dentro do v0.1; a spec global permanece **rascunho** até existir toolchain de referência.
+
+---
+
+## Campos implícitos {#implicit-fields}
+
+Toda `entity` recebe automaticamente (salvo `id: uuid` explícito):
+
+| Campo | Tipo | Notas |
+|---|---|---|
+| `id` | `uuid` | Primary key |
+| `created_at` | `datetime` | Sempre injetado (padrão Core) |
+| `updated_at` | `datetime` | Sempre injetado (padrão Core) |
+
+O modificador `timestamps` em `entity` é documentação opcional; não desativa esses campos.
+
+`soft_delete` em `entity` adiciona `deleted_at: datetime optional`.
+
+---
+
+## Builtins {#builtins}
+
+| Nome | Uso | Efeito |
+|---|---|---|
+| `now()` | expressões | Data/hora UTC atual |
+| `available_seller()` | workflow | Retorna `User` seller disponível |
+| `assign` | `assign Lead.seller seller` | Atribui FK / relação |
+| `notify(recipient, message)` | workflow | Notificação; `recipient` é variável `User`, campo ou literal |
+| `LeadExists(phone)` | condição | Duplicidade por telefone normalizado |
+| `normalize_phone(value)` | expressão | Normaliza telefone |
+| `emit EventName { … }` | workflow | Publica evento de domínio |
+| `create Entity { … }` | workflow | Cria registro da entidade |
+| `reject "msg"` | workflow | Erro de negócio |
+| `dispatch JobName` | workflow | Enfileira job |
+
+Builtins não listados são inválidos.
+
+---
+
+## Ciclo de vida
+
+Eventos de sistema (gatilhos de `when`):
+
+```txt
+created | updated | deleted
+```
+
+```aip
+lifecycle Lead {
+  on created -> workflow LeadReceived
+  before create {
+    normalize_phone(Lead.phone)
+  }
+  after update {
+    notify(Lead.seller, "Lead atualizado")
+  }
+}
+```
+
+`when Lead.created` em `workflow` equivale a `on created` em `lifecycle`. Prefira `lifecycle` com vários ganchos na mesma entidade.
+
+### Statements de workflow (v0.1)
+
+Dentro de `workflow` / ganchos de `lifecycle`: `var`, `if` / `reject`, `assign`, `create`, `emit`, `notify`, `dispatch` (opcional `after` + duração). Durações: `15m`, `1h`, `1d` — ver [Workflows](/pt/workflows).
+
+Referências forward são válidas: `emit` e `create` podem usar `event` / `entity` declarados depois no arquivo.
+
+---
+
+## Políticas {#policies}
+
+| Predicado | Significado |
+|---|---|
+| `public` | Sem autenticação |
+| `authenticated` | JWT/sessão válida |
+| `role(name)` | Papel global |
+| `permission(name)` | Permissão concedida |
+| `owner(field)` | Usuário autenticado igual a `field` |
+| `owner_or_manager(field)` | `owner` ou `role(manager)` ou `role(admin)` |
+
+```aip
+policy Lead {
+  read owner_or_manager(Lead.seller)
+}
+```
+
+Requer `Lead.seller` como `belongs_to User`.
+
+### Acesso padrão
+
+Entidades sem `policy`: transpiladores devem usar **`authenticated`** no CRUD quando `app` tem `auth`, ou **`public`** sem `auth`. `policy` explícita prevalece.
+
+### Propostos (fora da gramática v0.1)
+
+- Declaração top-level `permission nome`
+- Blocos `endpoint` para rate limit por rota
+
+Preview em [Segurança](/pt/security) até entrarem na gramática.
+
+---
+
+## Validação
+
+O validador deve rejeitar:
+
+- ausência ou duplicata do bloco `app`
+- referência a `entity` / `event` / `job` inexistente
+- `policy` sem `auth` no `app` quando usar `authenticated` ou `role`
+- `owner(field)` com campo inexistente
+- `workflow` sem `when`
+- modificadores duplicados ou fora de ordem (warning vs error por regra)
+- builtins não registrados
+
+---
+
+## Matriz de transpiladores {#transpiler-matrix}
+
+| Alvo | Artefatos | Status v0.1 |
+|---|---|---|
+| PostgreSQL | DDL, migrations, índices | Planejado (alvo principal da linguagem) |
+| MySQL | DDL, migrations | Planejado (`database mysql` no `app`; sem transpiler ainda) |
+| Go | structs, handlers, middleware JWT | Planejado |
+| TypeScript | interfaces, guards | Planejado |
+| Python | models, decorators | Planejado |
+| PHP | classes, policies | Planejado |
+| OpenAPI | paths, schemas, security | Planejado |
+| Docs | Markdown / referência API | Planejado |
+| Testes | fixtures CRUD | Planejado |
+| Workers | filas, jobs | Planejado |
+
+Custo de inferência LLM incide na **edição do `.aip`**, não na transpilação offline.
+
+---
+
+## Spec de referência
+
+Exemplo CRM: [examples/crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip)
+
+Capítulos de domínio documentam extensões em relação a esse arquivo.
