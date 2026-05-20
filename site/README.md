@@ -6,7 +6,7 @@ Institutional website for [aiparlance.org](https://aiparlance.org). Built with [
 
 | File | Purpose |
 |------|---------|
-| `astro.config.mjs` | **Local** — MAMP subpath, `site` = `http://localhost:8888` |
+| `astro.config.mjs` | **Local development** — optional subpath `base` when not served from domain root |
 | `astro.config-sample.mjs` | **Production** — domain root, `site` = `https://aiparlance.org` |
 
 Copy the sample when deploying: `cp astro.config-sample.mjs astro.config.mjs` is optional; prefer `npm run build:prod` so local config stays untouched.
@@ -43,23 +43,17 @@ cd site
 npm install
 ```
 
-### Local (MAMP + dev server)
+### Local development
 
-Uses `astro.config.mjs` (`base`: `/dev/aiparlance.org/v1/site/dist/`).
+Uses `astro.config.mjs`. Adjust `base` and `site` there if you serve the build from a subpath.
 
 ```bash
-npm run dev       # http://localhost:4321/dev/aiparlance.org/v1/site/dist/en/
-npm run build     # then open MAMP URLs below
-npm run preview   # preview local build with correct base
+npm run dev
+npm run build
+npm run preview
 ```
 
-**MAMP** (Apache on port 8888, document root = `htdocs`):
-
-- English: http://localhost:8888/dev/aiparlance.org/v1/site/dist/en/
-- Portuguese: http://localhost:8888/dev/aiparlance.org/v1/site/dist/pt/
-- Redirect: http://localhost:8888/dev/aiparlance.org/v1/site/dist/
-
-Run `npm run build` after code changes.
+Run `npm run build` after code changes when testing the static output.
 
 ### Production
 
@@ -67,17 +61,17 @@ Uses `astro.config-sample.mjs` (`base`: `/`).
 
 ```bash
 npm run build:prod
-npm run preview:prod   # http://localhost:4321/en/
+npm run preview:prod
 ```
 
 Upload `dist/` to the host root for `aiparlance.org`.
 
 ## Deploy
 
-**Cloudflare Pages:** passo a passo em [CLOUDFLARE.md](./CLOUDFLARE.md) (sem `wrangler deploy`).
+**Cloudflare:** passo a passo em [CLOUDFLARE.md](./CLOUDFLARE.md).
 
 1. `npm run build:prod`
-2. Publicar `dist/` (Cloudflare Pages, Netlify, Vercel, Apache).
+2. Publicar `dist/` (Cloudflare, Netlify, Vercel, Apache).
 3. Apontar `aiparlance.org` para a raiz do build.
 
 Ensure `/` → `/en` (`public/_redirects` + `src/pages/index.astro`), plus `sitemap.xml` and `robots.txt`.

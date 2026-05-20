@@ -36,8 +36,6 @@ aiparlance.org/
 - English (default) — e.g. https://docs.aiparlance.org/en/introduction  
 - Portuguese — e.g. https://docs.aiparlance.org/pt/introduction  
 
-Source in [`/docs`](docs/) (Mintlify). Custom domain is configured in the [Mintlify dashboard](https://dashboard.mintlify.com); point `docs.aiparlance.org` CNAME to Mintlify.
-
 ## License
 
 [Apache License 2.0](LICENSE).
