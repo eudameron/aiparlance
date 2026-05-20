@@ -46,6 +46,67 @@ git push main
 
 **Domínios** → `aiparlance.org` → DNS conforme o assistente.
 
+## Página mostra "Hello world"
+
+Isso **não vem do Astro** (não existe no repositório). É o **Worker padrão** da Cloudflare que ainda responde no domínio.
+
+### Teste rápido
+
+Abra diretamente:
+
+- `https://<seu-projeto>.pages.dev/en/`
+- `https://aiparlance.org/en/`
+
+Se **`/en/`** mostrar o site AI Parlance mas **`/`** mostrar Hello world, o build está certo — só falta ajustar o Worker/rota.
+
+### Corrigir `Cannot read properties of undefined (reading 'fetch')`
+
+`env.ASSETS` só existe se o binding **ASSETS** estiver configurado. Sem isso, o Worker quebra.
+
+**Opção A — Site estático sem Worker (recomendado)**
+
+1. Apague **todo** o código do Worker no painel (editor vazio) ou remova o script.
+2. Build: `npm ci && npm run build:prod` · saída: `dist` · deploy command: **vazio**.
+3. O Cloudflare publica só a pasta `dist/` (como Pages estático).
+
+**Opção B — Manter o Worker + binding ASSETS**
+
+1. **Settings** → **Bindings** → **Add** → **Assets** (ou *Static Assets*).
+2. **Binding name:** `ASSETS` (exatamente esse nome).
+3. **Directory / assets path:** `dist` (relativo à raiz `site/` após o build).
+4. Cole o Worker:
+
+```js
+export default {
+  async fetch(request, env) {
+    return env.ASSETS.fetch(request);
+  },
+};
+```
+
+5. **Save** → redeploy → **Purge cache**.
+
+**Opção C — Deploy via Wrangler (Git)**
+
+Comando de implantação:
+
+```bash
+npm ci && npm run build:prod && npx wrangler deploy
+```
+
+O `site/wrangler.jsonc` já define `assets.directory = dist` e `binding = ASSETS`.
+
+### Corrigir via Git (alternativa)
+
+O repositório inclui `site/worker.js` + `site/wrangler.jsonc` (pass-through para `dist/`).  
+Faça `git push` após commit. Se o deploy usar Wrangler, o Worker deixa de retornar Hello world.
+
+**Build continua:** `npm ci && npm run build:prod` — sem `npm run build` (MAMP).
+
+### Domínio
+
+**Domínios** → o domínio deve apontar para este **deployment** (assets), não para um Worker antigo separado.
+
 ## Teste local (produção)
 
 ```bash

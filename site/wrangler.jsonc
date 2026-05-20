@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "aiparlance",
+  "compatibility_date": "2026-05-20",
+  "main": "worker.js",
+  "assets": {
+    "directory": "dist",
+    "binding": "ASSETS"
+  }
+}
