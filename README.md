@@ -29,6 +29,10 @@ aiparlance.org/
 | [site/](site/) | Public marketing site ([EN](https://aiparlance.org/en) · [PT](https://aiparlance.org/pt)) |
 | [transpilers/](transpilers/) | Future Go, TypeScript, SQL, … generators |
 
+## Official site
+
+**https://aiparlance.org/**
+
 ## Documentation
 
 **https://docs.aiparlance.org**
