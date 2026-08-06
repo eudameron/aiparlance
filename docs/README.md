@@ -11,7 +11,7 @@ AI Parlance docs in **English** and **Portuguese**. Part of the [eudameron/aipar
 ├── spec/          Normative grammar & v0.1 artifacts
 ├── examples/      Reference .aip files
 ├── packages/      Reference toolchain (parser, validator, CLI)
-├── transpilers/   Emitters (SQL, OpenAPI, TypeScript)
+├── transpilers/   Emitters (matrix Preview packages)
 └── scripts/       CI helpers (examples suite)
 ```
 
@@ -27,7 +27,7 @@ docs/
 └── pt/
 ```
 
-Community onboarding: [en/getting-started.mdx](en/getting-started.mdx) · first emitters story: [en/first-transpiler.mdx](en/first-transpiler.mdx).
+Community onboarding: [en/getting-started.mdx](en/getting-started.mdx) · emitters: [en/first-transpiler.mdx](en/first-transpiler.mdx) · CRUD: [en/crud-walkthrough.mdx](en/crud-walkthrough.mdx).
 
 Reference specs live in [`/examples`](../examples/), not under `docs/`.
 
@@ -48,6 +48,7 @@ npx mintlify dev
 | Portuguese | https://docs.aiparlance.org/pt/introduction |
 | Getting started | https://docs.aiparlance.org/en/getting-started |
 | First emitters | https://docs.aiparlance.org/en/first-transpiler |
+| CRUD walkthrough | https://docs.aiparlance.org/en/crud-walkthrough |
 
 ## Deploy
 

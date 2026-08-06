@@ -1,17 +1,17 @@
 ---
 title: Começando
-description: Instale a toolchain de referência, valide specs .aip e emita SQL, OpenAPI e TypeScript
+description: Instale a toolchain de referência, valide specs .aip e emita SQL, OpenAPI, TypeScript, Go e a matriz completa em Prévia
 ---
 
 # Começando
 
-Use a **toolchain de referência** a partir do monorepo hoje. Os pacotes ainda não estão no npm público — clone o repositório e rode a CLI localmente.
+Use a **toolchain de referência** do monorepo hoje. Os pacotes ainda não estão no npm público — clone o repositório e rode a CLI localmente.
 
 Requisitos: **Node.js 20+**, Git.
 
 ---
 
-## 1. Clone e instalação
+## 1. Clonar e instalar
 
 ```bash
 git clone https://github.com/eudameron/aiparlance.git
@@ -20,7 +20,7 @@ npm ci
 npm run build
 ```
 
-Isso compila `@aiparlance/parser`, `validator`, `cli` e os emitters (`sql`, `openapi`, `typescript`).
+Isso compila `@aiparlance/parser`, `validator`, `cli` e os emitters em Prévia (`sql`, `openapi`, `typescript`, `go`, `mysql`, `workers`, `python`, `php`, `docs`, `tests`).
 
 ---
 
@@ -34,12 +34,18 @@ node packages/cli/dist/cli.js --help
 
 | Comando | O que faz |
 |---|---|
-| `aip parse <file.aip>` | Imprime o AST Core em JSON |
-| `aip validate <file.aip>` | Checagens semânticas (regras MUST) |
-| `aip emit sql <file.aip>` | DDL PostgreSQL |
+| `aip parse <file.aip>` | Imprime o AST em JSON |
+| `aip validate <file.aip>` | Checagens semânticas (MUST) — Core + Infra + Security + Behavior |
+| `aip emit sql <file.aip>` | DDL PostgreSQL (+ índices / seeds quando houver) |
 | `aip emit openapi <file.aip>` | OpenAPI 3.0.3 JSON |
 | `aip emit typescript <file.aip>` | Interfaces TypeScript + type guards |
 | `aip emit go <file.aip>` | Structs Go + handlers finos + middleware de auth |
+| `aip emit mysql <file.aip>` | DDL MySQL (`database mysql`) |
+| `aip emit workers <file.aip>` | Stubs de jobs / filas |
+| `aip emit python <file.aip>` | Dataclasses Python |
+| `aip emit php <file.aip>` | Classes PHP |
+| `aip emit docs <file.aip>` | Referência API em Markdown |
+| `aip emit tests <file.aip>` | Fixtures de teste CRUD |
 
 ### Experimente o exemplo mínimo
 
@@ -51,7 +57,7 @@ node packages/cli/dist/cli.js emit typescript examples/minimal.aip
 node packages/cli/dist/cli.js emit go examples/minimal.aip
 ```
 
-Gravar em arquivo:
+Grave a saída em arquivo:
 
 ```bash
 node packages/cli/dist/cli.js emit sql examples/minimal.aip > /tmp/minimal.sql
@@ -60,9 +66,11 @@ node packages/cli/dist/cli.js emit typescript examples/minimal.aip > /tmp/minima
 node packages/cli/dist/cli.js emit go examples/minimal.aip > /tmp/minimal.go
 ```
 
+Walkthrough CRUD completo (entidades, policies, API, seeds, emit): [Walkthrough CRUD](/pt/crud-walkthrough).
+
 ---
 
-## 3. Escreva seu `.aip`
+## 3. Escreva seu próprio `.aip`
 
 Toda spec v0.1 precisa de um bloco `app` primeiro, depois `entity` / `crud` / `validation` (Core). Veja [Sintaxe](/pt/syntax) e [examples/](https://github.com/eudameron/aiparlance/tree/main/examples).
 
@@ -87,7 +95,7 @@ node packages/cli/dist/cli.js emit sql my-app.aip
 ```
 
 <Note>
-Exemplos mais ricos (`crm-reference.aip`, `ops-reference.aip`) documentam Infra / Security / Behavior. O parser Core para nesses blocos com `unsupported_tier` até esses tiers existirem — isso é esperado. Use `minimal.aip` (ou specs só Core) para emit hoje.
+Exemplos mais ricos (`blog-crud.aip`, `crm-reference.aip`, `ops-reference.aip`, `inventory-crud.aip`) incluem Infra / Security / Behavior e **fazem parse + validate** com a toolchain v0.1 completa. Use `mysql-minimal.aip` para `aip emit mysql`.
 </Note>
 
 ---
@@ -116,15 +124,14 @@ npm run typecheck
 
 ---
 
-## 5. O que já existe vs o que é prévia
+## 5. O que envia vs o que é prévia
 
 | Status | Alvos |
 |---|---|
-| **Prévia** (no monorepo) | DDL PostgreSQL, OpenAPI 3, interfaces/guards TypeScript, structs/handlers Go |
-| **Planejado** | Emitters Go, MySQL, Python, PHP, Workers, Docs, Testes |
-| **Só ilustrativo** | [Playground](https://aiparlance.org) do site de marketing — não são os pacotes oficiais |
+| **Prévia** (no monorepo) | PostgreSQL, MySQL, OpenAPI 3, TypeScript, Go, Python, PHP, Workers, Docs, Testes |
+| **Só ilustrativo** | [Playground](https://aiparlance.org) do site — não são os pacotes oficiais |
 
-Leia mais: [Primeiros emitters](/pt/first-transpiler) · [Especificação § Matriz de transpiladores](/pt/specification#transpiler-matrix) · [ROADMAP](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md) · [CONTRIBUTING](https://github.com/eudameron/aiparlance/blob/main/CONTRIBUTING.md)
+Leia mais: [Primeiros emitters](/pt/first-transpiler) · [Walkthrough CRUD](/pt/crud-walkthrough) · [Especificação § Matriz de transpiladores](/pt/specification#transpiler-matrix) · [ROADMAP](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md) · [CONTRIBUTING](https://github.com/eudameron/aiparlance/blob/main/CONTRIBUTING.md)
 
 ---
 

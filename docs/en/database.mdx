@@ -13,11 +13,11 @@ description: Infra extensions for schema, migrations, and naming in AI Parlance
 
 | Database | Language (`app`) | Transpiler v0.1 |
 |---|---|---|
-| PostgreSQL | `postgres` | Preview (`aip emit sql` — Core DDL) |
-| MySQL | `mysql` | Planned |
+| PostgreSQL | `postgres` | Preview (`aip emit sql` — DDL, indexes, seeds) |
+| MySQL | `mysql` | Preview (`aip emit mysql`) |
 | SQLite, MariaDB, MongoDB, … | Roadmap | — |
 
-You can declare `database mysql` in the spec today; MySQL DDL generation is not shipped yet. PostgreSQL Core DDL: `aip emit sql` ([transpiler matrix](/en/specification#transpiler-matrix)).
+PostgreSQL: `aip emit sql`. MySQL: declare `database mysql` and run `aip emit mysql` (see [`examples/mysql-minimal.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/mysql-minimal.aip)). Matrix: [Specification § Transpiler matrix](/en/specification#transpiler-matrix).
 
 ```aip
 app CRM @0.1 {

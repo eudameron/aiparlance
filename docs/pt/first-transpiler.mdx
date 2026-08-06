@@ -1,30 +1,36 @@
 ---
 title: Primeiros emitters
-description: Os primeiros transpiladores oficiais do AI Parlance — PostgreSQL, OpenAPI e TypeScript
+description: Emitters oficiais do AI Parlance em Prévia — PostgreSQL até a matriz completa
 ---
 
 # Primeiros emitters
 
-A Phase C do roadmap entregou os **primeiros emitters oficiais** (transpiladores) do AI Parlance. Eles vivem no monorepo como alvos em Prévia — ainda não são pacotes no npm público, mas são pipelines reais AST Core → artefato que você roda com `aip emit`.
+A Phase C do roadmap entregou os **primeiros emitters oficiais** (transpiladores) do AI Parlance. Eles vivem no monorepo como alvos em Prévia — ainda não são pacotes no npm público, mas são pipelines reais AST → artefato que você roda com `aip emit`.
 
 ---
 
-## O que significa “primeiro transpiler” aqui
+## O que “primeiro transpiler” significa aqui
 
-Historicamente, o site de marketing tinha só um playground **ilustrativo**. A linguagem era só especificação.
+Historicamente, o site de marketing só tinha um playground **ilustrativo**. A linguagem era só especificação.
 
-Com a Phase C **M3–M5** e o follow-up **Go** pós-M6, o projeto publicou os primeiros **emitters de referência**:
+Com a Phase C **M3–M6** e o follow-up da matriz, o projeto publica **dez emitters em Prévia** a partir de um AST validado:
 
-| Ordem | Alvo | Pacote | CLI |
-|---|---|---|---|
-| 1º emit concreto | **DDL PostgreSQL** | `@aiparlance/sql` | `aip emit sql` |
-| 2º | **OpenAPI 3** | `@aiparlance/openapi` | `aip emit openapi` |
-| 3º | **TypeScript** | `@aiparlance/typescript` | `aip emit typescript` |
-| 4º (2º backend de app) | **Go** | `@aiparlance/go` | `aip emit go` |
+| Alvo | Pacote | CLI |
+|---|---|---|
+| **DDL PostgreSQL** | `@aiparlance/sql` | `aip emit sql` |
+| **OpenAPI 3** | `@aiparlance/openapi` | `aip emit openapi` |
+| **TypeScript** | `@aiparlance/typescript` | `aip emit typescript` |
+| **Go** | `@aiparlance/go` | `aip emit go` |
+| **DDL MySQL** | `@aiparlance/mysql` | `aip emit mysql` |
+| **Workers** | `@aiparlance/workers` | `aip emit workers` |
+| **Python** | `@aiparlance/python` | `aip emit python` |
+| **PHP** | `@aiparlance/php` | `aip emit php` |
+| **Docs** | `@aiparlance/docs` | `aip emit docs` |
+| **Testes** | `@aiparlance/tests` | `aip emit tests` |
 
-PostgreSQL foi o **primeiro** emitter porque a documentação o trata como dialeto SQL primário. OpenAPI e TypeScript fecharam a primeira onda multi-target; **Go** é o segundo emitter de backend de aplicação (structs, handlers finos, stubs de middleware de auth).
+PostgreSQL foi o **primeiro** emitter porque a documentação o trata como dialeto SQL primário. OpenAPI, TypeScript e Go fecharam a primeira onda multi-target; MySQL e o restante da matriz seguiram como MVPs em Prévia.
 
-Junto com `aip parse` e `aip validate`, isso é a **toolchain de referência** Core.
+Junto com `aip parse` e `aip validate` (Core + Infra + Security + Behavior), esta é a **toolchain de referência**.
 
 ---
 
@@ -34,10 +40,10 @@ Junto com `aip parse` e `aip validate`, isso é a **toolchain de referência** C
 fonte .aip
   → parse (AST)
   → validate (regras MUST)
-  → emit sql | openapi | typescript | go
+  → emit sql | openapi | typescript | go | mysql | workers | python | php | docs | tests
 ```
 
-Uma spec Core alimenta todos os emitters em Prévia. A nomenclatura (snake_case, FK `*_id`, tabelas no plural) permanece alinhada entre SQL, OpenAPI e tags `json` em Go.
+Uma spec validada alimenta todos os emitters em Prévia. A nomenclatura (snake_case, FK `*_id`, tabelas no plural) permanece alinhada entre dialetos SQL, OpenAPI e tags `json` em Go.
 
 ---
 
@@ -46,34 +52,19 @@ Uma spec Core alimenta todos os emitters em Prévia. A nomenclatura (snake_case,
 ### PostgreSQL (`aip emit sql`)
 
 - `CREATE EXTENSION IF NOT EXISTS pgcrypto`
-- `CREATE TABLE` por `entity` (`id` e timestamps implícitos; `deleted_at` com `soft_delete`)
-- Tipos, `UNIQUE` / `NOT NULL`, `CHECK`s de enum, FKs de `belongs_to`
-
-Golden: [`transpilers/sql/fixtures/minimal.sql`](https://github.com/eudameron/aiparlance/blob/main/transpilers/sql/fixtures/minimal.sql)
+- `CREATE TABLE` por `entity` (`id` implícito, timestamps; `deleted_at` com `soft_delete`)
+- Tipos, `UNIQUE` / `NOT NULL`, `CHECK` de enum, FKs `belongs_to`
+- `CREATE INDEX` a partir de `index`; `INSERT` a partir de `seed`
 
 ### OpenAPI 3 (`aip emit openapi`)
 
 - Schemas `Entity` / `EntityCreate` / `EntityUpdate`
-- Paths CRUD quando há `crud Entity`
-- `securitySchemes` opcional a partir de `app.auth`
+- Paths CRUD quando há `crud Entity` (respeita `api.prefix`)
+- `securitySchemes` opcionais a partir de `app.auth`
 
-Golden: [`transpilers/openapi/fixtures/minimal.openapi.json`](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/fixtures/minimal.openapi.json)
+### TypeScript / Go / MySQL / demais
 
-### TypeScript (`aip emit typescript`)
-
-- Interfaces `Entity` / `EntityCreate` / `EntityUpdate`
-- Type guards de runtime (`isEntity`, `isEntityCreate`) — sem deps de runtime
-- Helpers finos `entityPaths` quando há CRUD
-
-Golden: [`transpilers/typescript/fixtures/minimal.ts`](https://github.com/eudameron/aiparlance/blob/main/transpilers/typescript/fixtures/minimal.ts)
-
-### Go (`aip emit go`)
-
-- Structs `Entity` / `EntityCreate` / `EntityUpdate` com tags `json`
-- Handlers CRUD finos em `net/http` + helpers de path quando há `crud`
-- Stubs `AuthMiddleware` a partir de `app.auth` (Bearer / API key / cookie de sessão)
-
-Golden: [`transpilers/go/fixtures/minimal.go`](https://github.com/eudameron/aiparlance/blob/main/transpilers/go/fixtures/minimal.go)
+Interfaces + guards; structs + stubs `net/http`; DDL MySQL (`database mysql`); stubs de workers, Python, PHP, docs e testes — profundidade MVP em Prévia. Ver a [matriz de transpiladores](/pt/specification#transpiler-matrix).
 
 ---
 
@@ -87,25 +78,28 @@ node packages/cli/dist/cli.js emit sql examples/minimal.aip
 node packages/cli/dist/cli.js emit openapi examples/minimal.aip
 node packages/cli/dist/cli.js emit typescript examples/minimal.aip
 node packages/cli/dist/cli.js emit go examples/minimal.aip
+node packages/cli/dist/cli.js emit mysql examples/mysql-minimal.aip
+node packages/cli/dist/cli.js emit workers examples/ops-reference.aip
 ```
 
-Instruções completas de instalação e teste: [Começando](/pt/getting-started).
+Instalação completa e história CRUD: [Começando](/pt/getting-started) · [Walkthrough CRUD](/pt/crud-walkthrough).
 
 ---
 
 ## Limites honestos (Prévia v0.1)
 
-- A linguagem continua **rascunho**; os emitters cobrem o **Core** (`app`, `entity`, `crud`, `validation`, modifiers de campo).
-- Blocos Infra / Security / Behavior em examples ricos ainda não são totalmente parseados.
-- Sem lock-in Nest/Express/Chi — emits TypeScript e Go permanecem finos (stdlib / interfaces).
-- O playground do site continua **ilustrativo** e não deve ser confundido com esses pacotes.
+- A linguagem continua **rascunho**; a profundidade dos emitters varia por alvo.
+- Exemplos full-tier **fazem parse e validate**; nem todo detalhe de Behavior/Security já aparece em todos os emitters.
+- Sem lock-in Nest/Express/Chi — emits TypeScript e Go permanecem finos.
+- O playground do site continua **ilustrativo**.
 
-Status na matriz: [Especificação § Matriz de transpiladores](/pt/specification#transpiler-matrix). Próximo: profundidade de parse Infra/Security/Behavior.
+Status da matriz: [Especificação § Matriz de transpiladores](/pt/specification#transpiler-matrix).
 
 ---
 
-## Relacionados
+## Relacionado
 
 - [Começando](/pt/getting-started)
+- [Walkthrough CRUD](/pt/crud-walkthrough)
 - [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md)
 - [CONTRIBUTING.md](https://github.com/eudameron/aiparlance/blob/main/CONTRIBUTING.md)

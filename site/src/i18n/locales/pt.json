@@ -4,7 +4,7 @@
   "dir": "ltr",
   "siteName": "AI Parlance",
   "title": "AI Parlance — IR AI-first para geração de software",
-  "description": "Escreva specs .aip compactas. A toolchain de referência já faz parse, validação e emit de PostgreSQL, OpenAPI, TypeScript e Go. Clone o repo, rode aip emit, menos boilerplate.",
+  "description": "Escreva specs .aip compactas. A toolchain de referência já faz parse, validação e emit de PostgreSQL, MySQL, OpenAPI, TypeScript, Go e mais. Clone o repo, rode aip emit, menos boilerplate.",
   "nav": {
     "benefits": "Benefícios",
     "toolchain": "Emitters",
@@ -13,13 +13,13 @@
     "github": "GitHub"
   },
   "hero": {
-    "badge": "v0.1 · primeiros emitters",
+    "badge": "v0.1 · emitters em Prévia",
     "title": "Intenção primeiro.",
     "titleHighlight": "Código depois.",
-    "subtitle": "AI Parlance é uma representação intermediária AI-first. Humanos e LLMs escrevem .aip; emitters oficiais transformam specs Core em SQL, OpenAPI, TypeScript e Go.",
+    "subtitle": "AI Parlance é uma representação intermediária AI-first. Humanos e LLMs escrevem .aip; emitters oficiais transformam specs validadas em SQL, OpenAPI, TypeScript, Go e o restante da matriz.",
     "ctaDocs": "Começar",
-    "ctaTry": "Ver primeiros emitters",
-    "note": "CLI de referência no monorepo: aip parse · validate · emit sql|openapi|typescript|go. O playground abaixo é só ilustrativo."
+    "ctaTry": "Ver emitters",
+    "note": "CLI de referência no monorepo: aip parse · validate · emit sql|openapi|typescript|go|mysql|…. O playground abaixo é só ilustrativo."
   },
   "benefits": {
     "title": "Por que AI Parlance",
@@ -31,7 +31,7 @@
       },
       {
         "title": "Multi-target numa spec",
-        "body": "Um AST Core validado já alimenta PostgreSQL, OpenAPI, TypeScript e Go; outros alvos seguem a matriz."
+        "body": "Um AST validado alimenta PostgreSQL, MySQL, OpenAPI, TypeScript, Go e outros alvos em Prévia."
       },
       {
         "title": "Blocos de domínio integrados",
@@ -39,7 +39,7 @@
       },
       {
         "title": "Validar antes de gerar",
-        "body": "aip validate checa specs Core; aip emit gera artefatos em Prévia (SQL, OpenAPI, TypeScript, Go) para você revisar antes de publicar."
+        "body": "aip validate checa os tiers v0.1; aip emit gera artefatos em Prévia para você revisar antes de publicar."
       },
       {
         "title": "Gramática amigável a LLMs",
@@ -52,13 +52,13 @@
     ]
   },
   "toolchain": {
-    "title": "Primeiros emitters oficiais",
-    "subtitle": "A Phase C entregou os primeiros emitters de referência a partir de um AST Core compartilhado. PostgreSQL veio primeiro; OpenAPI, TypeScript e Go seguiram.",
+    "title": "Emitters oficiais em Prévia",
+    "subtitle": "Dez emitters de referência a partir de um AST compartilhado. PostgreSQL veio primeiro; a matriz seguiu.",
     "items": [
       {
         "name": "PostgreSQL",
         "badge": "1º",
-        "body": "DDL a partir de entities — tabelas, FKs, enums, soft delete. aip emit sql"
+        "body": "DDL, índices, seeds. aip emit sql"
       },
       {
         "name": "OpenAPI 3",
@@ -68,12 +68,42 @@
       {
         "name": "TypeScript",
         "badge": "Prévia",
-        "body": "Interfaces, type guards e paths finos. aip emit typescript"
+        "body": "Interfaces, guards e paths. aip emit typescript"
       },
       {
         "name": "Go",
         "badge": "Prévia",
-        "body": "Structs, stubs net/http, middleware de auth. aip emit go"
+        "body": "Structs, stubs net/http, auth. aip emit go"
+      },
+      {
+        "name": "MySQL",
+        "badge": "Prévia",
+        "body": "DDL para database mysql. aip emit mysql"
+      },
+      {
+        "name": "Workers",
+        "badge": "Prévia",
+        "body": "Stubs de jobs e filas. aip emit workers"
+      },
+      {
+        "name": "Python",
+        "badge": "Prévia",
+        "body": "Dataclasses MVP. aip emit python"
+      },
+      {
+        "name": "PHP",
+        "badge": "Prévia",
+        "body": "Classes MVP. aip emit php"
+      },
+      {
+        "name": "Docs",
+        "badge": "Prévia",
+        "body": "Referência API em Markdown. aip emit docs"
+      },
+      {
+        "name": "Testes",
+        "badge": "Prévia",
+        "body": "Fixtures CRUD. aip emit tests"
       }
     ],
     "cta": "Ler a história dos emitters",
@@ -81,7 +111,7 @@
   },
   "pipeline": {
     "title": "Como funciona",
-    "steps": ["Humano ou IA", "Spec .aip", "AST + validação", "Emitters", "SQL · OpenAPI · TS · Go"]
+    "steps": ["Humano ou IA", "Spec .aip", "AST + validação", "Emitters", "SQL · OpenAPI · TS · Go · …"]
   },
   "playground": {
     "title": "Demo ilustrativa",
@@ -98,55 +128,85 @@
     "outputLabel": "Saída gerada (prévia)",
     "generate": "Gerar",
     "reset": "Carregar exemplo",
-    "disclaimer": "Não são os emitters oficiais. Caminho oficial: npm ci && npm run build, depois node packages/cli/dist/cli.js emit sql|openapi|typescript|go examples/minimal.aip",
+    "disclaimer": "Não são os emitters oficiais. Caminho oficial: npm ci && npm run build, depois node packages/cli/dist/cli.js emit sql|openapi|typescript|go|mysql examples/…",
     "errorEmpty": "Informe a fonte .aip primeiro.",
     "errorParse": "Não foi possível interpretar a spec. Confira entity e crud."
   },
   "cta": {
     "title": "Experimente a toolchain de referência",
-    "body": "Clone o repositório, rode os testes e emita SQL, OpenAPI, TypeScript ou Go a partir de examples/minimal.aip.",
+    "body": "Clone o repositório, rode os testes e emita a partir de examples/minimal.aip ou do walkthrough CRUD do blog.",
     "button": "Guia Começando",
     "buttonSecondary": "Primeiros emitters"
   },
   "footer": {
-    "tagline": "IR AI-first · emitters em Prévia, incluindo Go.",
+    "tagline": "IR AI-first · 10 emitters em Prévia.",
     "docs": "Documentação",
     "gettingStarted": "Começando",
-    "emitters": "Primeiros emitters",
+    "emitters": "Emitters",
     "github": "Código no GitHub",
     "license": "Apache 2.0"
   },
   "emittersPage": {
-    "title": "AI Parlance — Primeiros emitters",
-    "description": "Emitters oficiais do AI Parlance: DDL PostgreSQL, OpenAPI 3, TypeScript e structs/handlers Go.",
+    "title": "AI Parlance — Emitters",
+    "description": "Emitters oficiais do AI Parlance em Prévia na matriz de transpiladores.",
     "badge": "Toolchain em Prévia",
     "heading": "Emitters oficiais",
-    "lead": "A toolchain de referência transforma .aip Core validado em artefatos concretos. PostgreSQL veio primeiro; OpenAPI, TypeScript e Go seguiram do mesmo AST.",
+    "lead": "A toolchain de referência transforma .aip validado em artefatos concretos. Dez alvos em Prévia compartilham um AST.",
     "back": "Voltar ao início",
     "sections": [
       {
         "title": "DDL PostgreSQL",
         "command": "aip emit sql",
-        "body": "Cria tabelas com id e timestamps implícitos, constraints unique/required, checks de enum e FKs belongs_to. Dialeto SQL primário na documentação."
+        "body": "Tabelas, FKs, enums, soft delete, índices e seeds. Dialeto SQL primário na documentação."
       },
       {
         "title": "OpenAPI 3",
         "command": "aip emit openapi",
-        "body": "Emite schemas Entity / Create / Update e paths CRUD. Schemes de segurança opcionais a partir de app.auth."
+        "body": "Schemas Entity / Create / Update e paths CRUD. Schemes de segurança opcionais a partir de app.auth."
       },
       {
         "title": "TypeScript",
         "command": "aip emit typescript",
-        "body": "Interfaces mais type guards sem dependência de runtime e helpers de path finos — sem lock-in Nest ou Express."
+        "body": "Interfaces mais type guards sem dependência de runtime e helpers de path finos."
       },
       {
         "title": "Go",
         "command": "aip emit go",
-        "body": "Structs, stubs CRUD em net/http e AuthMiddleware a partir de app.auth — só stdlib, sem lock-in Gin/Chi."
+        "body": "Structs, stubs CRUD em net/http e AuthMiddleware a partir de app.auth."
+      },
+      {
+        "title": "DDL MySQL",
+        "command": "aip emit mysql",
+        "body": "DDL no dialeto MySQL para specs com database mysql (ver examples/mysql-minimal.aip)."
+      },
+      {
+        "title": "Workers",
+        "command": "aip emit workers",
+        "body": "Stubs de jobs e filas a partir de blocos Behavior."
+      },
+      {
+        "title": "Python",
+        "command": "aip emit python",
+        "body": "Dataclasses MVP a partir de entities."
+      },
+      {
+        "title": "PHP",
+        "command": "aip emit php",
+        "body": "Classes MVP a partir de entities."
+      },
+      {
+        "title": "Docs",
+        "command": "aip emit docs",
+        "body": "Referência API em Markdown a partir da spec."
+      },
+      {
+        "title": "Testes",
+        "command": "aip emit tests",
+        "body": "Fixtures de teste orientadas a CRUD."
       }
     ],
     "tryTitle": "Experimente",
-    "tryBody": "Clone, instale, compile e emita a partir do exemplo mínimo.",
+    "tryBody": "Clone, instale, compile e emita a partir de examples/minimal.aip ou examples/blog-crud.aip.",
     "docsCta": "Começando completo",
     "storyCta": "Docs: primeiros emitters"
   }

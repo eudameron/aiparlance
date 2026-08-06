@@ -1,0 +1,160 @@
+---
+title: CRUD walkthrough
+description: Build a complete blog CRUD in .aip — entities, policies, API, seeds, and emit
+---
+
+# CRUD walkthrough
+
+End-to-end path from a multi-entity `.aip` to Preview artifacts. Canonical example: [`examples/blog-crud.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/blog-crud.aip).
+
+Related: [`inventory-crud.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/inventory-crud.aip) (stock moves + workers) · [`mysql-minimal.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/mysql-minimal.aip) (MySQL dialect).
+
+---
+
+## 1. App + auth
+
+```aip
+app Blog @0.1 {
+  database postgres
+  auth jwt
+}
+```
+
+---
+
+## 2. Entities and CRUD
+
+Define the graph, then declare `crud` for each resource you want as an HTTP resource:
+
+```aip
+entity Author {
+  timestamps
+  soft_delete
+  name: string required
+  email: email required unique
+  role: enum(admin, editor, writer) default(writer)
+}
+
+entity Post {
+  timestamps
+  soft_delete
+  title: string required
+  slug: string required unique
+  body: text required
+  status: enum(draft, published, archived) default(draft)
+  author: belongs_to Author
+}
+
+entity Comment {
+  timestamps
+  body: text required
+  post: belongs_to Post
+  author: belongs_to Author optional
+}
+
+crud Author
+crud Post
+crud Comment
+```
+
+---
+
+## 3. Validation, policy, index, API
+
+```aip
+validation Post {
+  title required
+  slug required unique
+  body required
+}
+
+policy Post {
+  create authenticated
+  read public
+  update owner_or_manager(Post.author)
+  delete role(admin)
+}
+
+index Post {
+  status
+  slug
+}
+
+api {
+  prefix "/v1"
+  format json
+  rate_limit 120/minute
+}
+```
+
+OpenAPI paths become `/v1/authors`, `/v1/posts`, `/v1/comments` (and `/{id}` variants).
+
+---
+
+## 4. Seed + light Behavior
+
+```aip
+seed Author {
+  name: "Site Admin"
+  email: "admin@blog.example.com"
+  role: admin
+}
+
+workflow PostPublished {
+  when Post.updated
+  notify(Post.author, "Post status may have changed")
+  emit PostStatusChanged {
+    post: Post
+    author: Post.author
+  }
+}
+
+event PostStatusChanged {
+  post: Post
+  author: Author
+}
+```
+
+---
+
+## 5. Validate and emit
+
+```bash
+npm ci && npm run build
+
+node packages/cli/dist/cli.js validate examples/blog-crud.aip
+
+node packages/cli/dist/cli.js emit sql examples/blog-crud.aip
+node packages/cli/dist/cli.js emit openapi examples/blog-crud.aip
+node packages/cli/dist/cli.js emit typescript examples/blog-crud.aip
+node packages/cli/dist/cli.js emit go examples/blog-crud.aip
+node packages/cli/dist/cli.js emit tests examples/blog-crud.aip
+node packages/cli/dist/cli.js emit docs examples/blog-crud.aip
+```
+
+Expect PostgreSQL tables for authors/posts/comments, indexes, a seed `INSERT`, and OpenAPI CRUD under `/v1`.
+
+For MySQL:
+
+```bash
+node packages/cli/dist/cli.js emit mysql examples/mysql-minimal.aip
+```
+
+For jobs/queues (inventory example):
+
+```bash
+node packages/cli/dist/cli.js emit workers examples/inventory-crud.aip
+```
+
+---
+
+## Checklist
+
+- [ ] One `app` with `database` (+ `auth` if needed)
+- [ ] Entities with relations + `crud` per resource
+- [ ] `validation` / `policy` / `index` / `api` as needed
+- [ ] Optional `seed`, `workflow`, `event`
+- [ ] `aip validate` green before emit
+- [ ] Review Preview artifacts before shipping
+
+Next: [Getting started](/en/getting-started) · [First emitters](/en/first-transpiler) · [Security](/en/security) · [Workflows](/en/workflows)

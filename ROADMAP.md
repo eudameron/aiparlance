@@ -241,6 +241,8 @@ Beta syntax may change between v0.x minors; keep emitters tolerant or version-ga
 | Doc | Role |
 |---|---|
 | [Introduction](https://docs.aiparlance.org/en/introduction) | Pipeline + draft-language / toolchain note |
+| [Getting started](https://docs.aiparlance.org/en/getting-started) | Install, CLI, emit matrix |
+| [CRUD walkthrough](https://docs.aiparlance.org/en/crud-walkthrough) | Complete blog CRUD → emit |
 | [Specification](https://docs.aiparlance.org/en/specification) | Grammar summary, validation MUST, matrix, stability |
 | [Syntax](https://docs.aiparlance.org/en/syntax) | Core + Infra blocks |
 | [Database](https://docs.aiparlance.org/en/database) | PostgreSQL primary, naming, seed |

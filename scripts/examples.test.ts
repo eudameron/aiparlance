@@ -81,4 +81,18 @@ describe("examples (CI)", () => {
     expect(spec.paths["/v1/users"]).toBeDefined();
     expect(spec.paths["/v1/leads"]).toBeDefined();
   });
+
+  it("emits full blog CRUD OpenAPI under /v1", () => {
+    const rel = "examples/blog-crud.aip";
+    const doc = parse(readFileSync(join(examplesDir, "blog-crud.aip"), "utf8"), rel);
+    expect(validate(doc).ok).toBe(true);
+    const sql = emitSql(doc);
+    expect(sql).toContain("CREATE TABLE posts");
+    expect(sql).toContain("INSERT INTO authors");
+    expect(sql).toContain("CREATE INDEX");
+    const spec = JSON.parse(emitOpenApi(doc));
+    expect(spec.paths["/v1/authors"]).toBeDefined();
+    expect(spec.paths["/v1/posts"]).toBeDefined();
+    expect(spec.paths["/v1/comments"]).toBeDefined();
+  });
 });

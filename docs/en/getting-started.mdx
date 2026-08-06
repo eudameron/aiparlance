@@ -1,6 +1,6 @@
 ---
 title: Getting started
-description: Install the reference toolchain, validate .aip specs, and emit SQL, OpenAPI, and TypeScript
+description: Install the reference toolchain, validate .aip specs, and emit SQL, OpenAPI, TypeScript, Go, and the full Preview matrix
 ---
 
 # Getting started
@@ -20,7 +20,7 @@ npm ci
 npm run build
 ```
 
-This builds `@aiparlance/parser`, `validator`, `cli`, and the emitters (`sql`, `openapi`, `typescript`).
+This builds `@aiparlance/parser`, `validator`, `cli`, and the Preview emitters (`sql`, `openapi`, `typescript`, `go`, `mysql`, `workers`, `python`, `php`, `docs`, `tests`).
 
 ---
 
@@ -34,12 +34,18 @@ node packages/cli/dist/cli.js --help
 
 | Command | What it does |
 |---|---|
-| `aip parse <file.aip>` | Print the Core AST as JSON |
-| `aip validate <file.aip>` | Semantic checks (MUST rules) |
-| `aip emit sql <file.aip>` | PostgreSQL DDL |
+| `aip parse <file.aip>` | Print the AST as JSON |
+| `aip validate <file.aip>` | Semantic checks (MUST rules) — Core + Infra + Security + Behavior |
+| `aip emit sql <file.aip>` | PostgreSQL DDL (+ indexes / seeds when present) |
 | `aip emit openapi <file.aip>` | OpenAPI 3.0.3 JSON |
 | `aip emit typescript <file.aip>` | TypeScript interfaces + type guards |
 | `aip emit go <file.aip>` | Go structs + thin handlers + auth middleware |
+| `aip emit mysql <file.aip>` | MySQL DDL (`database mysql`) |
+| `aip emit workers <file.aip>` | Jobs / queues stubs |
+| `aip emit python <file.aip>` | Python dataclasses |
+| `aip emit php <file.aip>` | PHP classes |
+| `aip emit docs <file.aip>` | Markdown API reference |
+| `aip emit tests <file.aip>` | CRUD test fixtures |
 
 ### Try the minimal example
 
@@ -59,6 +65,8 @@ node packages/cli/dist/cli.js emit openapi examples/minimal.aip > /tmp/minimal.o
 node packages/cli/dist/cli.js emit typescript examples/minimal.aip > /tmp/minimal.ts
 node packages/cli/dist/cli.js emit go examples/minimal.aip > /tmp/minimal.go
 ```
+
+Full CRUD walkthrough (entities, policies, API, seeds, emit): [CRUD walkthrough](/en/crud-walkthrough).
 
 ---
 
@@ -87,7 +95,7 @@ node packages/cli/dist/cli.js emit sql my-app.aip
 ```
 
 <Note>
-Richer examples (`crm-reference.aip`, `ops-reference.aip`) document Infra / Security / Behavior. The Core parser stops at those blocks with `unsupported_tier` until those tiers ship — that is expected. Use `minimal.aip` (or Core-only specs) for emit today.
+Richer examples (`blog-crud.aip`, `crm-reference.aip`, `ops-reference.aip`, `inventory-crud.aip`) include Infra / Security / Behavior and **parse + validate** with the full v0.1 toolchain. Use `mysql-minimal.aip` for `aip emit mysql`.
 </Note>
 
 ---
@@ -120,11 +128,10 @@ npm run typecheck
 
 | Status | Targets |
 |---|---|
-| **Preview** (in monorepo) | PostgreSQL DDL, OpenAPI 3, TypeScript interfaces/guards, Go structs/handlers |
-| **Planned** | Go, MySQL, Python, PHP, Workers, Docs, Tests emitters |
+| **Preview** (in monorepo) | PostgreSQL, MySQL, OpenAPI 3, TypeScript, Go, Python, PHP, Workers, Docs, Tests |
 | **Illustrative only** | Marketing site [playground](https://aiparlance.org) — not the official packages |
 
-Read more: [First emitters](/en/first-transpiler) · [Specification § Transpiler matrix](/en/specification#transpiler-matrix) · [ROADMAP](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md) · [CONTRIBUTING](https://github.com/eudameron/aiparlance/blob/main/CONTRIBUTING.md)
+Read more: [First emitters](/en/first-transpiler) · [CRUD walkthrough](/en/crud-walkthrough) · [Specification § Transpiler matrix](/en/specification#transpiler-matrix) · [ROADMAP](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md) · [CONTRIBUTING](https://github.com/eudameron/aiparlance/blob/main/CONTRIBUTING.md)
 
 ---
 
