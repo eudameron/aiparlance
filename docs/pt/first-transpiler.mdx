@@ -13,17 +13,18 @@ A Phase C do roadmap entregou os **primeiros emitters oficiais** (transpiladores
 
 Historicamente, o site de marketing tinha só um playground **ilustrativo**. A linguagem era só especificação.
 
-Com a Phase C **M3–M5**, o projeto publicou os primeiros **emitters de referência**:
+Com a Phase C **M3–M5** e o follow-up **Go** pós-M6, o projeto publicou os primeiros **emitters de referência**:
 
 | Ordem | Alvo | Pacote | CLI |
 |---|---|---|---|
 | 1º emit concreto | **DDL PostgreSQL** | `@aiparlance/sql` | `aip emit sql` |
 | 2º | **OpenAPI 3** | `@aiparlance/openapi` | `aip emit openapi` |
 | 3º | **TypeScript** | `@aiparlance/typescript` | `aip emit typescript` |
+| 4º (2º backend de app) | **Go** | `@aiparlance/go` | `aip emit go` |
 
-PostgreSQL foi o **primeiro** emitter porque a documentação o trata como dialeto SQL primário. OpenAPI e TypeScript fecham a primeira onda multi-target a partir do mesmo AST validado.
+PostgreSQL foi o **primeiro** emitter porque a documentação o trata como dialeto SQL primário. OpenAPI e TypeScript fecharam a primeira onda multi-target; **Go** é o segundo emitter de backend de aplicação (structs, handlers finos, stubs de middleware de auth).
 
-Junto com `aip parse` e `aip validate`, isso é a **toolchain de referência** Core (Phase C **M0–M6**).
+Junto com `aip parse` e `aip validate`, isso é a **toolchain de referência** Core.
 
 ---
 
@@ -33,10 +34,10 @@ Junto com `aip parse` e `aip validate`, isso é a **toolchain de referência** C
 fonte .aip
   → parse (AST)
   → validate (regras MUST)
-  → emit sql | openapi | typescript
+  → emit sql | openapi | typescript | go
 ```
 
-Uma spec Core alimenta os três emitters em Prévia. A nomenclatura (snake_case, FK `*_id`, tabelas no plural) permanece alinhada entre SQL e OpenAPI.
+Uma spec Core alimenta todos os emitters em Prévia. A nomenclatura (snake_case, FK `*_id`, tabelas no plural) permanece alinhada entre SQL, OpenAPI e tags `json` em Go.
 
 ---
 
@@ -66,6 +67,14 @@ Golden: [`transpilers/openapi/fixtures/minimal.openapi.json`](https://github.com
 
 Golden: [`transpilers/typescript/fixtures/minimal.ts`](https://github.com/eudameron/aiparlance/blob/main/transpilers/typescript/fixtures/minimal.ts)
 
+### Go (`aip emit go`)
+
+- Structs `Entity` / `EntityCreate` / `EntityUpdate` com tags `json`
+- Handlers CRUD finos em `net/http` + helpers de path quando há `crud`
+- Stubs `AuthMiddleware` a partir de `app.auth` (Bearer / API key / cookie de sessão)
+
+Golden: [`transpilers/go/fixtures/minimal.go`](https://github.com/eudameron/aiparlance/blob/main/transpilers/go/fixtures/minimal.go)
+
 ---
 
 ## Experimente em um minuto
@@ -77,6 +86,7 @@ cd aiparlance && npm ci && npm run build
 node packages/cli/dist/cli.js emit sql examples/minimal.aip
 node packages/cli/dist/cli.js emit openapi examples/minimal.aip
 node packages/cli/dist/cli.js emit typescript examples/minimal.aip
+node packages/cli/dist/cli.js emit go examples/minimal.aip
 ```
 
 Instruções completas de instalação e teste: [Começando](/pt/getting-started).
@@ -87,10 +97,10 @@ Instruções completas de instalação e teste: [Começando](/pt/getting-started
 
 - A linguagem continua **rascunho**; os emitters cobrem o **Core** (`app`, `entity`, `crud`, `validation`, modifiers de campo).
 - Blocos Infra / Security / Behavior em examples ricos ainda não são totalmente parseados.
-- Sem lock-in Nest/Express — o emit TypeScript permanece fino (interfaces + guards + paths).
+- Sem lock-in Nest/Express/Chi — emits TypeScript e Go permanecem finos (stdlib / interfaces).
 - O playground do site continua **ilustrativo** e não deve ser confundido com esses pacotes.
 
-Status na matriz: [Especificação § Matriz de transpiladores](/pt/specification#transpiler-matrix). Próximo item no roadmap: **Go**.
+Status na matriz: [Especificação § Matriz de transpiladores](/pt/specification#transpiler-matrix). Próximo: profundidade de parse Infra/Security/Behavior.
 
 ---
 

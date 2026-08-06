@@ -6,6 +6,7 @@
     { "path": "packages/cli" },
     { "path": "transpilers/sql" },
     { "path": "transpilers/openapi" },
-    { "path": "transpilers/typescript" }
+    { "path": "transpilers/typescript" },
+    { "path": "transpilers/go" }
   ]
 }

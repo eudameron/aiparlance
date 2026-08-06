@@ -1,12 +1,9 @@
 {
-  "name": "@aiparlance/cli",
+  "name": "@aiparlance/go",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "AI Parlance CLI — aip parse | validate | emit",
-  "bin": {
-    "aip": "./dist/cli.js"
-  },
+  "description": "AI Parlance → Go structs/handlers/JWT middleware (follow-up after M5)",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -22,10 +19,7 @@
   },
   "dependencies": {
     "@aiparlance/parser": "0.0.0",
-    "@aiparlance/validator": "0.0.0",
     "@aiparlance/sql": "0.0.0",
-    "@aiparlance/openapi": "0.0.0",
-    "@aiparlance/typescript": "0.0.0",
-    "@aiparlance/go": "0.0.0"
+    "@aiparlance/validator": "0.0.0"
   }
 }

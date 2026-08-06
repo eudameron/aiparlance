@@ -10,9 +10,10 @@ import {
   emitTypeScript,
   EmitTypeScriptError,
 } from "@aiparlance/typescript";
+import { emitGo, EmitGoError } from "@aiparlance/go";
 
 /**
- * AI Parlance CLI — Phase C
+ * AI Parlance CLI — Phase C + follow-ups
  */
 
 export const HELP = `aip — AI Parlance CLI
@@ -23,8 +24,9 @@ Usage:
   aip emit sql <file.aip>              Emit PostgreSQL DDL (M3)
   aip emit openapi <file.aip>          Emit OpenAPI 3 JSON (M4)
   aip emit typescript <file.aip>       Emit TypeScript interfaces/guards (M5)
+  aip emit go <file.aip>               Emit Go structs/handlers (follow-up)
 
-Status: Phase C / M6 — parse, validate, emit sql|openapi|typescript; examples CI green.
+Status: Preview emitters — sql|openapi|typescript|go.
 Roadmap: https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md
 `;
 
@@ -94,12 +96,13 @@ function cmdValidate(args: string[]): number {
 function cmdEmit(args: string[]): number {
   if (args.length < 1) {
     process.stderr.write(
-      "aip: usage: aip emit <sql|openapi|typescript> <file.aip>\n"
+      "aip: usage: aip emit <sql|openapi|typescript|go> <file.aip>\n"
     );
     return 1;
   }
   const target = args[0]!;
-  if (target !== "sql" && target !== "openapi" && target !== "typescript") {
+  const supported = new Set(["sql", "openapi", "typescript", "go"]);
+  if (!supported.has(target)) {
     process.stderr.write(
       `aip: emit '${target}' is not implemented yet (see ROADMAP.md)\n`
     );
@@ -119,7 +122,9 @@ function cmdEmit(args: string[]): number {
         ? emitSql(doc)
         : target === "openapi"
           ? emitOpenApi(doc)
-          : emitTypeScript(doc);
+          : target === "typescript"
+            ? emitTypeScript(doc)
+            : emitGo(doc);
     process.stdout.write(out);
     if (!out.endsWith("\n")) process.stdout.write("\n");
     return 0;
@@ -127,7 +132,8 @@ function cmdEmit(args: string[]): number {
     if (
       e instanceof EmitSqlError ||
       e instanceof EmitOpenApiError ||
-      e instanceof EmitTypeScriptError
+      e instanceof EmitTypeScriptError ||
+      e instanceof EmitGoError
     ) {
       process.stderr.write(`aip: ${e.message}\n`);
       return 1;

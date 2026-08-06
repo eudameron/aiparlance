@@ -6,7 +6,7 @@
 
 AI-first intermediate representation (IR) for AI-assisted software generation.
 
-**Reference toolchain (Preview):** clone the repo and run `aip parse` / `validate` / `emit sql|openapi|typescript`. See [Getting started](https://docs.aiparlance.org/en/getting-started) and [First emitters](https://docs.aiparlance.org/en/first-transpiler).
+**Reference toolchain (Preview):** clone the repo and run `aip parse` / `validate` / `emit sql|openapi|typescript|go`. See [Getting started](https://docs.aiparlance.org/en/getting-started) and [First emitters](https://docs.aiparlance.org/en/first-transpiler).
 
 ## Repository layout
 
@@ -48,6 +48,7 @@ node packages/cli/dist/cli.js validate examples/minimal.aip
 node packages/cli/dist/cli.js emit sql examples/minimal.aip
 node packages/cli/dist/cli.js emit openapi examples/minimal.aip
 node packages/cli/dist/cli.js emit typescript examples/minimal.aip
+node packages/cli/dist/cli.js emit go examples/minimal.aip
 ```
 
 See [ROADMAP.md](ROADMAP.md) (Phase C **M6** complete) and [CONTRIBUTING.md](CONTRIBUTING.md).

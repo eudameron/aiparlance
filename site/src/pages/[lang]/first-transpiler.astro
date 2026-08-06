@@ -48,7 +48,8 @@ const p = t.emittersPage;
 cd aiparlance && npm ci && npm run build
 node packages/cli/dist/cli.js emit sql examples/minimal.aip
 node packages/cli/dist/cli.js emit openapi examples/minimal.aip
-node packages/cli/dist/cli.js emit typescript examples/minimal.aip`}</code></pre>
+node packages/cli/dist/cli.js emit typescript examples/minimal.aip
+node packages/cli/dist/cli.js emit go examples/minimal.aip`}</code></pre>
         <div class="actions">
           <a
             class="btn btn-primary"
@@ -110,7 +111,7 @@ node packages/cli/dist/cli.js emit typescript examples/minimal.aip`}</code></pre
   }
   @media (min-width: 900px) {
     .emitters-list {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
     }
   }
   .emitters-block {

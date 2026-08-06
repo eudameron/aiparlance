@@ -1,5 +1,17 @@
-# Go transpiler
+# @aiparlance/go
 
-Second application backend (structs, handlers, JWT middleware).
+Go structs + thin `net/http` handlers + auth middleware stubs (second application backend).
 
-**Not scaffolded in M0** — follows TypeScript emitter (see [`ROADMAP.md`](../../ROADMAP.md) follow-ups).
+```bash
+node packages/cli/dist/cli.js emit go examples/minimal.aip
+```
+
+Emits per entity:
+
+- `Entity` / `EntityCreate` / `EntityUpdate` structs (`json` tags, snake_case)
+- CRUD path constants + handler stubs (`List` / `Create` / `Get` / `Update` / `Delete`) when `crud` is declared
+- `AuthMiddleware` when `app.auth` is present (`jwt` / `oauth` / `api_key` / `session`)
+
+Stdlib only — no Gin/Chi/Echo lock-in.
+
+Status: **Preview** (post–Phase C follow-up).

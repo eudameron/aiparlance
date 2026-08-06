@@ -4,7 +4,7 @@
   "dir": "ltr",
   "siteName": "AI Parlance",
   "title": "AI Parlance — AI-first IR for software generation",
-  "description": "Write compact .aip specs. The reference toolchain parses, validates, and emits PostgreSQL, OpenAPI, and TypeScript today. Clone the repo, run aip emit, less boilerplate.",
+  "description": "Write compact .aip specs. The reference toolchain parses, validates, and emits PostgreSQL, OpenAPI, TypeScript, and Go today. Clone the repo, run aip emit, less boilerplate.",
   "nav": {
     "benefits": "Benefits",
     "toolchain": "Emitters",
@@ -16,10 +16,10 @@
     "badge": "v0.1 · first emitters shipped",
     "title": "Intent first.",
     "titleHighlight": "Code follows.",
-    "subtitle": "AI Parlance is an AI-first intermediate representation. Humans and LLMs write .aip; official emitters turn Core specs into SQL, OpenAPI, and TypeScript.",
+    "subtitle": "AI Parlance is an AI-first intermediate representation. Humans and LLMs write .aip; official emitters turn Core specs into SQL, OpenAPI, TypeScript, and Go.",
     "ctaDocs": "Get started",
     "ctaTry": "See first emitters",
-    "note": "Reference CLI in the monorepo: aip parse · validate · emit sql|openapi|typescript. Site playground below is illustrative only."
+    "note": "Reference CLI in the monorepo: aip parse · validate · emit sql|openapi|typescript|go. Site playground below is illustrative only."
   },
   "benefits": {
     "title": "Why AI Parlance",
@@ -31,7 +31,7 @@
       },
       {
         "title": "Multi-target from one spec",
-        "body": "One validated Core AST already feeds PostgreSQL, OpenAPI, and TypeScript; more targets follow the matrix."
+        "body": "One validated Core AST already feeds PostgreSQL, OpenAPI, TypeScript, and Go; more targets follow the matrix."
       },
       {
         "title": "Built-in domain blocks",
@@ -39,7 +39,7 @@
       },
       {
         "title": "Validate before generate",
-        "body": "aip validate checks Core specs; aip emit produces Preview artifacts you can review before shipping."
+        "body": "aip validate checks Core specs; aip emit produces Preview artifacts (SQL, OpenAPI, TypeScript, Go) you can review before shipping."
       },
       {
         "title": "LLM-friendly grammar",
@@ -53,7 +53,7 @@
   },
   "toolchain": {
     "title": "First official emitters",
-    "subtitle": "Phase C shipped the first reference transpilers from a shared Core AST. PostgreSQL was first; OpenAPI and TypeScript completed the wave.",
+    "subtitle": "Phase C shipped the first reference emitters from a shared Core AST. PostgreSQL was first; OpenAPI, TypeScript, and Go followed.",
     "items": [
       {
         "name": "PostgreSQL",
@@ -69,6 +69,11 @@
         "name": "TypeScript",
         "badge": "Preview",
         "body": "Interfaces, type guards, thin path helpers. aip emit typescript"
+      },
+      {
+        "name": "Go",
+        "badge": "Preview",
+        "body": "Structs, net/http stubs, auth middleware. aip emit go"
       }
     ],
     "cta": "Read the emitters story",
@@ -76,7 +81,7 @@
   },
   "pipeline": {
     "title": "How it works",
-    "steps": ["Human or AI", ".aip spec", "AST + validation", "Emitters", "SQL · OpenAPI · TypeScript"]
+    "steps": ["Human or AI", ".aip spec", "AST + validation", "Emitters", "SQL · OpenAPI · TS · Go"]
   },
   "playground": {
     "title": "Illustrative demo",
@@ -93,18 +98,18 @@
     "outputLabel": "Generated output (preview)",
     "generate": "Generate",
     "reset": "Load example",
-    "disclaimer": "Not the official emitters. Official path: npm ci && npm run build, then node packages/cli/dist/cli.js emit sql|openapi|typescript examples/minimal.aip",
+    "disclaimer": "Not the official emitters. Official path: npm ci && npm run build, then node packages/cli/dist/cli.js emit sql|openapi|typescript|go examples/minimal.aip",
     "errorEmpty": "Enter .aip source first.",
     "errorParse": "Could not parse spec. Check entity and crud blocks."
   },
   "cta": {
     "title": "Try the reference toolchain",
-    "body": "Clone the repo, run the test suite, and emit SQL, OpenAPI, or TypeScript from examples/minimal.aip.",
+    "body": "Clone the repo, run the test suite, and emit SQL, OpenAPI, TypeScript, or Go from examples/minimal.aip.",
     "button": "Getting started guide",
     "buttonSecondary": "First emitters"
   },
   "footer": {
-    "tagline": "AI-first IR · first emitters in Preview.",
+    "tagline": "AI-first IR · Preview emitters including Go.",
     "docs": "Documentation",
     "gettingStarted": "Getting started",
     "emitters": "First emitters",
@@ -113,10 +118,10 @@
   },
   "emittersPage": {
     "title": "AI Parlance — First emitters",
-    "description": "The first official AI Parlance transpilers: PostgreSQL DDL, OpenAPI 3, and TypeScript interfaces and guards.",
-    "badge": "Phase C · M3–M5",
-    "heading": "First official emitters",
-    "lead": "The reference toolchain turns validated Core .aip into concrete artifacts. PostgreSQL was the first emitter; OpenAPI and TypeScript followed from the same AST.",
+    "description": "Official AI Parlance emitters: PostgreSQL DDL, OpenAPI 3, TypeScript, and Go structs/handlers.",
+    "badge": "Preview toolchain",
+    "heading": "Official emitters",
+    "lead": "The reference toolchain turns validated Core .aip into concrete artifacts. PostgreSQL was first; OpenAPI, TypeScript, and Go followed from the same AST.",
     "back": "Back to home",
     "sections": [
       {
@@ -133,6 +138,11 @@
         "title": "TypeScript",
         "command": "aip emit typescript",
         "body": "Interfaces plus zero-dependency type guards and thin path helpers — no Nest or Express lock-in."
+      },
+      {
+        "title": "Go",
+        "command": "aip emit go",
+        "body": "Structs, thin net/http CRUD stubs, and AuthMiddleware from app.auth — stdlib only, no Gin/Chi lock-in."
       }
     ],
     "tryTitle": "Try it",

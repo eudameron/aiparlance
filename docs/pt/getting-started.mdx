@@ -39,6 +39,7 @@ node packages/cli/dist/cli.js --help
 | `aip emit sql <file.aip>` | DDL PostgreSQL |
 | `aip emit openapi <file.aip>` | OpenAPI 3.0.3 JSON |
 | `aip emit typescript <file.aip>` | Interfaces TypeScript + type guards |
+| `aip emit go <file.aip>` | Structs Go + handlers finos + middleware de auth |
 
 ### Experimente o exemplo mínimo
 
@@ -47,6 +48,7 @@ node packages/cli/dist/cli.js validate examples/minimal.aip
 node packages/cli/dist/cli.js emit sql examples/minimal.aip
 node packages/cli/dist/cli.js emit openapi examples/minimal.aip
 node packages/cli/dist/cli.js emit typescript examples/minimal.aip
+node packages/cli/dist/cli.js emit go examples/minimal.aip
 ```
 
 Gravar em arquivo:
@@ -55,6 +57,7 @@ Gravar em arquivo:
 node packages/cli/dist/cli.js emit sql examples/minimal.aip > /tmp/minimal.sql
 node packages/cli/dist/cli.js emit openapi examples/minimal.aip > /tmp/minimal.openapi.json
 node packages/cli/dist/cli.js emit typescript examples/minimal.aip > /tmp/minimal.ts
+node packages/cli/dist/cli.js emit go examples/minimal.aip > /tmp/minimal.go
 ```
 
 ---
@@ -117,7 +120,7 @@ npm run typecheck
 
 | Status | Alvos |
 |---|---|
-| **Prévia** (no monorepo) | DDL PostgreSQL, OpenAPI 3, interfaces/guards TypeScript |
+| **Prévia** (no monorepo) | DDL PostgreSQL, OpenAPI 3, interfaces/guards TypeScript, structs/handlers Go |
 | **Planejado** | Emitters Go, MySQL, Python, PHP, Workers, Docs, Testes |
 | **Só ilustrativo** | [Playground](https://aiparlance.org) do site de marketing — não são os pacotes oficiais |
 

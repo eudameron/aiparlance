@@ -8,7 +8,7 @@ This roadmap tracked turning AI Parlance from **specification-only** into a **re
 - Transpiler matrix: PostgreSQL, OpenAPI, TypeScript **Preview**; others Planned ([Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix))
 - PostgreSQL is the **primary** SQL target ([Database](https://docs.aiparlance.org/en/database))
 
-**Status today:** Phase C **M6 complete** — Core reference toolchain ships (`aip parse` / `validate` / `emit sql|openapi|typescript`), CI covers examples + emit goldens, docs/matrix/CONTRIBUTING reflect preview status. The marketing playground remains **illustrative only**. Follow-ups: Go emitter, Infra/Security/Behavior parse depth.
+**Status today:** Core reference toolchain + **Go** emitter ship (`aip parse` / `validate` / `emit sql|openapi|typescript|go`). Next follow-ups: Infra/Security/Behavior parse depth, then Workers / MySQL / … The marketing playground remains **illustrative only**.
 
 The overall language remains **draft** until this reference toolchain ships (per Specification).
 
@@ -195,11 +195,9 @@ Per matrix: **interfaces, guards**. Per Security multi-target notes: guards/deco
 
 ## Follow-ups (after M6)
 
-Ordered to match the matrix and docs, not parallel day-one work:
-
 | Order | Target | Notes |
 |---|---|---|
-| 1 | **Go** | Second application backend (structs, handlers, JWT) |
+| 1 | **Go** | ✅ Preview — `@aiparlance/go` · `aip emit go` (structs, handlers, auth middleware stubs) |
 | 2 | Expand Security + Behavior parse/validate | Needed for CRM/ops full fidelity |
 | 3 | Workers | From `workflow` / `job` / `queue` (Behavior beta) |
 | 4 | MySQL | Same IR as PostgreSQL; secondary dialect |

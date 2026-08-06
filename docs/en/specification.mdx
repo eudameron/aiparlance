@@ -66,7 +66,7 @@ Go, SQL, OpenAPI, workers, …
 
 `.aip` is the source; the AST is internal. Agents and humans edit `.aip`, not the AST directly.
 
-**Toolchain (v0.1):** Core **parser**, **validator**, **PostgreSQL DDL**, **OpenAPI 3**, and **TypeScript** emitters are in the monorepo (`aip parse` / `aip validate` / `aip emit sql|openapi|typescript`). Other matrix emitters are not published yet. This document is the normative prose source; see [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf) and [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
+**Toolchain (v0.1):** Core **parser**, **validator**, **PostgreSQL DDL**, **OpenAPI 3**, **TypeScript**, and **Go** emitters are in the monorepo (`aip parse` / `aip validate` / `aip emit sql|openapi|typescript|go`). Other matrix emitters are not published yet. This document is the normative prose source; see [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf) and [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
 
 ---
 
@@ -243,7 +243,7 @@ The semantic validator must reject:
 |---|---|---|
 | PostgreSQL | DDL, indexes (Core entities) | Preview (`aip emit sql`) |
 | MySQL | DDL, migrations | Planned (same `database mysql` in `app`; no emitter yet) |
-| Go | structs, handlers, JWT middleware | Planned |
+| Go | structs, handlers, JWT middleware | Preview (`aip emit go`) |
 | TypeScript | interfaces, guards | Preview (`aip emit typescript`) |
 | Python | models, decorators | Planned |
 | PHP | classes, policies | Planned |

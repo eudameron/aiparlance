@@ -57,7 +57,12 @@ const { locale, t } = Astro.props;
   }
   @media (min-width: 768px) {
     .toolchain-grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .toolchain-grid {
+      grid-template-columns: repeat(4, 1fr);
     }
   }
   .toolchain-card {

@@ -7,6 +7,7 @@ import { formatDiagnostic, validate } from "@aiparlance/validator";
 import { emitSql } from "@aiparlance/sql";
 import { emitOpenApi } from "@aiparlance/openapi";
 import { emitTypeScript } from "@aiparlance/typescript";
+import { emitGo } from "@aiparlance/go";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const examplesDir = join(root, "examples");
@@ -60,7 +61,7 @@ describe("examples (M6 CI)", () => {
     });
   }
 
-  it("emits SQL / OpenAPI / TypeScript goldens for minimal.aip", () => {
+  it("emits SQL / OpenAPI / TypeScript / Go goldens for minimal.aip", () => {
     const rel = "examples/minimal.aip";
     const source = readFileSync(join(examplesDir, "minimal.aip"), "utf8");
     const doc = parse(source, rel);
@@ -80,6 +81,9 @@ describe("examples (M6 CI)", () => {
         join(root, "transpilers/typescript/fixtures/minimal.ts"),
         "utf8"
       )
+    );
+    expect(emitGo(doc)).toBe(
+      readFileSync(join(root, "transpilers/go/fixtures/minimal.go"), "utf8")
     );
   });
 });

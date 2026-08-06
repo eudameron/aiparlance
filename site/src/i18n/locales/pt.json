@@ -4,7 +4,7 @@
   "dir": "ltr",
   "siteName": "AI Parlance",
   "title": "AI Parlance — IR AI-first para geração de software",
-  "description": "Escreva specs .aip compactas. A toolchain de referência já faz parse, validação e emit de PostgreSQL, OpenAPI e TypeScript. Clone o repo, rode aip emit, menos boilerplate.",
+  "description": "Escreva specs .aip compactas. A toolchain de referência já faz parse, validação e emit de PostgreSQL, OpenAPI, TypeScript e Go. Clone o repo, rode aip emit, menos boilerplate.",
   "nav": {
     "benefits": "Benefícios",
     "toolchain": "Emitters",
@@ -16,10 +16,10 @@
     "badge": "v0.1 · primeiros emitters",
     "title": "Intenção primeiro.",
     "titleHighlight": "Código depois.",
-    "subtitle": "AI Parlance é uma representação intermediária AI-first. Humanos e LLMs escrevem .aip; emitters oficiais transformam specs Core em SQL, OpenAPI e TypeScript.",
+    "subtitle": "AI Parlance é uma representação intermediária AI-first. Humanos e LLMs escrevem .aip; emitters oficiais transformam specs Core em SQL, OpenAPI, TypeScript e Go.",
     "ctaDocs": "Começar",
     "ctaTry": "Ver primeiros emitters",
-    "note": "CLI de referência no monorepo: aip parse · validate · emit sql|openapi|typescript. O playground abaixo é só ilustrativo."
+    "note": "CLI de referência no monorepo: aip parse · validate · emit sql|openapi|typescript|go. O playground abaixo é só ilustrativo."
   },
   "benefits": {
     "title": "Por que AI Parlance",
@@ -31,7 +31,7 @@
       },
       {
         "title": "Multi-target numa spec",
-        "body": "Um AST Core validado já alimenta PostgreSQL, OpenAPI e TypeScript; outros alvos seguem a matriz."
+        "body": "Um AST Core validado já alimenta PostgreSQL, OpenAPI, TypeScript e Go; outros alvos seguem a matriz."
       },
       {
         "title": "Blocos de domínio integrados",
@@ -39,7 +39,7 @@
       },
       {
         "title": "Validar antes de gerar",
-        "body": "aip validate checa specs Core; aip emit gera artefatos em Prévia para você revisar antes de publicar."
+        "body": "aip validate checa specs Core; aip emit gera artefatos em Prévia (SQL, OpenAPI, TypeScript, Go) para você revisar antes de publicar."
       },
       {
         "title": "Gramática amigável a LLMs",
@@ -53,7 +53,7 @@
   },
   "toolchain": {
     "title": "Primeiros emitters oficiais",
-    "subtitle": "A Phase C entregou os primeiros transpiladores de referência a partir de um AST Core compartilhado. PostgreSQL veio primeiro; OpenAPI e TypeScript fecharam a onda.",
+    "subtitle": "A Phase C entregou os primeiros emitters de referência a partir de um AST Core compartilhado. PostgreSQL veio primeiro; OpenAPI, TypeScript e Go seguiram.",
     "items": [
       {
         "name": "PostgreSQL",
@@ -69,6 +69,11 @@
         "name": "TypeScript",
         "badge": "Prévia",
         "body": "Interfaces, type guards e paths finos. aip emit typescript"
+      },
+      {
+        "name": "Go",
+        "badge": "Prévia",
+        "body": "Structs, stubs net/http, middleware de auth. aip emit go"
       }
     ],
     "cta": "Ler a história dos emitters",
@@ -76,7 +81,7 @@
   },
   "pipeline": {
     "title": "Como funciona",
-    "steps": ["Humano ou IA", "Spec .aip", "AST + validação", "Emitters", "SQL · OpenAPI · TypeScript"]
+    "steps": ["Humano ou IA", "Spec .aip", "AST + validação", "Emitters", "SQL · OpenAPI · TS · Go"]
   },
   "playground": {
     "title": "Demo ilustrativa",
@@ -93,18 +98,18 @@
     "outputLabel": "Saída gerada (prévia)",
     "generate": "Gerar",
     "reset": "Carregar exemplo",
-    "disclaimer": "Não são os emitters oficiais. Caminho oficial: npm ci && npm run build, depois node packages/cli/dist/cli.js emit sql|openapi|typescript examples/minimal.aip",
+    "disclaimer": "Não são os emitters oficiais. Caminho oficial: npm ci && npm run build, depois node packages/cli/dist/cli.js emit sql|openapi|typescript|go examples/minimal.aip",
     "errorEmpty": "Informe a fonte .aip primeiro.",
     "errorParse": "Não foi possível interpretar a spec. Confira entity e crud."
   },
   "cta": {
     "title": "Experimente a toolchain de referência",
-    "body": "Clone o repositório, rode os testes e emita SQL, OpenAPI ou TypeScript a partir de examples/minimal.aip.",
+    "body": "Clone o repositório, rode os testes e emita SQL, OpenAPI, TypeScript ou Go a partir de examples/minimal.aip.",
     "button": "Guia Começando",
     "buttonSecondary": "Primeiros emitters"
   },
   "footer": {
-    "tagline": "IR AI-first · primeiros emitters em Prévia.",
+    "tagline": "IR AI-first · emitters em Prévia, incluindo Go.",
     "docs": "Documentação",
     "gettingStarted": "Começando",
     "emitters": "Primeiros emitters",
@@ -113,10 +118,10 @@
   },
   "emittersPage": {
     "title": "AI Parlance — Primeiros emitters",
-    "description": "Os primeiros transpiladores oficiais do AI Parlance: DDL PostgreSQL, OpenAPI 3 e interfaces/guards TypeScript.",
-    "badge": "Phase C · M3–M5",
-    "heading": "Primeiros emitters oficiais",
-    "lead": "A toolchain de referência transforma .aip Core validado em artefatos concretos. PostgreSQL foi o primeiro emitter; OpenAPI e TypeScript vieram do mesmo AST.",
+    "description": "Emitters oficiais do AI Parlance: DDL PostgreSQL, OpenAPI 3, TypeScript e structs/handlers Go.",
+    "badge": "Toolchain em Prévia",
+    "heading": "Emitters oficiais",
+    "lead": "A toolchain de referência transforma .aip Core validado em artefatos concretos. PostgreSQL veio primeiro; OpenAPI, TypeScript e Go seguiram do mesmo AST.",
     "back": "Voltar ao início",
     "sections": [
       {
@@ -133,6 +138,11 @@
         "title": "TypeScript",
         "command": "aip emit typescript",
         "body": "Interfaces mais type guards sem dependência de runtime e helpers de path finos — sem lock-in Nest ou Express."
+      },
+      {
+        "title": "Go",
+        "command": "aip emit go",
+        "body": "Structs, stubs CRUD em net/http e AuthMiddleware a partir de app.auth — só stdlib, sem lock-in Gin/Chi."
       }
     ],
     "tryTitle": "Experimente",
