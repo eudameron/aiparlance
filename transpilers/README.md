@@ -10,7 +10,7 @@ Code generators that turn validated AI Parlance AST into target stacks.
 ```text
 transpilers/
 ├── sql/           # @aiparlance/sql — PostgreSQL (M3 done)
-├── openapi/       # @aiparlance/openapi — OpenAPI 3.x (M4)
+├── openapi/       # @aiparlance/openapi — OpenAPI 3.x (M4 done)
 ├── typescript/    # @aiparlance/typescript — interfaces/guards (M5)
 └── go/            # follow-up after TypeScript
 ```

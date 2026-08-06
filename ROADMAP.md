@@ -8,7 +8,7 @@ This roadmap turns AI Parlance from **specification-only** into a **reference to
 - Transpiler matrix: all targets currently **Planned** ([Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix))
 - PostgreSQL is the **primary** SQL target ([Database](https://docs.aiparlance.org/en/database))
 
-**Status today:** Phase C **M3** — Core parser, validator, and **PostgreSQL DDL emitter** ship (`aip parse` / `aip validate` / `aip emit sql`). OpenAPI and TypeScript emitters are next. The marketing playground remains **illustrative only**.
+**Status today:** Phase C **M4** — Core parser, validator, **PostgreSQL DDL**, and **OpenAPI 3** emitters ship (`aip parse` / `validate` / `emit sql|openapi`). TypeScript emitter is next. The marketing playground remains **illustrative only**.
 
 The overall language remains **draft** until this reference toolchain ships (per Specification).
 
@@ -144,16 +144,18 @@ Per matrix: **DDL, migrations, indexes**. Per Database docs: naming (`User` → 
 
 Per matrix: **paths, schemas, security**.
 
-**MVP from `entity` + `crud` + `api` (+ `auth` when present):**
+**MVP from `entity` + `crud` (+ `app.auth` when present):**
 
-- Schemas from entities (including implicit fields)
-- CRUD paths (`POST/GET/PUT/DELETE` conventions from Syntax)
-- `api.prefix` / `format`
-- Security schemes stub from `app.auth` (`jwt`, etc.) when Security tier is parsed
+- [x] Schemas from entities (including implicit fields) + Create/Update variants
+- [x] CRUD paths (`POST/GET/PUT/DELETE` per Syntax)
+- [ ] `api.prefix` / `format` (needs Infra `api` parse — deferred; paths at `/`)
+- [x] Security schemes from `app.auth` (`jwt`, `session`, `api_key`, `oauth`)
 
 **Accept:**
 
-- Valid OpenAPI 3 document for `minimal.aip` (and CRM when Security/Infra parse allows)
+- [x] Valid OpenAPI 3.0.3 JSON for `minimal.aip` (golden: `transpilers/openapi/fixtures/minimal.openapi.json`)
+
+**Status:** **M4 complete** — next is M5 (TypeScript emitter).
 
 ---
 

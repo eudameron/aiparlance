@@ -9,6 +9,7 @@ and this project uses a draft **v0.1** language version until a reference toolch
 
 ### Added
 
+- Phase C **M4**: OpenAPI 3 emitter (`@aiparlance/openapi`) and `aip emit openapi`
 - Phase C **M3**: PostgreSQL DDL emitter (`@aiparlance/sql`) and `aip emit sql`
 - Phase C **M2**: semantic validator (`@aiparlance/validator`) and `aip validate <file.aip>`
 - Phase C **M1**: Core lexer/parser (`@aiparlance/parser`) and `aip parse <file.aip>`

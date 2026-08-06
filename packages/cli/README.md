@@ -5,15 +5,16 @@ Command-line interface for the reference toolchain.
 ## Commands
 
 ```bash
-aip parse <file.aip>                 # AST JSON on stdout
-aip validate <file.aip>              # diagnostics on stderr, "ok" on stdout
+aip parse <file.aip>
+aip validate <file.aip>
 aip emit sql <file.aip>              # PostgreSQL DDL (M3)
-aip emit openapi|typescript …        # M4–M5 — pending
+aip emit openapi <file.aip>          # OpenAPI 3 JSON (M4)
+aip emit typescript <file.aip>       # M5 — pending
 ```
 
 ```bash
 npm run build -w @aiparlance/cli
-node packages/cli/dist/cli.js emit sql examples/minimal.aip
+node packages/cli/dist/cli.js emit openapi examples/minimal.aip
 ```
 
 See [`ROADMAP.md`](../../ROADMAP.md).
