@@ -1,6 +1,6 @@
 ---
 title: Emitter Docs
-description: "@aiparlance/docs — papel docs, nota 13/38, objetivos e testes"
+description: "@aiparlance/docs — papel docs, nota 13/38, objetivos pass/partial/fail"
 ---
 
 # Emitter Docs
@@ -16,32 +16,71 @@ description: "@aiparlance/docs — papel docs, nota 13/38, objetivos e testes"
 
 Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
 
-## Marcadores
+## Resumo
 
 | ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
 |---|---|---|---|
-| 13 | 0 | 25 | 16 |
+| 13 | 0 | 25 | 17 |
 
-Itens N/A estão fora do papel `docs` e não entram no denominador.
+Itens N/A estão fora do papel `docs` e não entram no denominador da nota.
 
 ## O que produz
 
 Referência Markdown de API/domínio (Pass = documentado, não executado).
 
-## Objetivos — passando hoje
+## ✅ Passou
 
-- A1, A4–A8 campos documentados
-- D1–D2, D7 endpoints + prefix
-- H1 + H3–H5
+| ID | Objetivo |
+|---|---|
+| `A1` | Emit entity shapes (types / structs / schemas / tables) from `entity` |
+| `A4` | Emit enums / constrained variants from `enum(…)` |
+| `A5` | Emit `belongs_to` as FKs or refs |
+| `A6` | Emit implicit `id` primary key |
+| `A7` | Emit `timestamps` (`created_at` / `updated_at`) |
+| `A8` | Emit `soft_delete` field/column (`deleted_at`) |
+| `D1` | Full CRUD surface for `crud` entities (list/create/get/update/delete) |
+| `D2` | Honor `api.prefix` |
+| `D7` | Honor `api.format` (e.g. JSON) |
+| `H1` | Human-readable API / domain documentation |
+| `H3` | Golden / CI for `minimal.aip` (or dialect twin) |
+| `H4` | Emit succeeds on matching full-tier examples without crash |
+| `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
 
-## Objetivos — lacunas / próximos
+## ⚠️ Parcial
 
-- B validação
-- E auth/policy
-- G Behavior
-- D3–D6
+_Nenhum item parcial._
 
-Tabela completa ID a ID: [transpilers/docs/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/docs/EMITTER_OBJECTIVES.md).
+## ❌ Ainda falhando (aplicáveis)
+
+| ID | Objetivo |
+|---|---|
+| `A2` | Emit create-input shapes (`EntityCreate` or equivalent) |
+| `A3` | Emit update-input shapes (`EntityUpdate` or equivalent) |
+| `A9` | Soft-delete **semantics** (default reads filter deleted rows) |
+| `B1` | Honor `required` / `optional` |
+| `B2` | Honor `unique` |
+| `B3` | Apply `validation { }` beyond required folding |
+| `B4` | Map semantic types (`email`, `phone`, …) distinctly |
+| `D3` | Honor `api.cors` (config or middleware) |
+| `D4` | Honor `api.rate_limit` (config or enforcement) |
+| `D5` | Pagination and/or filter/sort on list |
+| `D6` | Typed error responses (4xx/5xx + stable body shape) |
+| `E1` | Auth scheme from `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
+| `E2` | Wire auth into API (security requirements or middleware) |
+| `E3` | Reflect `policy` create/read/update/delete |
+| `E4` | Predicates: `public`, `authenticated`, `role(…)` |
+| `E5` | Predicates: `owner` / `owner_or_manager(…)` |
+| `E6` | Consistent **401/403** denial paths (runtime **or** contract documents both) |
+| `G1` | Emit `job` artifacts (callable or schedulable) |
+| `G2` | Emit `queue` declarations / bindings |
+| `G3` | Wire workflow `dispatch` |
+| `G4` | Wire workflow `notify` |
+| `G5` | Wire workflow `emit` + `event` types |
+| `G6` | Wire `lifecycle` hooks (`on` / `before` / `after`) |
+| `G7` | Surface `ai_context` (emit, embed, or agent-facing artifact) |
+| `H2` | Automated test fixtures or scaffolds |
+
+Scorecard completo (incluindo ➖ N/A): [transpilers/docs/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/docs/EMITTER_OBJECTIVES.md).
 
 ## Testes
 

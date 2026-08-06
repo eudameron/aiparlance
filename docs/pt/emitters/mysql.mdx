@@ -1,6 +1,6 @@
 ---
 title: Emitter MySQL
-description: "@aiparlance/mysql — papel schema, nota 14/23, objetivos e testes"
+description: "@aiparlance/mysql — papel schema, nota 14/23, objetivos pass/partial/fail"
 ---
 
 # Emitter MySQL
@@ -16,32 +16,57 @@ description: "@aiparlance/mysql — papel schema, nota 14/23, objetivos e testes
 
 Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
 
-## Marcadores
+## Resumo
 
 | ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
 |---|---|---|---|
-| 14 | 2 | 7 | 31 |
+| 14 | 2 | 7 | 32 |
 
-Itens N/A estão fora do papel `schema` e não entram no denominador.
+Itens N/A estão fora do papel `schema` e não entram no denominador da nota.
 
 ## O que produz
 
 DDL MySQL espelhando PostgreSQL (exige `database mysql`).
 
-## Objetivos — passando hoje
+## ✅ Passou
 
-- A1, A4–A8 tabelas / FKs
-- B1–B2 constraints
-- C1–C3 + C6 dialeto mysql
-- H3, H5
+| ID | Objetivo |
+|---|---|
+| `A1` | Emit entity shapes (types / structs / schemas / tables) from `entity` |
+| `A4` | Emit enums / constrained variants from `enum(…)` |
+| `A5` | Emit `belongs_to` as FKs or refs |
+| `A6` | Emit implicit `id` primary key |
+| `A7` | Emit `timestamps` (`created_at` / `updated_at`) |
+| `A8` | Emit `soft_delete` field/column (`deleted_at`) |
+| `B1` | Honor `required` / `optional` |
+| `B2` | Honor `unique` |
+| `C1` | Durable schema (DDL or ORM / query models) |
+| `C2` | Indexes from `index { }` |
+| `C3` | Seeds from `seed { }` |
+| `C6` | Respect `app.database` dialect |
+| `H3` | Golden / CI for `minimal.aip` (or dialect twin) |
+| `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
 
-## Objetivos — lacunas / próximos
+## ⚠️ Parcial
 
-- C4/C5 migrations
-- H4 só fixtures mysql (parcial)
-- A9 semântica soft-delete
+| ID | Objetivo |
+|---|---|
+| `B4` | Map semantic types (`email`, `phone`, …) distinctly |
+| `H4` | Emit succeeds on matching full-tier examples without crash |
 
-Tabela completa ID a ID: [transpilers/mysql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/mysql/EMITTER_OBJECTIVES.md).
+## ❌ Ainda falhando (aplicáveis)
+
+| ID | Objetivo |
+|---|---|
+| `A9` | Soft-delete **semantics** (default reads filter deleted rows) |
+| `B3` | Apply `validation { }` beyond required folding |
+| `C4` | Versioned migrations (ordered **up**) |
+| `C5` | Migration **down** / rollback |
+| `C7` | Transactions for multi-statement / workflow writes |
+| `H1` | Human-readable API / domain documentation |
+| `H2` | Automated test fixtures or scaffolds |
+
+Scorecard completo (incluindo ➖ N/A): [transpilers/mysql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/mysql/EMITTER_OBJECTIVES.md).
 
 ## Testes
 

@@ -1,6 +1,6 @@
 ---
 title: PHP emitter
-description: "@aiparlance/php — role app, score 11/55, objectives and tests"
+description: "@aiparlance/php — role app, score 11/55, pass/partial/fail objectives"
 ---
 
 # PHP emitter
@@ -16,31 +16,89 @@ description: "@aiparlance/php — role app, score 11/55, objectives and tests"
 
 Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
 
-## Marks
+## Summary
 
 | ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
 |---|---|---|---|
 | 11 | 3 | 41 | 0 |
 
-N/A items are outside the `app` role and do not affect the denominator.
+N/A items are outside the `app` role and do not affect the score denominator.
 
 ## What it produces
 
 PHP typed classes; enums currently map to `string`.
 
-## Objectives — passing today
+## ✅ Passed
 
-- A1–A3, A5–A8
-- B1
-- H3–H5
+| ID | Objective |
+|---|---|
+| `A1` | Emit entity shapes (types / structs / schemas / tables) from `entity` |
+| `A2` | Emit create-input shapes (`EntityCreate` or equivalent) |
+| `A3` | Emit update-input shapes (`EntityUpdate` or equivalent) |
+| `A5` | Emit `belongs_to` as FKs or refs |
+| `A6` | Emit implicit `id` primary key |
+| `A7` | Emit `timestamps` (`created_at` / `updated_at`) |
+| `A8` | Emit `soft_delete` field/column (`deleted_at`) |
+| `B1` | Honor `required` / `optional` |
+| `H3` | Golden / CI for `minimal.aip` (or dialect twin) |
+| `H4` | Emit succeeds on matching full-tier examples without crash |
+| `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
 
-## Objectives — gaps / next
+## ⚠️ Partial
 
-- A4 native enums
-- D/E/F runtime
-- rest of app checklist
+| ID | Objective |
+|---|---|
+| `A4` | Emit enums / constrained variants from `enum(…)` |
+| `B3` | Apply `validation { }` beyond required folding |
+| `B4` | Map semantic types (`email`, `phone`, …) distinctly |
 
-Full ID-by-ID table: [transpilers/php/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/php/EMITTER_OBJECTIVES.md).
+## ❌ Still failing (applicable)
+
+| ID | Objective |
+|---|---|
+| `A9` | Soft-delete **semantics** (default reads filter deleted rows) |
+| `B2` | Honor `unique` |
+| `C1` | Durable schema (DDL or ORM / query models) |
+| `C2` | Indexes from `index { }` |
+| `C3` | Seeds from `seed { }` |
+| `C4` | Versioned migrations (ordered **up**) |
+| `C5` | Migration **down** / rollback |
+| `C6` | Respect `app.database` dialect |
+| `C7` | Transactions for multi-statement / workflow writes |
+| `D1` | Full CRUD surface for `crud` entities (list/create/get/update/delete) |
+| `D2` | Honor `api.prefix` |
+| `D3` | Honor `api.cors` (config or middleware) |
+| `D4` | Honor `api.rate_limit` (config or enforcement) |
+| `D5` | Pagination and/or filter/sort on list |
+| `D6` | Typed error responses (4xx/5xx + stable body shape) |
+| `D7` | Honor `api.format` (e.g. JSON) |
+| `E1` | Auth scheme from `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
+| `E2` | Wire auth into API (security requirements or middleware) |
+| `E3` | Reflect `policy` create/read/update/delete |
+| `E4` | Predicates: `public`, `authenticated`, `role(…)` |
+| `E5` | Predicates: `owner` / `owner_or_manager(…)` |
+| `E6` | Consistent **401/403** denial paths (runtime **or** contract documents both) |
+| `F1` | Runnable server or worker entrypoint |
+| `F2` | Handlers/jobs perform real work (not only 501 / `throw`) |
+| `F3` | DB read/write (or generated query / ORM layer) |
+| `F4` | Runtime request validation aligned with B\* |
+| `F5` | Runtime policy checks aligned with E\* |
+| `G1` | Emit `job` artifacts (callable or schedulable) |
+| `G2` | Emit `queue` declarations / bindings |
+| `G3` | Wire workflow `dispatch` |
+| `G4` | Wire workflow `notify` |
+| `G5` | Wire workflow `emit` + `event` types |
+| `G6` | Wire `lifecycle` hooks (`on` / `before` / `after`) |
+| `G7` | Surface `ai_context` (emit, embed, or agent-facing artifact) |
+| `H1` | Human-readable API / domain documentation |
+| `H2` | Automated test fixtures or scaffolds |
+| `I1` | Typed API client / SDK (or codegen from the contract) |
+| `I2` | Contract↔runtime parity story (shared paths/types or CI check) |
+| `J1` | Config/env for DB URL and secrets (no hardcoding) |
+| `J2` | Minimal observability (request id and/or structured logs) |
+| `J3` | Health/readiness endpoint or worker liveness hook |
+
+Full ID-by-ID scorecard (including ➖ N/A): [transpilers/php/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/php/EMITTER_OBJECTIVES.md).
 
 ## Tests
 

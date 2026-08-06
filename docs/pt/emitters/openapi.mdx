@@ -1,6 +1,6 @@
 ---
 title: Emitter OpenAPI
-description: "@aiparlance/openapi — papel contract, nota 16/33, objetivos e testes"
+description: "@aiparlance/openapi — papel contract, nota 16/33, objetivos pass/partial/fail"
 ---
 
 # Emitter OpenAPI
@@ -16,33 +16,67 @@ description: "@aiparlance/openapi — papel contract, nota 16/33, objetivos e te
 
 Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
 
-## Marcadores
+## Resumo
 
 | ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
 |---|---|---|---|
-| 16 | 3 | 14 | 21 |
+| 16 | 3 | 14 | 22 |
 
-Itens N/A estão fora do papel `contract` e não entram no denominador.
+Itens N/A estão fora do papel `contract` e não entram no denominador da nota.
 
 ## O que produz
 
 OpenAPI 3.0.3 JSON: schemas, paths CRUD, `api.prefix`, schemes de auth.
 
-## Objetivos — passando hoje
+## ✅ Passou
 
-- A1–A8 schemas Create/Update
-- B1 required
-- D1 CRUD + D2 prefix + D7 JSON
-- E1 securitySchemes
-- H3–H5
+| ID | Objetivo |
+|---|---|
+| `A1` | Emit entity shapes (types / structs / schemas / tables) from `entity` |
+| `A2` | Emit create-input shapes (`EntityCreate` or equivalent) |
+| `A3` | Emit update-input shapes (`EntityUpdate` or equivalent) |
+| `A4` | Emit enums / constrained variants from `enum(…)` |
+| `A5` | Emit `belongs_to` as FKs or refs |
+| `A6` | Emit implicit `id` primary key |
+| `A7` | Emit `timestamps` (`created_at` / `updated_at`) |
+| `A8` | Emit `soft_delete` field/column (`deleted_at`) |
+| `B1` | Honor `required` / `optional` |
+| `D1` | Full CRUD surface for `crud` entities (list/create/get/update/delete) |
+| `D2` | Honor `api.prefix` |
+| `D7` | Honor `api.format` (e.g. JSON) |
+| `E1` | Auth scheme from `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
+| `H3` | Golden / CI for `minimal.aip` (or dialect twin) |
+| `H4` | Emit succeeds on matching full-tier examples without crash |
+| `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
 
-## Objetivos — lacunas / próximos
+## ⚠️ Parcial
 
-- E2–E6 policy → security por operação
-- D3–D6 cors, rate_limit, paginação, erros
-- I1–I2 client / paridade
+| ID | Objetivo |
+|---|---|
+| `B2` | Honor `unique` |
+| `B4` | Map semantic types (`email`, `phone`, …) distinctly |
+| `E2` | Wire auth into API (security requirements or middleware) |
 
-Tabela completa ID a ID: [transpilers/openapi/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/EMITTER_OBJECTIVES.md).
+## ❌ Ainda falhando (aplicáveis)
+
+| ID | Objetivo |
+|---|---|
+| `A9` | Soft-delete **semantics** (default reads filter deleted rows) |
+| `B3` | Apply `validation { }` beyond required folding |
+| `D3` | Honor `api.cors` (config or middleware) |
+| `D4` | Honor `api.rate_limit` (config or enforcement) |
+| `D5` | Pagination and/or filter/sort on list |
+| `D6` | Typed error responses (4xx/5xx + stable body shape) |
+| `E3` | Reflect `policy` create/read/update/delete |
+| `E4` | Predicates: `public`, `authenticated`, `role(…)` |
+| `E5` | Predicates: `owner` / `owner_or_manager(…)` |
+| `E6` | Consistent **401/403** denial paths (runtime **or** contract documents both) |
+| `H1` | Human-readable API / domain documentation |
+| `H2` | Automated test fixtures or scaffolds |
+| `I1` | Typed API client / SDK (or codegen from the contract) |
+| `I2` | Contract↔runtime parity story (shared paths/types or CI check) |
+
+Scorecard completo (incluindo ➖ N/A): [transpilers/openapi/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/EMITTER_OBJECTIVES.md).
 
 ## Testes
 

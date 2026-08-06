@@ -1,6 +1,6 @@
 ---
 title: Workers emitter
-description: "@aiparlance/workers — role workers, score 4/20, objectives and tests"
+description: "@aiparlance/workers — role workers, score 4/20, pass/partial/fail objectives"
 ---
 
 # Workers emitter
@@ -16,30 +16,54 @@ description: "@aiparlance/workers — role workers, score 4/20, objectives and t
 
 Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
 
-## Marks
+## Summary
 
 | ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
 |---|---|---|---|
-| 4 | 3 | 13 | 34 |
+| 4 | 3 | 13 | 35 |
 
-N/A items are outside the `workers` role and do not affect the denominator.
+N/A items are outside the `workers` role and do not affect the score denominator.
 
 ## What it produces
 
 TS job/queue stubs + `dispatches` edges from workflows.
 
-## Objectives — passing today
+## ✅ Passed
 
-- G2 queue consts
-- H3–H5
+| ID | Objective |
+|---|---|
+| `G2` | Emit `queue` declarations / bindings |
+| `H3` | Golden / CI for `minimal.aip` (or dialect twin) |
+| `H4` | Emit succeeds on matching full-tier examples without crash |
+| `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
 
-## Objectives — gaps / next
+## ⚠️ Partial
 
-- G1/F2 real job runners
-- G3–G7 notify/emit/lifecycle/ai_context
-- J1–J3 ops
+| ID | Objective |
+|---|---|
+| `F2` | Handlers/jobs perform real work (not only 501 / `throw`) |
+| `G1` | Emit `job` artifacts (callable or schedulable) |
+| `G3` | Wire workflow `dispatch` |
 
-Full ID-by-ID table: [transpilers/workers/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/workers/EMITTER_OBJECTIVES.md).
+## ❌ Still failing (applicable)
+
+| ID | Objective |
+|---|---|
+| `F1` | Runnable server or worker entrypoint |
+| `F3` | DB read/write (or generated query / ORM layer) |
+| `F4` | Runtime request validation aligned with B\* |
+| `F5` | Runtime policy checks aligned with E\* |
+| `G4` | Wire workflow `notify` |
+| `G5` | Wire workflow `emit` + `event` types |
+| `G6` | Wire `lifecycle` hooks (`on` / `before` / `after`) |
+| `G7` | Surface `ai_context` (emit, embed, or agent-facing artifact) |
+| `H1` | Human-readable API / domain documentation |
+| `H2` | Automated test fixtures or scaffolds |
+| `J1` | Config/env for DB URL and secrets (no hardcoding) |
+| `J2` | Minimal observability (request id and/or structured logs) |
+| `J3` | Health/readiness endpoint or worker liveness hook |
+
+Full ID-by-ID scorecard (including ➖ N/A): [transpilers/workers/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/workers/EMITTER_OBJECTIVES.md).
 
 ## Tests
 

@@ -1,6 +1,6 @@
 ---
 title: Tests emitter
-description: "@aiparlance/tests — role tests, score 7/18, objectives and tests"
+description: "@aiparlance/tests — role tests, score 7/18, pass/partial/fail objectives"
 ---
 
 # Tests emitter
@@ -16,29 +16,51 @@ description: "@aiparlance/tests — role tests, score 7/18, objectives and tests
 
 Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
 
-## Marks
+## Summary
 
 | ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
 |---|---|---|---|
-| 7 | 0 | 11 | 36 |
+| 7 | 0 | 11 | 37 |
 
-N/A items are outside the `tests` role and do not affect the denominator.
+N/A items are outside the `tests` role and do not affect the score denominator.
 
 ## What it produces
 
 Vitest-style CRUD path fixtures (Pass = fixture coverage).
 
-## Objectives — passing today
+## ✅ Passed
 
-- D1–D2, D7 CRUD + prefix + JSON
-- H2–H5
+| ID | Objective |
+|---|---|
+| `D1` | Full CRUD surface for `crud` entities (list/create/get/update/delete) |
+| `D2` | Honor `api.prefix` |
+| `D7` | Honor `api.format` (e.g. JSON) |
+| `H2` | Automated test fixtures or scaffolds |
+| `H3` | Golden / CI for `minimal.aip` (or dialect twin) |
+| `H4` | Emit succeeds on matching full-tier examples without crash |
+| `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
 
-## Objectives — gaps / next
+## ⚠️ Partial
 
-- E auth/policy cases
-- D3–D6 cors/rate/pagination/errors
+_No partial items._
 
-Full ID-by-ID table: [transpilers/tests/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/tests/EMITTER_OBJECTIVES.md).
+## ❌ Still failing (applicable)
+
+| ID | Objective |
+|---|---|
+| `D3` | Honor `api.cors` (config or middleware) |
+| `D4` | Honor `api.rate_limit` (config or enforcement) |
+| `D5` | Pagination and/or filter/sort on list |
+| `D6` | Typed error responses (4xx/5xx + stable body shape) |
+| `E1` | Auth scheme from `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
+| `E2` | Wire auth into API (security requirements or middleware) |
+| `E3` | Reflect `policy` create/read/update/delete |
+| `E4` | Predicates: `public`, `authenticated`, `role(…)` |
+| `E5` | Predicates: `owner` / `owner_or_manager(…)` |
+| `E6` | Consistent **401/403** denial paths (runtime **or** contract documents both) |
+| `H1` | Human-readable API / domain documentation |
+
+Full ID-by-ID scorecard (including ➖ N/A): [transpilers/tests/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/tests/EMITTER_OBJECTIVES.md).
 
 ## Tests
 

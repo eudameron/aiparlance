@@ -1,6 +1,6 @@
 ---
 title: Emitter Tests
-description: "@aiparlance/tests — papel tests, nota 7/18, objetivos e testes"
+description: "@aiparlance/tests — papel tests, nota 7/18, objetivos pass/partial/fail"
 ---
 
 # Emitter Tests
@@ -16,29 +16,51 @@ description: "@aiparlance/tests — papel tests, nota 7/18, objetivos e testes"
 
 Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
 
-## Marcadores
+## Resumo
 
 | ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
 |---|---|---|---|
-| 7 | 0 | 11 | 36 |
+| 7 | 0 | 11 | 37 |
 
-Itens N/A estão fora do papel `tests` e não entram no denominador.
+Itens N/A estão fora do papel `tests` e não entram no denominador da nota.
 
 ## O que produz
 
 Fixtures de paths CRUD estilo Vitest (Pass = cobertura de fixture).
 
-## Objetivos — passando hoje
+## ✅ Passou
 
-- D1–D2, D7 CRUD + prefix + JSON
-- H2–H5
+| ID | Objetivo |
+|---|---|
+| `D1` | Full CRUD surface for `crud` entities (list/create/get/update/delete) |
+| `D2` | Honor `api.prefix` |
+| `D7` | Honor `api.format` (e.g. JSON) |
+| `H2` | Automated test fixtures or scaffolds |
+| `H3` | Golden / CI for `minimal.aip` (or dialect twin) |
+| `H4` | Emit succeeds on matching full-tier examples without crash |
+| `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
 
-## Objetivos — lacunas / próximos
+## ⚠️ Parcial
 
-- E casos auth/policy
-- D3–D6 cors/rate/paginação/erros
+_Nenhum item parcial._
 
-Tabela completa ID a ID: [transpilers/tests/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/tests/EMITTER_OBJECTIVES.md).
+## ❌ Ainda falhando (aplicáveis)
+
+| ID | Objetivo |
+|---|---|
+| `D3` | Honor `api.cors` (config or middleware) |
+| `D4` | Honor `api.rate_limit` (config or enforcement) |
+| `D5` | Pagination and/or filter/sort on list |
+| `D6` | Typed error responses (4xx/5xx + stable body shape) |
+| `E1` | Auth scheme from `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
+| `E2` | Wire auth into API (security requirements or middleware) |
+| `E3` | Reflect `policy` create/read/update/delete |
+| `E4` | Predicates: `public`, `authenticated`, `role(…)` |
+| `E5` | Predicates: `owner` / `owner_or_manager(…)` |
+| `E6` | Consistent **401/403** denial paths (runtime **or** contract documents both) |
+| `H1` | Human-readable API / domain documentation |
+
+Scorecard completo (incluindo ➖ N/A): [transpilers/tests/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/tests/EMITTER_OBJECTIVES.md).
 
 ## Testes
 
