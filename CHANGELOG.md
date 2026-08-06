@@ -27,3 +27,5 @@ and this project uses a draft **v0.1** language version until a reference toolch
 - No official parser / AST / semantic validator
 - Transpiler matrix targets are all **Planned**
 - Playground on the marketing site is illustrative only
+
+See [`ROADMAP.md`](ROADMAP.md) for Phase C (reference toolchain).

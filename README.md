@@ -31,6 +31,7 @@ aiparlance.org/
 | [transpilers/](transpilers/) | Future Go, TypeScript, SQL, … generators |
 | [CHANGELOG.md](CHANGELOG.md) | Project changelog |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
+| [ROADMAP.md](ROADMAP.md) | Phase C toolchain roadmap (parser → SQL → OpenAPI → TypeScript) |
 
 ## Official site
 

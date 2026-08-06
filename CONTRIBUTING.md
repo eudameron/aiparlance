@@ -40,9 +40,9 @@ Do not invent syntax that only appears in the playground demo (`site/src/lib/tra
 - Production build: `cd site && npm run build:prod` (uses `astro.config-sample.mjs`).
 - Do not use the local-only `npm run build` config for production deploys.
 
-## Future toolchain (not ready for PRs yet)
+## Future toolchain (Phase C)
 
-Parser, validator, and emitters under `transpilers/` will follow a separate implementation phase. Open an issue before large toolchain PRs so scope can be agreed.
+Parser, validator, and emitters are tracked in [`ROADMAP.md`](ROADMAP.md). Open an issue before large toolchain PRs so scope can be agreed with the current milestone (M0–M6).
 
 ## License
 

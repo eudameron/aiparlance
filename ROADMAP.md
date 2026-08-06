@@ -1,0 +1,238 @@
+# Roadmap — Phase C (Reference toolchain)
+
+This roadmap turns AI Parlance from **specification-only** into a **reference toolchain**, aligned with the public docs:
+
+- Pipeline: `.aip` → Parser → AST → Validator → Transpilers ([Introduction](https://docs.aiparlance.org/en/introduction), [Specification](https://docs.aiparlance.org/en/specification))
+- Normative grammar: [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf)
+- Stability tiers: Core / Infra (stable); Security / Behavior (beta) ([Specification § Stability](https://docs.aiparlance.org/en/specification#stability-levels))
+- Transpiler matrix: all targets currently **Planned** ([Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix))
+- PostgreSQL is the **primary** SQL target ([Database](https://docs.aiparlance.org/en/database))
+
+**Status today:** docs + site + grammar published; no official parser, validator, or emitters. The marketing playground (`site/src/lib/transpiler/`) is **illustrative only** and is not the reference toolchain ([CONTRIBUTING](CONTRIBUTING.md)).
+
+The overall language remains **draft** until this reference toolchain ships (per Specification).
+
+---
+
+## Goals
+
+1. Ship a TypeScript toolchain that parses and validates `.aip` against the normative grammar and Specification MUST rules.
+2. Emit useful artifacts from one IR: **PostgreSQL** (primary), **OpenAPI**, then **TypeScript** (first application backend).
+3. Prove multi-target with shared AST — not by rewriting the playground demo.
+
+## Non-goals (Phase C)
+
+| Out of scope | Why |
+|---|---|
+| Implementing Proposed syntax (`permission` decl, `endpoint`) | Preview only until promoted in grammar |
+| Roadmap language features (`has_many`, top-level `enum{}`, `custom`) | Explicitly not v0.1 |
+| MySQL / Go / Python / PHP / Workers / Docs / Tests emitters | Matrix items deferred after the reference path |
+| Replacing Mintlify or rewriting the marketing site | Separate from toolchain |
+| Full Behavior runtime (Temporal-like) | Behavior is beta; parse/validate first, emit later |
+
+---
+
+## Implementation language
+
+| Role | Choice | Rationale |
+|---|---|---|
+| Toolchain (parser, AST, validator, CLI) | **TypeScript** | Matches monorepo (`site/`), enables shared package with future playground |
+| First SQL emitter | **PostgreSQL** | Documented primary target |
+| First API contract emitter | **OpenAPI** | Paths/schemas/security from `entity` + `crud` (+ `api`/`auth`) |
+| First application backend emitter | **TypeScript** | Interfaces + guards (matrix); same language as toolchain |
+| Second application backend (later) | **Go** | structs, handlers, JWT middleware — after TS reference is stable |
+
+---
+
+## Package layout (target)
+
+```text
+packages/
+  parser/          # lexer + parser → AST (grammar.ebnf)
+  validator/       # semantic MUST rules (Specification § Validation)
+  cli/             # aip parse | validate | emit
+transpilers/
+  sql/             # PostgreSQL DDL, indexes, seed → SQL
+  openapi/         # OpenAPI 3.x
+  typescript/      # interfaces, guards, minimal handlers
+  go/              # (Phase C follow-up)
+```
+
+Exact npm package names may use an `@aiparlance/*` scope when scaffolding begins.
+
+**Input to every transpiler:** validated AST (not raw `.aip` text).  
+**Fixtures:** [`examples/minimal.aip`](examples/minimal.aip) → [`crm-reference.aip`](examples/crm-reference.aip) → [`ops-reference.aip`](examples/ops-reference.aip).
+
+---
+
+## Milestones
+
+### M0 — Scaffold (prep)
+
+- Monorepo workspace for `packages/*` and `transpilers/*`
+- Test runner (e.g. Vitest) + CI job: typecheck + unit tests
+- Document CLI UX draft in this file / package READMEs
+
+**Done when:** empty packages build in CI; no public claim that the toolchain ships yet.
+
+---
+
+### M1 — Parser + AST (Core)
+
+**Coverage (Core, stable):** `app`, `entity`, field types (`primitive`, inline `enum`, `belongs_to`), field modifiers, `crud`, `validation` block, line comments `//`.
+
+**Grammar source of truth:** [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf).
+
+**Accept:**
+
+- `aip parse examples/minimal.aip` succeeds and prints/returns AST
+- Rejects malformed Core with actionable errors (line/column)
+- Does **not** yet require full Infra/Security/Behavior parse (may parse-and-ignore or hard-error on unknown blocks — prefer structured “unsupported tier” errors)
+
+**Out:** semantic validation beyond “tree is well-formed”.
+
+---
+
+### M2 — Semantic validator
+
+Implement Specification [§ Validation](https://docs.aiparlance.org/en/specification#validation) for Core (+ Infra pieces needed by emitters):
+
+- Missing or duplicate `app`
+- References to missing `entity`
+- Modifier order / duplicates (warn vs error per rule)
+- Implicit fields awareness (`id`, `created_at`, `updated_at`; `soft_delete` → `deleted_at`) for later emitters
+
+**Accept:**
+
+- `aip validate examples/minimal.aip` exits 0
+- Invalid fixtures exit non-zero with stable error codes/messages
+
+Extend progressively: when Security/Behavior parse lands, add rules for `policy`+`auth`, `workflow` without `when`, missing `event`/`job`, unregistered builtins.
+
+---
+
+### M3 — Transpiler: PostgreSQL (primary)
+
+Per matrix: **DDL, migrations, indexes**. Per Database docs: naming (`User` → `users`, FK `user_id`), semantic types → PostgreSQL, implicit fields in `CREATE TABLE`.
+
+**MVP artifacts from Core (+ Infra used by `minimal` / early CRM):**
+
+- `CREATE TABLE` for each `entity`
+- `belongs_to` → FK columns + references
+- `unique` / `required` → constraints
+- `index` blocks → `CREATE INDEX`
+- Optional: `seed` → `INSERT` statements
+- Optional: `soft_delete` / timestamps documented in DDL
+
+**Accept:**
+
+- `aip emit sql examples/minimal.aip` produces runnable PostgreSQL for the Core example
+- Golden-file tests against checked-in SQL snapshots
+
+**Defer:** full migration versioning UX; MySQL dialect (declare-only until a later milestone).
+
+---
+
+### M4 — Transpiler: OpenAPI
+
+Per matrix: **paths, schemas, security**.
+
+**MVP from `entity` + `crud` + `api` (+ `auth` when present):**
+
+- Schemas from entities (including implicit fields)
+- CRUD paths (`POST/GET/PUT/DELETE` conventions from Syntax)
+- `api.prefix` / `format`
+- Security schemes stub from `app.auth` (`jwt`, etc.) when Security tier is parsed
+
+**Accept:**
+
+- Valid OpenAPI 3 document for `minimal.aip` (and CRM when Security/Infra parse allows)
+
+---
+
+### M5 — Transpiler: TypeScript (first backend)
+
+Per matrix: **interfaces, guards**. Per Security multi-target notes: guards/decorators for TypeScript.
+
+**MVP:**
+
+- TypeScript interfaces (or types) per `entity`
+- Runtime guards or zod schemas from field modifiers / `validation`
+- Minimal CRUD handler stubs **or** typed client shapes — keep thin; prefer correctness over framework lock-in (no mandatory Nest/Express in v1)
+
+**Accept:**
+
+- Emitted TS typechecks in isolation
+- Golden tests for `minimal.aip`
+
+**Playground:** only after M5, optionally replace `site/src/lib/transpiler/` with the official packages — never the reverse.
+
+---
+
+### M6 — CLI + CI + docs status
+
+- CLI: `parse` | `validate` | `emit <sql|openapi|typescript>`
+- CI: validate all `examples/*.aip` that the current tier supports; emit golden tests
+- Update Introduction Note and Specification toolchain line when the reference toolchain is **published**
+- Update [transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix) statuses (Planned → Preview/Available) for SQL, OpenAPI, TypeScript — **EN + PT**
+- Changelog entry for first toolchain release
+
+**Done when:** public docs no longer say “parser, validator, and transpilers are not published yet” without qualification; matrix reflects reality.
+
+---
+
+## Follow-ups (after M6)
+
+Ordered to match the matrix and docs, not parallel day-one work:
+
+| Order | Target | Notes |
+|---|---|---|
+| 1 | **Go** | Second application backend (structs, handlers, JWT) |
+| 2 | Expand Security + Behavior parse/validate | Needed for CRM/ops full fidelity |
+| 3 | Workers | From `workflow` / `job` / `queue` (Behavior beta) |
+| 4 | MySQL | Same IR as PostgreSQL; secondary dialect |
+| 5 | Python, PHP | Additional backends |
+| 6 | Docs / Tests emitters | Matrix niceties |
+
+Language features marked **roadmap** in the Specification stay documentation-only until a future language version.
+
+---
+
+## Tier rollout (parse / validate)
+
+Emitters may start on Core-only AST. Expand parsing in this order (matches stability):
+
+```text
+Core (stable)     → M1–M5 foundation
+Infra (stable)    → index, api, seed, timestamps, soft_delete (needed for M3/M4 depth)
+Security (beta)   → auth, policy, predicates (OpenAPI security + TS guards)
+Behavior (beta)   → workflow, event, lifecycle, job, queue, ai_context (Workers later)
+```
+
+Beta syntax may change between v0.x minors; keep emitters tolerant or version-gated.
+
+---
+
+## Success criteria (Phase C complete)
+
+- [ ] Reference parser + validator published (TypeScript packages)
+- [ ] `examples/minimal.aip` validates and emits SQL + OpenAPI + TypeScript
+- [ ] PostgreSQL remains documented and implemented as primary SQL target
+- [ ] Transpiler matrix updated for shipped targets (EN + PT)
+- [ ] Playground either still labeled illustrative or wired to official packages
+- [ ] CONTRIBUTING updated: toolchain PRs welcome under package guidelines
+
+---
+
+## References
+
+| Doc | Role |
+|---|---|
+| [Introduction](https://docs.aiparlance.org/en/introduction) | Pipeline + specification-only note |
+| [Specification](https://docs.aiparlance.org/en/specification) | Grammar summary, validation MUST, matrix, stability |
+| [Syntax](https://docs.aiparlance.org/en/syntax) | Core + Infra blocks |
+| [Database](https://docs.aiparlance.org/en/database) | PostgreSQL primary, naming, seed |
+| [Security](https://docs.aiparlance.org/en/security) | auth, policy, OpenAPI/TS artifacts |
+| [Workflows](https://docs.aiparlance.org/en/workflows) | Behavior beta (post-MVP emit) |
+| [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf) | Normative EBNF |
+| [`examples/`](examples/) | Conformance fixtures |

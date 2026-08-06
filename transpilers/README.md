@@ -2,21 +2,21 @@
 
 Code generators that turn AI Parlance (`.aip`) into target stacks.
 
-Planned targets (v0.1):
+**Implementation order:** see [`ROADMAP.md`](../ROADMAP.md) (Phase C).  
+**Matrix (docs):** [Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix).
 
-- PostgreSQL / MySQL (DDL, migrations)
-- Go, TypeScript, Python, PHP
-- OpenAPI
-- Workers (queues, jobs)
-
-Each transpiler will live in its own subdirectory when implemented, for example:
+## Planned layout
 
 ```text
 transpilers/
-├── go/
-├── typescript/
-├── sql/
-└── openapi/
+├── sql/           # PostgreSQL first (primary), MySQL later
+├── openapi/       # paths, schemas, security
+├── typescript/    # interfaces, guards (first application backend)
+├── go/            # second application backend (after TypeScript)
+├── python/        # later
+└── php/           # later
 ```
 
-Input: parsed AST from [spec/v0.1/](../spec/v0.1/). Reference spec: [examples/crm-reference.aip](../examples/crm-reference.aip).
+Input: **validated AST** from the TypeScript toolchain (`packages/parser`, `packages/validator`) — not the marketing playground.
+
+Reference fixtures: [examples/minimal.aip](../examples/minimal.aip), [crm-reference.aip](../examples/crm-reference.aip), [ops-reference.aip](../examples/ops-reference.aip).
