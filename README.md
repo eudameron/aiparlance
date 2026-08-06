@@ -35,6 +35,19 @@ aiparlance.org/
 | [CHANGELOG.md](CHANGELOG.md) | Project changelog |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
 
+## Quick start (toolchain)
+
+```bash
+npm ci
+npm test
+node packages/cli/dist/cli.js validate examples/minimal.aip
+node packages/cli/dist/cli.js emit sql examples/minimal.aip
+node packages/cli/dist/cli.js emit openapi examples/minimal.aip
+node packages/cli/dist/cli.js emit typescript examples/minimal.aip
+```
+
+See [ROADMAP.md](ROADMAP.md) (Phase C **M6** complete) and [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Official site
 
 **https://aiparlance.org/**

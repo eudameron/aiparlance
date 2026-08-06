@@ -1,14 +1,14 @@
 # Roadmap — Phase C (Reference toolchain)
 
-This roadmap turns AI Parlance from **specification-only** into a **reference toolchain**, aligned with the public docs:
+This roadmap tracked turning AI Parlance from **specification-only** into a **reference toolchain**, aligned with the public docs:
 
 - Pipeline: `.aip` → Parser → AST → Validator → Transpilers ([Introduction](https://docs.aiparlance.org/en/introduction), [Specification](https://docs.aiparlance.org/en/specification))
 - Normative grammar: [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf)
 - Stability tiers: Core / Infra (stable); Security / Behavior (beta) ([Specification § Stability](https://docs.aiparlance.org/en/specification#stability-levels))
-- Transpiler matrix: all targets currently **Planned** ([Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix))
+- Transpiler matrix: PostgreSQL, OpenAPI, TypeScript **Preview**; others Planned ([Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix))
 - PostgreSQL is the **primary** SQL target ([Database](https://docs.aiparlance.org/en/database))
 
-**Status today:** Phase C **M5** — Core parser, validator, **PostgreSQL DDL**, **OpenAPI 3**, and **TypeScript** emitters ship (`aip parse` / `validate` / `emit sql|openapi|typescript`). Next is M6 (CLI polish, CI, docs matrix). The marketing playground remains **illustrative only**.
+**Status today:** Phase C **M6 complete** — Core reference toolchain ships (`aip parse` / `validate` / `emit sql|openapi|typescript`), CI covers examples + emit goldens, docs/matrix/CONTRIBUTING reflect preview status. The marketing playground remains **illustrative only**. Follow-ups: Go emitter, Infra/Security/Behavior parse depth.
 
 The overall language remains **draft** until this reference toolchain ships (per Specification).
 
@@ -181,13 +181,15 @@ Per matrix: **interfaces, guards**. Per Security multi-target notes: guards/deco
 ---
 ### M6 — CLI + CI + docs status
 
-- CLI: `parse` | `validate` | `emit <sql|openapi|typescript>`
-- CI: validate all `examples/*.aip` that the current tier supports; emit golden tests
-- Update Introduction Note and Specification toolchain line when the reference toolchain is **published**
-- Update [transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix) statuses (Planned → Preview/Available) for SQL, OpenAPI, TypeScript — **EN + PT**
-- Changelog entry for first toolchain release
+- [x] CLI: `parse` | `validate` | `emit <sql|openapi|typescript>`
+- [x] CI: validate Core-supported examples (`minimal.aip`); assert richer references fail only with `unsupported_tier`; emit goldens for `minimal.aip` (`scripts/examples.test.ts`)
+- [x] Introduction Note and Specification toolchain line reflect monorepo preview toolchain — **EN + PT**
+- [x] Transpiler matrix: SQL, OpenAPI, TypeScript → **Preview** — **EN + PT**
+- [x] Changelog + CONTRIBUTING for first toolchain / toolchain PRs
 
 **Done when:** public docs no longer say “parser, validator, and transpilers are not published yet” without qualification; matrix reflects reality.
+
+**Status:** **M6 complete** — Phase C Core reference path done. See [Follow-ups](#follow-ups-after-m6).
 
 ---
 
@@ -225,12 +227,12 @@ Beta syntax may change between v0.x minors; keep emitters tolerant or version-ga
 
 ## Success criteria (Phase C complete)
 
-- [ ] Reference parser + validator published (TypeScript packages)
+- [x] Reference parser + validator published (TypeScript packages in monorepo)
 - [x] `examples/minimal.aip` validates and emits SQL + OpenAPI + TypeScript
 - [x] PostgreSQL remains documented and implemented as primary SQL target
 - [x] Transpiler matrix updated for shipped targets (EN + PT)
-- [ ] Playground either still labeled illustrative or wired to official packages
-- [ ] CONTRIBUTING updated: toolchain PRs welcome under package guidelines
+- [x] Playground either still labeled illustrative or wired to official packages
+- [x] CONTRIBUTING updated: toolchain PRs welcome under package guidelines
 
 ---
 
@@ -238,7 +240,7 @@ Beta syntax may change between v0.x minors; keep emitters tolerant or version-ga
 
 | Doc | Role |
 |---|---|
-| [Introduction](https://docs.aiparlance.org/en/introduction) | Pipeline + specification-only note |
+| [Introduction](https://docs.aiparlance.org/en/introduction) | Pipeline + draft-language / toolchain note |
 | [Specification](https://docs.aiparlance.org/en/specification) | Grammar summary, validation MUST, matrix, stability |
 | [Syntax](https://docs.aiparlance.org/en/syntax) | Core + Infra blocks |
 | [Database](https://docs.aiparlance.org/en/database) | PostgreSQL primary, naming, seed |

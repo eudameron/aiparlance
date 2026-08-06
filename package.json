@@ -12,7 +12,8 @@
     "build": "npm run build --workspaces --if-present",
     "typecheck": "tsc -b",
     "test": "npm run build && vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "check:examples": "npm run build && vitest run scripts/examples.test.ts"
   },
   "engines": {
     "node": ">=20"

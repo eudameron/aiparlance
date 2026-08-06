@@ -5,6 +5,7 @@ export default defineConfig({
     include: [
       "packages/*/src/**/*.test.ts",
       "transpilers/*/src/**/*.test.ts",
+      "scripts/**/*.test.ts",
     ],
   },
 });

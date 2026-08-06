@@ -24,7 +24,7 @@ Usage:
   aip emit openapi <file.aip>          Emit OpenAPI 3 JSON (M4)
   aip emit typescript <file.aip>       Emit TypeScript interfaces/guards (M5)
 
-Status: Phase C / M5 — parse, validate, emit sql|openapi|typescript implemented.
+Status: Phase C / M6 — parse, validate, emit sql|openapi|typescript; examples CI green.
 Roadmap: https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md
 `;
 
