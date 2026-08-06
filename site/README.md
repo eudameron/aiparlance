@@ -76,6 +76,17 @@ Upload `dist/` to the host root for `aiparlance.org`.
 
 Ensure `/` → `/en` (`public/_redirects` + `src/pages/index.astro`), plus `sitemap.xml` and `robots.txt`.
 
+## Google Tag Manager
+
+GTM loads from [`src/layouts/Layout.astro`](src/layouts/Layout.astro) only when `PUBLIC_GTM_ID` is set (EN and PT pages).
+
+| Environment | How to set |
+|-------------|------------|
+| Local (optional) | `site/.env` — see [`.env.example`](.env.example) |
+| Cloudflare Pages | **Settings → Environment variables** (Build) → `PUBLIC_GTM_ID` = `GTM-XXXXXXX` |
+
+Without the variable, no GTM scripts are emitted (safe for local/dev).
+
 ## Brand assets
 
 Brand assets in `public/` (`logo.png`, `logo-nav.png`, `favicon.png`). Sync copies to [`/docs`](../docs/) when updating.
