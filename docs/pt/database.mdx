@@ -13,11 +13,11 @@ Extensões **Infra** sobre `entity`. Base: [crm-reference.aip](https://github.co
 
 | Banco | Linguagem (`app`) | Transpiler v0.1 |
 |---|---|---|
-| PostgreSQL | `postgres` | Planejado (principal) |
+| PostgreSQL | `postgres` | Prévia (`aip emit sql` — DDL Core) |
 | MySQL | `mysql` | Planejado |
 | SQLite, MariaDB, MongoDB, … | Roadmap | — |
 
-É válido declarar `database mysql` na spec; geração de DDL ainda não foi publicada ([matriz de transpiladores](/pt/specification#transpiler-matrix)).
+É válido declarar `database mysql` na spec; geração de DDL MySQL ainda não foi publicada. DDL Core PostgreSQL: `aip emit sql` ([matriz de transpiladores](/pt/specification#transpiler-matrix)).
 
 ```aip
 app CRM @0.1 {

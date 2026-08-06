@@ -8,7 +8,7 @@ This roadmap turns AI Parlance from **specification-only** into a **reference to
 - Transpiler matrix: all targets currently **Planned** ([Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix))
 - PostgreSQL is the **primary** SQL target ([Database](https://docs.aiparlance.org/en/database))
 
-**Status today:** Phase C **M2** — Core parser + semantic validator ship in `@aiparlance/parser` / `@aiparlance/validator` (`aip parse`, `aip validate`). Emitters are **not** implemented yet. The marketing playground remains **illustrative only**.
+**Status today:** Phase C **M3** — Core parser, validator, and **PostgreSQL DDL emitter** ship (`aip parse` / `aip validate` / `aip emit sql`). OpenAPI and TypeScript emitters are next. The marketing playground remains **illustrative only**.
 
 The overall language remains **draft** until this reference toolchain ships (per Specification).
 
@@ -120,21 +120,23 @@ Extend progressively: when Security/Behavior parse lands, add rules for `policy`
 
 Per matrix: **DDL, migrations, indexes**. Per Database docs: naming (`User` → `users`, FK `user_id`), semantic types → PostgreSQL, implicit fields in `CREATE TABLE`.
 
-**MVP artifacts from Core (+ Infra used by `minimal` / early CRM):**
+**MVP artifacts from Core:**
 
-- `CREATE TABLE` for each `entity`
-- `belongs_to` → FK columns + references
-- `unique` / `required` → constraints
-- `index` blocks → `CREATE INDEX`
-- Optional: `seed` → `INSERT` statements
-- Optional: `soft_delete` / timestamps documented in DDL
+- [x] `CREATE TABLE` for each `entity`
+- [x] `belongs_to` → FK columns + `REFERENCES`
+- [x] `unique` / `required` → constraints; `enum` → `CHECK` + `DEFAULT`
+- [x] `soft_delete` / implicit `id` / timestamps in DDL
+- [ ] `index` blocks → `CREATE INDEX` (needs Infra parse — deferred)
+- [ ] `seed` → `INSERT` (needs Infra parse — deferred)
 
 **Accept:**
 
-- `aip emit sql examples/minimal.aip` produces runnable PostgreSQL for the Core example
-- Golden-file tests against checked-in SQL snapshots
+- [x] `aip emit sql examples/minimal.aip` produces runnable PostgreSQL for the Core example
+- [x] Golden-file tests against `transpilers/sql/fixtures/minimal.sql`
 
-**Defer:** full migration versioning UX; MySQL dialect (declare-only until a later milestone).
+**Defer:** full migration versioning UX; MySQL dialect; `index` / `seed` until Infra-tier parse.
+
+**Status:** **M3 complete** (Core DDL) — next is M4 (OpenAPI).
 
 ---
 

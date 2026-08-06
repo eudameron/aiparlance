@@ -9,7 +9,7 @@ const minimalPath = join(root, "examples/minimal.aip");
 
 describe("@aiparlance/cli", () => {
   it("prints help for --help", () => {
-    expect(HELP).toContain("aip parse");
+    expect(HELP).toContain("aip emit sql");
     expect(run(["node", "aip", "--help"])).toBe(0);
   });
 
@@ -17,14 +17,17 @@ describe("@aiparlance/cli", () => {
     expect(run(["node", "aip", "parse", "does-not-exist.aip"])).toBe(1);
   });
 
-  it("returns 1 for emit until M3", () => {
-    expect(run(["node", "aip", "emit", "sql", minimalPath])).toBe(1);
+  it("returns 1 for emit openapi until M4", () => {
+    expect(run(["node", "aip", "emit", "openapi", minimalPath])).toBe(1);
   });
 });
 
-describe("@aiparlance/cli validate integration", () => {
-  it("validates minimal.aip via subprocess-free run", () => {
-    // run() writes to stdout/stderr; validate exits 0 for minimal
+describe("@aiparlance/cli validate/emit integration", () => {
+  it("validates minimal.aip", () => {
     expect(run(["node", "aip", "validate", minimalPath])).toBe(0);
+  });
+
+  it("emits sql for minimal.aip", () => {
+    expect(run(["node", "aip", "emit", "sql", minimalPath])).toBe(0);
   });
 });

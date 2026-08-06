@@ -18,6 +18,7 @@
     "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {
-    "@aiparlance/parser": "0.0.0"
+    "@aiparlance/parser": "0.0.0",
+    "@aiparlance/validator": "0.0.0"
   }
 }

@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parse, ParseError } from "@aiparlance/parser";
 import { formatDiagnostic, validate } from "@aiparlance/validator";
+import { emitSql, EmitSqlError } from "@aiparlance/sql";
 
 /**
  * AI Parlance CLI — Phase C
@@ -13,10 +14,11 @@ export const HELP = `aip — AI Parlance CLI
 
 Usage:
   aip parse <file.aip>              Parse to AST (JSON on stdout)
-  aip validate <file.aip>           Semantic validation (M2)
-  aip emit <sql|openapi|typescript> <file.aip>   Emit artifacts (M3–M5)
+  aip validate <file.aip>           Semantic validation
+  aip emit sql <file.aip>           Emit PostgreSQL DDL (M3)
+  aip emit openapi|typescript …     Emit artifacts (M4–M5 — pending)
 
-Status: Phase C / M2 — parse and validate implemented; emit pending.
+Status: Phase C / M3 — parse, validate, and emit sql implemented.
 Roadmap: https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md
 `;
 
@@ -36,19 +38,19 @@ export function run(argv: string[]): number {
   }
 
   if (args[0] === "emit") {
-    process.stderr.write(
-      `aip: 'emit' is not implemented yet (see ROADMAP.md milestones M3–M5)\n`
-    );
-    return 1;
+    return cmdEmit(args.slice(1));
   }
 
   process.stderr.write(`aip: unknown command '${args[0]}'\n\n${HELP}`);
   return 1;
 }
 
-function readAipFile(args: string[]): { file: string; source: string } | null {
+function readAipFile(
+  args: string[],
+  usage: string
+): { file: string; source: string } | null {
   if (args.length !== 1) {
-    process.stderr.write(`aip: usage: aip <command> <file.aip>\n`);
+    process.stderr.write(`aip: usage: ${usage}\n`);
     return null;
   }
   const file = resolve(args[0]!);
@@ -61,23 +63,19 @@ function readAipFile(args: string[]): { file: string; source: string } | null {
 }
 
 function cmdParse(args: string[]): number {
-  const input = readAipFile(args);
+  const input = readAipFile(args, "aip parse <file.aip>");
   if (!input) return 1;
   try {
     const doc = parse(input.source, input.file);
     process.stdout.write(`${JSON.stringify(doc, null, 2)}\n`);
     return 0;
   } catch (e) {
-    if (e instanceof ParseError) {
-      process.stderr.write(`${e.toString()}\n`);
-      return 1;
-    }
-    throw e;
+    return handleParseError(e);
   }
 }
 
 function cmdValidate(args: string[]): number {
-  const input = readAipFile(args);
+  const input = readAipFile(args, "aip validate <file.aip>");
   if (!input) return 1;
   try {
     const doc = parse(input.source, input.file);
@@ -91,12 +89,52 @@ function cmdValidate(args: string[]): number {
     }
     return 1;
   } catch (e) {
-    if (e instanceof ParseError) {
-      process.stderr.write(`${e.toString()}\n`);
+    return handleParseError(e);
+  }
+}
+
+function cmdEmit(args: string[]): number {
+  if (args.length < 1) {
+    process.stderr.write(
+      "aip: usage: aip emit <sql|openapi|typescript> <file.aip>\n"
+    );
+    return 1;
+  }
+  const target = args[0]!;
+  if (target !== "sql") {
+    process.stderr.write(
+      `aip: emit '${target}' is not implemented yet (see ROADMAP.md milestones M4–M5)\n`
+    );
+    return 1;
+  }
+  const input = readAipFile(args.slice(1), "aip emit sql <file.aip>");
+  if (!input) return 1;
+  try {
+    const doc = parse(input.source, input.file);
+    const result = validate(doc);
+    for (const d of result.diagnostics) {
+      process.stderr.write(`${formatDiagnostic(d, input.file)}\n`);
+    }
+    if (!result.ok) return 1;
+    const sql = emitSql(doc);
+    process.stdout.write(sql);
+    if (!sql.endsWith("\n")) process.stdout.write("\n");
+    return 0;
+  } catch (e) {
+    if (e instanceof EmitSqlError) {
+      process.stderr.write(`aip: ${e.message}\n`);
       return 1;
     }
-    throw e;
+    return handleParseError(e);
   }
+}
+
+function handleParseError(e: unknown): number {
+  if (e instanceof ParseError) {
+    process.stderr.write(`${e.toString()}\n`);
+    return 1;
+  }
+  throw e;
 }
 
 const entry = process.argv[1];

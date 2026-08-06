@@ -66,7 +66,7 @@ Go, SQL, OpenAPI, workers, …
 
 O texto `.aip` é a fonte; a AST é representação interna.
 
-**Toolchain (v0.1):** **parser** e **validador** Core estão no monorepo (`packages/` — `aip parse` / `aip validate`). **Transpiladores/emitters** ainda não publicados (matriz abaixo permanece Planejado). Este documento é a fonte normativa em prosa; gramática em [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf) e marcos em [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
+**Toolchain (v0.1):** **parser**, **validador** e **emitter PostgreSQL (DDL)** Core estão no monorepo (`aip parse` / `aip validate` / `aip emit sql`). **OpenAPI / TypeScript / demais emitters** ainda não publicados. Este documento é a fonte normativa em prosa; gramática em [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf) e marcos em [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
 
 ---
 
@@ -239,8 +239,8 @@ O validador deve rejeitar:
 
 | Alvo | Artefatos | Status v0.1 |
 |---|---|---|
-| PostgreSQL | DDL, migrations, índices | Planejado (alvo principal da linguagem) |
-| MySQL | DDL, migrations | Planejado (`database mysql` no `app`; sem transpiler ainda) |
+| PostgreSQL | DDL, índices (entidades Core) | Prévia (`aip emit sql`) |
+| MySQL | DDL, migrations | Planejado (`database mysql` no `app`; sem emitter ainda) |
 | Go | structs, handlers, middleware JWT | Planejado |
 | TypeScript | interfaces, guards | Planejado |
 | Python | models, decorators | Planejado |
