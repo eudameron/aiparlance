@@ -9,3 +9,5 @@ process.stdout.write(emitPython(doc));
 ```
 
 Status: **MVP Preview**.
+
+See [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) (**12/55** app).

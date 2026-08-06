@@ -1,0 +1,59 @@
+---
+title: PHP emitter
+description: "@aiparlance/php — role app, score 11/55, objectives and tests"
+---
+
+# PHP emitter
+
+| | |
+|---|---|
+| Package | `@aiparlance/php` |
+| CLI | `aip emit php` |
+| Role | `app` |
+| **Score** | **11/55** (20%) |
+| Band | Stub / early app Preview |
+| Scorecard | [transpilers/php/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/php/EMITTER_OBJECTIVES.md) |
+
+Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marks
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 11 | 3 | 41 | 0 |
+
+N/A items are outside the `app` role and do not affect the denominator.
+
+## What it produces
+
+PHP typed classes; enums currently map to `string`.
+
+## Objectives — passing today
+
+- A1–A3, A5–A8
+- B1
+- H3–H5
+
+## Objectives — gaps / next
+
+- A4 native enums
+- D/E/F runtime
+- rest of app checklist
+
+Full ID-by-ID table: [transpilers/php/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/php/EMITTER_OBJECTIVES.md).
+
+## Tests
+
+Package Vitest emit smoke.
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit php examples/minimal.aip
+```
+
+## Related
+
+- [Emitters overview](/en/emitters)
+- [Master EMITTER_OBJECTIVES](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [First emitters](/en/first-transpiler)
+- [Getting started](/en/getting-started)

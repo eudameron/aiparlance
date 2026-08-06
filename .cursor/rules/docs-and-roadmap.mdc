@@ -12,6 +12,7 @@ After **every** implementation (toolchain, emitter, example, parse/validate, sit
 3. Add a bullet under `[Unreleased]` in [`CHANGELOG.md`](CHANGELOG.md).
 4. If examples or CI change: [`examples/README.md`](examples/README.md), docs Examples pages, [`CONTRIBUTING.md`](CONTRIBUTING.md).
 5. If public emit/playground claims change: `site/src/i18n/locales/en.json` and `pt.json`.
+6. If emitter capabilities change: re-score [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) and `transpilers/<name>/EMITTER_OBJECTIVES.md` (Pass/Partial/Fail/**N/A**, role denominator).
 
 Never leave stale wording such as `unsupported_tier` for tiers that already parse, “Planned” for shipped Preview emitters, or “Core only” when full-tier validate works.
 

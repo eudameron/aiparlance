@@ -1,0 +1,60 @@
+---
+title: MySQL emitter
+description: "@aiparlance/mysql — role schema, score 14/23, objectives and tests"
+---
+
+# MySQL emitter
+
+| | |
+|---|---|
+| Package | `@aiparlance/mysql` |
+| CLI | `aip emit mysql` |
+| Role | `schema` |
+| **Score** | **14/23** (61%) |
+| Band | Strong slice |
+| Scorecard | [transpilers/mysql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/mysql/EMITTER_OBJECTIVES.md) |
+
+Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marks
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 14 | 2 | 7 | 31 |
+
+N/A items are outside the `schema` role and do not affect the denominator.
+
+## What it produces
+
+MySQL DDL twin of PostgreSQL (`database mysql` required).
+
+## Objectives — passing today
+
+- A1, A4–A8 tables / FKs
+- B1–B2 constraints
+- C1–C3 + C6 mysql dialect
+- H3, H5
+
+## Objectives — gaps / next
+
+- C4/C5 migrations
+- H4 only mysql fixtures (partial)
+- A9 soft-delete semantics
+
+Full ID-by-ID table: [transpilers/mysql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/mysql/EMITTER_OBJECTIVES.md).
+
+## Tests
+
+Package Vitest. Use `examples/mysql-minimal.aip` (throws on postgres apps).
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit mysql examples/mysql-minimal.aip
+```
+
+## Related
+
+- [Emitters overview](/en/emitters)
+- [Master EMITTER_OBJECTIVES](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [First emitters](/en/first-transpiler)
+- [Getting started](/en/getting-started)

@@ -9,3 +9,5 @@ process.stdout.write(emitPhp(doc));
 ```
 
 Status: **MVP Preview**.
+
+See [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) (**11/55** app).

@@ -1,0 +1,57 @@
+---
+title: Tests emitter
+description: "@aiparlance/tests — role tests, score 7/18, objectives and tests"
+---
+
+# Tests emitter
+
+| | |
+|---|---|
+| Package | `@aiparlance/tests` |
+| CLI | `aip emit tests` |
+| Role | `tests` |
+| **Score** | **7/18** (39%) |
+| Band | Useful Preview |
+| Scorecard | [transpilers/tests/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/tests/EMITTER_OBJECTIVES.md) |
+
+Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marks
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 7 | 0 | 11 | 36 |
+
+N/A items are outside the `tests` role and do not affect the denominator.
+
+## What it produces
+
+Vitest-style CRUD path fixtures (Pass = fixture coverage).
+
+## Objectives — passing today
+
+- D1–D2, D7 CRUD + prefix + JSON
+- H2–H5
+
+## Objectives — gaps / next
+
+- E auth/policy cases
+- D3–D6 cors/rate/pagination/errors
+
+Full ID-by-ID table: [transpilers/tests/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/tests/EMITTER_OBJECTIVES.md).
+
+## Tests
+
+Package Vitest for emitter output shape.
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit tests examples/blog-crud.aip
+```
+
+## Related
+
+- [Emitters overview](/en/emitters)
+- [Master EMITTER_OBJECTIVES](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [First emitters](/en/first-transpiler)
+- [Getting started](/en/getting-started)

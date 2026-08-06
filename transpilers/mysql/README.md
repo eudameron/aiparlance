@@ -18,4 +18,4 @@ Dialect notes:
 
 Status: **MVP Preview** · Phase D P1 (migration parity after Postgres deepen).
 
-See [`ROADMAP.md`](../../ROADMAP.md).
+See [`ROADMAP.md`](../../ROADMAP.md) and [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) (**14/23** schema).

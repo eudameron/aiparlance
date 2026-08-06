@@ -1,0 +1,57 @@
+---
+title: Emitter Tests
+description: "@aiparlance/tests — papel tests, nota 7/18, objetivos e testes"
+---
+
+# Emitter Tests
+
+| | |
+|---|---|
+| Pacote | `@aiparlance/tests` |
+| CLI | `aip emit tests` |
+| Papel | `tests` |
+| **Nota** | **7/18** (39%) |
+| Faixa | Prévia útil |
+| Scorecard | [transpilers/tests/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/tests/EMITTER_OBJECTIVES.md) |
+
+Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marcadores
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 7 | 0 | 11 | 36 |
+
+Itens N/A estão fora do papel `tests` e não entram no denominador.
+
+## O que produz
+
+Fixtures de paths CRUD estilo Vitest (Pass = cobertura de fixture).
+
+## Objetivos — passando hoje
+
+- D1–D2, D7 CRUD + prefix + JSON
+- H2–H5
+
+## Objetivos — lacunas / próximos
+
+- E casos auth/policy
+- D3–D6 cors/rate/paginação/erros
+
+Tabela completa ID a ID: [transpilers/tests/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/tests/EMITTER_OBJECTIVES.md).
+
+## Testes
+
+Vitest do pacote para formato da saída.
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit tests examples/blog-crud.aip
+```
+
+## Relacionado
+
+- [Visão geral dos emitters](/pt/emitters)
+- [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [Primeiros emitters](/pt/first-transpiler)
+- [Começando](/pt/getting-started)

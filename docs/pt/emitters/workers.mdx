@@ -1,0 +1,58 @@
+---
+title: Emitter Workers
+description: "@aiparlance/workers — papel workers, nota 4/20, objetivos e testes"
+---
+
+# Emitter Workers
+
+| | |
+|---|---|
+| Pacote | `@aiparlance/workers` |
+| CLI | `aip emit workers` |
+| Papel | `workers` |
+| **Nota** | **4/20** (20%) |
+| Faixa | Stub em Prévia |
+| Scorecard | [transpilers/workers/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/workers/EMITTER_OBJECTIVES.md) |
+
+Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marcadores
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 4 | 3 | 13 | 34 |
+
+Itens N/A estão fora do papel `workers` e não entram no denominador.
+
+## O que produz
+
+Stubs TS de job/fila + arestas `dispatches` dos workflows.
+
+## Objetivos — passando hoje
+
+- G2 consts de fila
+- H3–H5
+
+## Objetivos — lacunas / próximos
+
+- G1/F2 runners reais
+- G3–G7 notify/emit/lifecycle/ai_context
+- J1–J3 ops
+
+Tabela completa ID a ID: [transpilers/workers/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/workers/EMITTER_OBJECTIVES.md).
+
+## Testes
+
+Fixture vs `ops-reference.aip`; testes do pacote.
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit workers examples/ops-reference.aip
+```
+
+## Relacionado
+
+- [Visão geral dos emitters](/pt/emitters)
+- [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [Primeiros emitters](/pt/first-transpiler)
+- [Começando](/pt/getting-started)

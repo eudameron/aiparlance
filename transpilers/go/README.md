@@ -16,4 +16,4 @@ Stdlib only — no Gin/Chi/Echo lock-in.
 
 Status: **Preview** · Phase D P1 (after TS/OpenAPI/SQL deepen).
 
-See [`ROADMAP.md`](../../ROADMAP.md).
+See [`ROADMAP.md`](../../ROADMAP.md) and [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) (**12/55** app).

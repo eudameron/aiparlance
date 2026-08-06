@@ -1,0 +1,61 @@
+---
+title: TypeScript emitter
+description: "@aiparlance/typescript — role app, score 12/55, objectives and tests"
+---
+
+# TypeScript emitter
+
+| | |
+|---|---|
+| Package | `@aiparlance/typescript` |
+| CLI | `aip emit typescript` |
+| Role | `app` |
+| **Score** | **12/55** (22%) |
+| Band | Stub / early app Preview |
+| Scorecard | [transpilers/typescript/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/typescript/EMITTER_OBJECTIVES.md) |
+
+Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marks
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 12 | 5 | 38 | 0 |
+
+N/A items are outside the `app` role and do not affect the denominator.
+
+## What it produces
+
+Interfaces + type guards + thin `entityPaths`. Phase D P0 deepen target.
+
+## Objectives — passing today
+
+- A1–A8 types
+- B1 required folding
+- H3–H5 golden + typecheck
+
+## Objectives — gaps / next
+
+- F1–F5 runnable API + DB
+- E* policies
+- D* real HTTP (not paths-only)
+- B3 Zod
+- J* ops
+
+Full ID-by-ID table: [transpilers/typescript/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/typescript/EMITTER_OBJECTIVES.md).
+
+## Tests
+
+Golden `minimal.ts` + emitted output typechecks in isolation. Examples CI.
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit typescript examples/blog-crud.aip
+```
+
+## Related
+
+- [Emitters overview](/en/emitters)
+- [Master EMITTER_OBJECTIVES](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [First emitters](/en/first-transpiler)
+- [Getting started](/en/getting-started)

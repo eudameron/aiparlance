@@ -1,0 +1,61 @@
+---
+title: Emitter Go
+description: "@aiparlance/go — papel app, nota 12/55, objetivos e testes"
+---
+
+# Emitter Go
+
+| | |
+|---|---|
+| Pacote | `@aiparlance/go` |
+| CLI | `aip emit go` |
+| Papel | `app` |
+| **Nota** | **12/55** (22%) |
+| Faixa | Stub / app em Prévia inicial |
+| Scorecard | [transpilers/go/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/go/EMITTER_OBJECTIVES.md) |
+
+Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marcadores
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 12 | 9 | 34 | 0 |
+
+Itens N/A estão fora do papel `app` e não entram no denominador.
+
+## O que produz
+
+Structs + stubs CRUD net/http (501) + middleware de auth só por presença.
+
+## Objetivos — passando hoje
+
+- A1–A8 structs
+- B1
+- H3–H5
+
+## Objetivos — lacunas / próximos
+
+- F2 handlers reais (não 501)
+- F1 main/server
+- E1 auth verificado
+- D2 prefix
+- C/F camada DB
+
+Tabela completa ID a ID: [transpilers/go/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/go/EMITTER_OBJECTIVES.md).
+
+## Testes
+
+Golden `minimal.go` + testes do pacote + CI de examples.
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit go examples/minimal.aip
+```
+
+## Relacionado
+
+- [Visão geral dos emitters](/pt/emitters)
+- [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [Primeiros emitters](/pt/first-transpiler)
+- [Começando](/pt/getting-started)

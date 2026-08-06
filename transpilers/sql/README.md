@@ -30,4 +30,4 @@ if (!validate(doc).ok) throw new Error("invalid");
 console.log(emitSql(doc));
 ```
 
-See [`ROADMAP.md`](../../ROADMAP.md) (Phase D · P0 deepen SQL).
+See [`ROADMAP.md`](../../ROADMAP.md) (Phase D · P0 deepen SQL) and [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) (**15/23** schema).

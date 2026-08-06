@@ -39,6 +39,7 @@ aiparlance.org/
 | [transpilers/](transpilers/) | Emitters (matrix Preview packages) |
 | [packages/](packages/) | Toolchain packages (`@aiparlance/*`) |
 | [ROADMAP.md](ROADMAP.md) | Phase C complete · Phase D (depth & distribution) |
+| [EMITTER_OBJECTIVES.md](EMITTER_OBJECTIVES.md) | Emitter maturity checklist v2 (roles + happy path) |
 | [CHANGELOG.md](CHANGELOG.md) | Project changelog |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
 

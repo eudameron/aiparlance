@@ -9,3 +9,5 @@ process.stdout.write(emitDocs(doc));
 ```
 
 Status: **MVP Preview**.
+
+See [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) (**13/38** docs).

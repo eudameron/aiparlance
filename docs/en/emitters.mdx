@@ -1,0 +1,62 @@
+---
+title: Emitters
+description: Preview emitters — roles, maturity scores, and how objectives are tested
+---
+
+# Emitters
+
+Official Preview emitters live in the monorepo (`transpilers/`). They share one validated AST from `aip parse` / `aip validate`.
+
+Maturity is tracked in [`EMITTER_OBJECTIVES.md`](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md) (**55** checklist IDs). Each package has a role-aware scorecard: ✅ Pass · ⚠️ Partial · ❌ Fail · ➖ N/A (outside role).
+
+**Score** = ✅ ÷ (55 − ➖).
+
+---
+
+## Scoreboard
+
+| Emitter | Role | Score | Docs |
+|---|---|---|---|
+| PostgreSQL | `schema` | **15/23** (65%) | [sql](/en/emitters/sql) |
+| MySQL | `schema` | **14/23** (61%) | [mysql](/en/emitters/mysql) |
+| OpenAPI | `contract` | **16/33** (48%) | [openapi](/en/emitters/openapi) |
+| Tests | `tests` | **7/18** (39%) | [tests](/en/emitters/tests) |
+| Docs | `docs` | **13/38** (34%) | [docs](/en/emitters/docs) |
+| TypeScript | `app` | **12/55** (22%) | [typescript](/en/emitters/typescript) |
+| Go | `app` | **12/55** (22%) | [go](/en/emitters/go) |
+| Python | `app` | **12/55** (22%) | [python](/en/emitters/python) |
+| PHP | `app` | **11/55** (20%) | [php](/en/emitters/php) |
+| Workers | `workers` | **4/20** (20%) | [workers](/en/emitters/workers) |
+
+Scored: 2026-08-06 (checklist v2).
+
+---
+
+## Roles
+
+| Role | Meaning |
+|---|---|
+| `schema` | DDL / durable schema |
+| `contract` | HTTP API contract |
+| `app` | Application types → runnable API |
+| `workers` | Jobs / queues / workflows |
+| `docs` | Human-readable reference |
+| `tests` | Test fixtures / scaffolds |
+
+Specialized emitters are not expected to Pass HTTP runtime items — those are ➖ N/A.
+
+---
+
+## How objectives are tested
+
+1. **Machine tests** — Vitest in `transpilers/<name>/` (+ repo `scripts/examples.test.ts` for goldens / full-tier smoke).
+2. **Manual checklist** — Inspect emit output against each applicable ID in the package [`EMITTER_OBJECTIVES.md`](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md).
+3. **Happy path (Phase D)** — Combined TS + OpenAPI + SQL criteria HP1–HP10 on `examples/blog-crud.aip`.
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit <target> examples/minimal.aip
+node packages/cli/dist/cli.js emit <target> examples/blog-crud.aip
+```
+
+Canonical checklist: [GitHub EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md) · Roadmap: [Phase D](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).

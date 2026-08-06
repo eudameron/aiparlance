@@ -1,0 +1,57 @@
+---
+title: Emitter Python
+description: "@aiparlance/python — papel app, nota 12/55, objetivos e testes"
+---
+
+# Emitter Python
+
+| | |
+|---|---|
+| Pacote | `@aiparlance/python` |
+| CLI | `aip emit python` |
+| Papel | `app` |
+| **Nota** | **12/55** (22%) |
+| Faixa | Stub / app em Prévia inicial |
+| Scorecard | [transpilers/python/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/python/EMITTER_OBJECTIVES.md) |
+
+Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marcadores
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 12 | 2 | 41 | 0 |
+
+Itens N/A estão fora do papel `app` e não entram no denominador.
+
+## O que produz
+
+Apenas dataclasses Python (`Entity` / Create / Update).
+
+## Objetivos — passando hoje
+
+- A1–A8
+- B1
+- H3–H5
+
+## Objetivos — lacunas / próximos
+
+- Todos D/E/F/G/I/J — só models MVP (P2)
+
+Tabela completa ID a ID: [transpilers/python/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/python/EMITTER_OBJECTIVES.md).
+
+## Testes
+
+Vitest do pacote (smoke/snapshots).
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit python examples/minimal.aip
+```
+
+## Relacionado
+
+- [Visão geral dos emitters](/pt/emitters)
+- [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [Primeiros emitters](/pt/first-transpiler)
+- [Começando](/pt/getting-started)

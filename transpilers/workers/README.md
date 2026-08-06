@@ -12,4 +12,4 @@ If the document has no jobs or queues, emits a comment-only module.
 
 Status: **MVP Preview** · Phase D P1 (one concrete queue adapter after P0).
 
-See [`ROADMAP.md`](../../ROADMAP.md).
+See [`ROADMAP.md`](../../ROADMAP.md) and [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) (**4/20** workers).

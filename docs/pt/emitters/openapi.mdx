@@ -1,0 +1,61 @@
+---
+title: Emitter OpenAPI
+description: "@aiparlance/openapi — papel contract, nota 16/33, objetivos e testes"
+---
+
+# Emitter OpenAPI
+
+| | |
+|---|---|
+| Pacote | `@aiparlance/openapi` |
+| CLI | `aip emit openapi` |
+| Papel | `contract` |
+| **Nota** | **16/33** (48%) |
+| Faixa | Prévia útil |
+| Scorecard | [transpilers/openapi/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/EMITTER_OBJECTIVES.md) |
+
+Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marcadores
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 16 | 3 | 14 | 21 |
+
+Itens N/A estão fora do papel `contract` e não entram no denominador.
+
+## O que produz
+
+OpenAPI 3.0.3 JSON: schemas, paths CRUD, `api.prefix`, schemes de auth.
+
+## Objetivos — passando hoje
+
+- A1–A8 schemas Create/Update
+- B1 required
+- D1 CRUD + D2 prefix + D7 JSON
+- E1 securitySchemes
+- H3–H5
+
+## Objetivos — lacunas / próximos
+
+- E2–E6 policy → security por operação
+- D3–D6 cors, rate_limit, paginação, erros
+- I1–I2 client / paridade
+
+Tabela completa ID a ID: [transpilers/openapi/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/EMITTER_OBJECTIVES.md).
+
+## Testes
+
+Golden `minimal.openapi.json` + CI. Prefix OpenAPI assertado em exemplos crm/blog.
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit openapi examples/blog-crud.aip
+```
+
+## Relacionado
+
+- [Visão geral dos emitters](/pt/emitters)
+- [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [Primeiros emitters](/pt/first-transpiler)
+- [Começando](/pt/getting-started)

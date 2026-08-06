@@ -20,4 +20,4 @@ Emits per entity:
 
 Status: **Preview** · Phase D P0 deepen target.
 
-See [`ROADMAP.md`](../../ROADMAP.md).
+See [`ROADMAP.md`](../../ROADMAP.md) and [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) (**12/55** app).

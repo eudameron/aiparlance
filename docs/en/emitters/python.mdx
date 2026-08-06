@@ -1,0 +1,57 @@
+---
+title: Python emitter
+description: "@aiparlance/python — role app, score 12/55, objectives and tests"
+---
+
+# Python emitter
+
+| | |
+|---|---|
+| Package | `@aiparlance/python` |
+| CLI | `aip emit python` |
+| Role | `app` |
+| **Score** | **12/55** (22%) |
+| Band | Stub / early app Preview |
+| Scorecard | [transpilers/python/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/python/EMITTER_OBJECTIVES.md) |
+
+Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marks
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 12 | 2 | 41 | 0 |
+
+N/A items are outside the `app` role and do not affect the denominator.
+
+## What it produces
+
+Python dataclasses (`Entity` / Create / Update) only.
+
+## Objectives — passing today
+
+- A1–A8
+- B1
+- H3–H5
+
+## Objectives — gaps / next
+
+- All D/E/F/G/I/J — models MVP only (P2)
+
+Full ID-by-ID table: [transpilers/python/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/python/EMITTER_OBJECTIVES.md).
+
+## Tests
+
+Package Vitest emit snapshots/smoke.
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit python examples/minimal.aip
+```
+
+## Related
+
+- [Emitters overview](/en/emitters)
+- [Master EMITTER_OBJECTIVES](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [First emitters](/en/first-transpiler)
+- [Getting started](/en/getting-started)

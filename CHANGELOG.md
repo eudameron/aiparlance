@@ -9,6 +9,8 @@ and this project uses a draft **v0.1** language version. A **reference toolchain
 
 ### Added
 
+- Docs **Emitters** menu (EN+PT): overview + per-emitter pages with role, score, objectives, and tests
+- [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) **v2** — role-aware checklist (55 IDs), N/A scoring, combined happy path HP1–HP10; per-emitter scorecards rescored
 - Docs **Examples** / **Exemplos** menu with pages for every reference `.aip` (EN + PT)
 - Robust examples: `blog-crud.aip`, `inventory-crud.aip`, `mysql-minimal.aip`
 - CRUD walkthrough docs (EN + PT)

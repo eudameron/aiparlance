@@ -1,0 +1,61 @@
+---
+title: PostgreSQL emitter
+description: "@aiparlance/sql — role schema, score 15/23, objectives and tests"
+---
+
+# PostgreSQL emitter
+
+| | |
+|---|---|
+| Package | `@aiparlance/sql` |
+| CLI | `aip emit sql` |
+| Role | `schema` |
+| **Score** | **15/23** (65%) |
+| Band | Strong slice |
+| Scorecard | [transpilers/sql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/sql/EMITTER_OBJECTIVES.md) |
+
+Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marks
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 15 | 1 | 7 | 31 |
+
+N/A items are outside the `schema` role and do not affect the denominator.
+
+## What it produces
+
+PostgreSQL DDL: `CREATE TABLE`, indexes, seeds. Primary SQL target.
+
+## Objectives — passing today
+
+- A1, A4–A8 domain columns / FKs / enums
+- B1–B2 NOT NULL / UNIQUE
+- C1–C3 DDL, indexes, seeds
+- C6 postgres dialect
+- H3–H5 CI + naming
+
+## Objectives — gaps / next
+
+- C4/C5 versioned migrations
+- A9 soft-delete read semantics
+- B3/B4 richer validation types
+
+Full ID-by-ID table: [transpilers/sql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/sql/EMITTER_OBJECTIVES.md).
+
+## Tests
+
+Package Vitest + golden `transpilers/sql/fixtures/minimal.sql`. Repo CI asserts SQL for `minimal.aip` and seeds/indexes on richer examples.
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit sql examples/blog-crud.aip
+```
+
+## Related
+
+- [Emitters overview](/en/emitters)
+- [Master EMITTER_OBJECTIVES](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [First emitters](/en/first-transpiler)
+- [Getting started](/en/getting-started)

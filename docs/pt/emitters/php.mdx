@@ -1,0 +1,59 @@
+---
+title: Emitter PHP
+description: "@aiparlance/php — papel app, nota 11/55, objetivos e testes"
+---
+
+# Emitter PHP
+
+| | |
+|---|---|
+| Pacote | `@aiparlance/php` |
+| CLI | `aip emit php` |
+| Papel | `app` |
+| **Nota** | **11/55** (20%) |
+| Faixa | Stub / app em Prévia inicial |
+| Scorecard | [transpilers/php/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/php/EMITTER_OBJECTIVES.md) |
+
+Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marcadores
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 11 | 3 | 41 | 0 |
+
+Itens N/A estão fora do papel `app` e não entram no denominador.
+
+## O que produz
+
+Classes PHP tipadas; enums hoje viram `string`.
+
+## Objetivos — passando hoje
+
+- A1–A3, A5–A8
+- B1
+- H3–H5
+
+## Objetivos — lacunas / próximos
+
+- A4 enums nativos
+- D/E/F runtime
+- resto do checklist app
+
+Tabela completa ID a ID: [transpilers/php/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/php/EMITTER_OBJECTIVES.md).
+
+## Testes
+
+Vitest do pacote (smoke).
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit php examples/minimal.aip
+```
+
+## Relacionado
+
+- [Visão geral dos emitters](/pt/emitters)
+- [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [Primeiros emitters](/pt/first-transpiler)
+- [Começando](/pt/getting-started)

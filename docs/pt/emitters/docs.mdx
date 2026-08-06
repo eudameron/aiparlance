@@ -1,0 +1,60 @@
+---
+title: Emitter Docs
+description: "@aiparlance/docs — papel docs, nota 13/38, objetivos e testes"
+---
+
+# Emitter Docs
+
+| | |
+|---|---|
+| Pacote | `@aiparlance/docs` |
+| CLI | `aip emit docs` |
+| Papel | `docs` |
+| **Nota** | **13/38** (34%) |
+| Faixa | Prévia útil |
+| Scorecard | [transpilers/docs/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/docs/EMITTER_OBJECTIVES.md) |
+
+Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marcadores
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 13 | 0 | 25 | 16 |
+
+Itens N/A estão fora do papel `docs` e não entram no denominador.
+
+## O que produz
+
+Referência Markdown de API/domínio (Pass = documentado, não executado).
+
+## Objetivos — passando hoje
+
+- A1, A4–A8 campos documentados
+- D1–D2, D7 endpoints + prefix
+- H1 + H3–H5
+
+## Objetivos — lacunas / próximos
+
+- B validação
+- E auth/policy
+- G Behavior
+- D3–D6
+
+Tabela completa ID a ID: [transpilers/docs/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/docs/EMITTER_OBJECTIVES.md).
+
+## Testes
+
+Vitest do pacote (smoke Markdown).
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit docs examples/blog-crud.aip
+```
+
+## Relacionado
+
+- [Visão geral dos emitters](/pt/emitters)
+- [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [Primeiros emitters](/pt/first-transpiler)
+- [Começando](/pt/getting-started)

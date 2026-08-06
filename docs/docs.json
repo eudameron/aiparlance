@@ -49,6 +49,22 @@
             ]
           },
           {
+            "group": "Emitters",
+            "pages": [
+              "en/emitters",
+              "en/emitters/sql",
+              "en/emitters/mysql",
+              "en/emitters/openapi",
+              "en/emitters/typescript",
+              "en/emitters/go",
+              "en/emitters/python",
+              "en/emitters/php",
+              "en/emitters/workers",
+              "en/emitters/docs",
+              "en/emitters/tests"
+            ]
+          },
+          {
             "group": "Reference",
             "pages": [
               "en/specification",
@@ -94,6 +110,22 @@
               "pt/examples/mysql-minimal",
               "pt/examples/crm-reference",
               "pt/examples/ops-reference"
+            ]
+          },
+          {
+            "group": "Emitters",
+            "pages": [
+              "pt/emitters",
+              "pt/emitters/sql",
+              "pt/emitters/mysql",
+              "pt/emitters/openapi",
+              "pt/emitters/typescript",
+              "pt/emitters/go",
+              "pt/emitters/python",
+              "pt/emitters/php",
+              "pt/emitters/workers",
+              "pt/emitters/docs",
+              "pt/emitters/tests"
             ]
           },
           {

@@ -1,0 +1,61 @@
+---
+title: Emitter PostgreSQL
+description: "@aiparlance/sql — papel schema, nota 15/23, objetivos e testes"
+---
+
+# Emitter PostgreSQL
+
+| | |
+|---|---|
+| Pacote | `@aiparlance/sql` |
+| CLI | `aip emit sql` |
+| Papel | `schema` |
+| **Nota** | **15/23** (65%) |
+| Faixa | Fatia forte |
+| Scorecard | [transpilers/sql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/sql/EMITTER_OBJECTIVES.md) |
+
+Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marcadores
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 15 | 1 | 7 | 31 |
+
+Itens N/A estão fora do papel `schema` e não entram no denominador.
+
+## O que produz
+
+DDL PostgreSQL: `CREATE TABLE`, índices, seeds. Dialeto SQL primário.
+
+## Objetivos — passando hoje
+
+- A1, A4–A8 colunas / FKs / enums
+- B1–B2 NOT NULL / UNIQUE
+- C1–C3 DDL, índices, seeds
+- C6 dialeto postgres
+- H3–H5 CI + naming
+
+## Objetivos — lacunas / próximos
+
+- C4/C5 migrations versionadas
+- A9 semântica de soft-delete na leitura
+- B3/B4 tipos/validação mais ricos
+
+Tabela completa ID a ID: [transpilers/sql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/sql/EMITTER_OBJECTIVES.md).
+
+## Testes
+
+Vitest do pacote + golden `transpilers/sql/fixtures/minimal.sql`. CI do repo cobre `minimal.aip` e seeds/índices em exemplos ricos.
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit sql examples/blog-crud.aip
+```
+
+## Relacionado
+
+- [Visão geral dos emitters](/pt/emitters)
+- [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [Primeiros emitters](/pt/first-transpiler)
+- [Começando](/pt/getting-started)

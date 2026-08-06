@@ -27,7 +27,7 @@ docs/
 └── pt/
 ```
 
-Community onboarding: [en/getting-started.mdx](en/getting-started.mdx) · emitters: [en/first-transpiler.mdx](en/first-transpiler.mdx) · CRUD: [en/crud-walkthrough.mdx](en/crud-walkthrough.mdx) · examples menu: [en/examples.mdx](en/examples.mdx).
+Community onboarding: [en/getting-started.mdx](en/getting-started.mdx) · emitters maturity: [en/emitters.mdx](en/emitters.mdx) · examples menu: [en/examples.mdx](en/examples.mdx).
 
 **Keep in sync:** after toolchain changes, update EN+PT docs and [`ROADMAP.md`](../ROADMAP.md) (see CONTRIBUTING).
 
@@ -52,6 +52,7 @@ npx mintlify dev
 | First emitters | https://docs.aiparlance.org/en/first-transpiler |
 | CRUD walkthrough | https://docs.aiparlance.org/en/crud-walkthrough |
 | Examples | https://docs.aiparlance.org/en/examples |
+| Emitters | https://docs.aiparlance.org/en/emitters |
 
 ## Deploy
 

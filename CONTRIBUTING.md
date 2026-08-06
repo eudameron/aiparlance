@@ -14,6 +14,7 @@ Thanks for interest in AI Parlance. v0.1 remains a **draft language**. A **refer
 | [`transpilers/`](transpilers/) | Emitters: `sql`, `openapi`, `typescript`, `go`, `mysql`, `workers`, `python`, `php`, `docs`, `tests` |
 | [`scripts/`](scripts/) | Repo CI helpers (example validation + emit asserts) |
 | [`ROADMAP.md`](ROADMAP.md) | Phase C (done) · Phase D (active) |
+| [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) | Maturity checklist v2; each `transpilers/*/EMITTER_OBJECTIVES.md` |
 
 Root `npm` workspaces cover `packages/*` and `transpilers/*` only (not `site/`).
 
@@ -92,6 +93,7 @@ Emit targets: `sql | openapi | typescript | go | mysql | workers | python | php 
 
 - Open an issue before large toolchain PRs so scope matches **Phase D** priorities (depth before new shallow emitters).
 - Prefer small packages: parser/validator changes need tests; emitters need fixtures under `transpilers/*/fixtures/` when goldens apply.
+- After emitter capability changes, update [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) scoreboard and that package’s `EMITTER_OBJECTIVES.md` (Pass/Partial/Fail/N/A + role score).
 - Keep emitters aligned on naming (`@aiparlance/*` helpers) and on the shared validated AST.
 - Do not wire the marketing playground to official packages unless that is the agreed Phase D milestone.
 

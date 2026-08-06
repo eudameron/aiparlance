@@ -9,6 +9,8 @@ AI Parlance turns **draft language + docs** into a **reference toolchain** and, 
 | [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf) | Normative EBNF |
 | [Examples](https://docs.aiparlance.org/en/examples) | All reference `.aip` specs |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to contribute |
+| [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) | Emitter maturity checklist v2 (roles, N/A, 55 IDs) + happy path |
+| [Emitters docs](https://docs.aiparlance.org/en/emitters) | Per-emitter scores & objectives (EN + PT) |
 
 ---
 
@@ -142,11 +144,15 @@ Only if they close ecosystem loops — not for coverage:
 
 #### D2 — Deepen TypeScript + OpenAPI + SQL
 
+Tracked against [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) v2 — raise **schema (SQL)** + **contract (OpenAPI)** + **app (TS)** until the **combined happy path (HP1–HP10)** passes:
+
 - [ ] TS: stronger validation story (Zod or equivalent); policy-aware guards
 - [ ] TS: minimal runnable CRUD handlers (framework chosen and documented)
 - [ ] OpenAPI: per-operation security from `policy` + `auth`
 - [ ] SQL: documented migration workflow (beyond single DDL dump)
 - [ ] Golden / integration tests for `examples/blog-crud.aip` across the three
+- [ ] Re-score `transpilers/{typescript,openapi,sql}/EMITTER_OBJECTIVES.md` after each deepen
+- [ ] HP1–HP10 checklist in `EMITTER_OBJECTIVES.md` all green
 
 **Done when:** README can show “validate blog-crud → migrate → run API → OpenAPI matches” with ≤ one thin glue file.
 

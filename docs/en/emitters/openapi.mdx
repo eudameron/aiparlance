@@ -1,0 +1,61 @@
+---
+title: OpenAPI emitter
+description: "@aiparlance/openapi — role contract, score 16/33, objectives and tests"
+---
+
+# OpenAPI emitter
+
+| | |
+|---|---|
+| Package | `@aiparlance/openapi` |
+| CLI | `aip emit openapi` |
+| Role | `contract` |
+| **Score** | **16/33** (48%) |
+| Band | Useful Preview |
+| Scorecard | [transpilers/openapi/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/EMITTER_OBJECTIVES.md) |
+
+Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+
+## Marks
+
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+|---|---|---|---|
+| 16 | 3 | 14 | 21 |
+
+N/A items are outside the `contract` role and do not affect the denominator.
+
+## What it produces
+
+OpenAPI 3.0.3 JSON: schemas, CRUD paths, `api.prefix`, auth schemes.
+
+## Objectives — passing today
+
+- A1–A8 schemas Create/Update
+- B1 required
+- D1 CRUD + D2 prefix + D7 JSON
+- E1 securitySchemes
+- H3–H5
+
+## Objectives — gaps / next
+
+- E2–E6 policy → per-operation security
+- D3–D6 cors, rate_limit, pagination, errors
+- I1–I2 client / parity
+
+Full ID-by-ID table: [transpilers/openapi/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/EMITTER_OBJECTIVES.md).
+
+## Tests
+
+Golden `minimal.openapi.json` + CI. OpenAPI prefix asserted for crm/blog examples.
+
+```bash
+npm test
+node packages/cli/dist/cli.js emit openapi examples/blog-crud.aip
+```
+
+## Related
+
+- [Emitters overview](/en/emitters)
+- [Master EMITTER_OBJECTIVES](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
+- [First emitters](/en/first-transpiler)
+- [Getting started](/en/getting-started)
