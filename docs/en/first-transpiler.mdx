@@ -5,7 +5,7 @@ description: Official AI Parlance Preview emitters — PostgreSQL through the fu
 
 # First emitters
 
-Phase C of the roadmap delivered the **first official emitters** (transpilers) for AI Parlance. They live in the monorepo as Preview targets — not npm-published packages yet, but real AST → artifact pipelines you can run with `aip emit`.
+Phase C of the roadmap delivered the **first official emitters** (transpilers) for AI Parlance. They live in the monorepo as Preview targets — not npm-published packages yet, but real AST → artifact pipelines you can run with `aip emit`. **Phase D** deepens TypeScript, OpenAPI, and PostgreSQL toward a runnable happy path (see [ROADMAP](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md)).
 
 ---
 
@@ -107,11 +107,11 @@ Full install and a complete CRUD story: [Getting started](/en/getting-started) �
 ## Honest limits (v0.1 Preview)
 
 - Language remains **draft**; emitter depth varies by target (MVP stubs vs richer SQL/OpenAPI).
-- Full-tier examples **parse and validate**; not every Behavior/Security detail is reflected in every emitter yet.
+- Full-tier examples **parse and validate**; not every Behavior/Security detail is reflected in every emitter yet (**Phase D** deepens TS / OpenAPI / SQL).
 - No Nest/Express/Chi lock-in — TypeScript and Go emits stay thin (stdlib / interfaces).
 - Site playground is still **illustrative** and must not be confused with these packages.
 
-Matrix status: [Specification § Transpiler matrix](/en/specification#transpiler-matrix).
+Matrix status: [Specification § Transpiler matrix](/en/specification#transpiler-matrix). Roadmap: [Phase D](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
 
 ---
 

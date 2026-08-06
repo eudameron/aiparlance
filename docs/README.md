@@ -29,6 +29,8 @@ docs/
 
 Community onboarding: [en/getting-started.mdx](en/getting-started.mdx) · emitters: [en/first-transpiler.mdx](en/first-transpiler.mdx) · CRUD: [en/crud-walkthrough.mdx](en/crud-walkthrough.mdx) · examples menu: [en/examples.mdx](en/examples.mdx).
 
+**Keep in sync:** after toolchain changes, update EN+PT docs and [`ROADMAP.md`](../ROADMAP.md) (see CONTRIBUTING).
+
 Reference specs live in [`/examples`](../examples/), not under `docs/`.
 
 ## Local preview

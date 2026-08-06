@@ -1,238 +1,213 @@
-# Roadmap — Phase C (Reference toolchain)
+# Roadmap
 
-This roadmap tracked turning AI Parlance from **specification-only** into a **reference toolchain**, aligned with the public docs:
+AI Parlance turns **draft language + docs** into a **reference toolchain** and, next, into **usable depth** (emitters that close a real CRUD path) and **distribution**.
 
-- Pipeline: `.aip` → Parser → AST → Validator → Transpilers ([Introduction](https://docs.aiparlance.org/en/introduction), [Specification](https://docs.aiparlance.org/en/specification))
-- Normative grammar: [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf)
-- Stability tiers: Core / Infra (stable); Security / Behavior (beta) ([Specification § Stability](https://docs.aiparlance.org/en/specification#stability-levels))
-- Transpiler matrix: PostgreSQL, OpenAPI, TypeScript **Preview**; others Planned ([Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix))
-- PostgreSQL is the **primary** SQL target ([Database](https://docs.aiparlance.org/en/database))
-
-**Status today:** Full v0.1 parse/validate (Core + Infra + Security + Behavior) and Preview emitters: `sql|openapi|typescript|go|mysql|workers|python|php|docs|tests`. The marketing playground remains **illustrative only**.
-
-The overall language remains **draft** until this reference toolchain ships (per Specification).
+| Doc | Role |
+|---|---|
+| [Introduction](https://docs.aiparlance.org/en/introduction) | Pipeline |
+| [Specification](https://docs.aiparlance.org/en/specification) | Grammar summary, MUST rules, matrix, stability |
+| [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf) | Normative EBNF |
+| [Examples](https://docs.aiparlance.org/en/examples) | All reference `.aip` specs |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to contribute |
 
 ---
 
-## Goals
+## Status today (2026-08)
 
-1. Ship a TypeScript toolchain that parses and validates `.aip` against the normative grammar and Specification MUST rules.
-2. Emit useful artifacts from one IR: **PostgreSQL** (primary), **OpenAPI**, then **TypeScript** (first application backend).
-3. Prove multi-target with shared AST — not by rewriting the playground demo.
+| Area | State |
+|---|---|
+| Language | **Draft** v0.1 |
+| Parse / validate | **Full v0.1** — Core + Infra + Security + Behavior |
+| Emitters (Preview) | `sql` · `openapi` · `typescript` · `go` · `mysql` · `workers` · `python` · `php` · `docs` · `tests` |
+| Examples (CI) | `minimal`, `blog-crud`, `inventory-crud`, `mysql-minimal`, `crm-reference`, `ops-reference` |
+| Docs / site | Aligned with 10-emitter matrix + Examples menu (EN + PT) |
+| npm registry | **Not published** — clone monorepo, `npm ci && npm run build` |
+| Marketing playground | **Illustrative only** (not official packages) |
 
-## Non-goals (Phase C)
+**Phase C (reference toolchain) is complete.** Matrix follow-ups after M6 are complete. Active work is **Phase D**.
+
+---
+
+## Phase C — Reference toolchain (complete)
+
+Goal: ship parse → validate → emit for a Core reference path, then expand the matrix.
+
+### Goals (met)
+
+1. TypeScript toolchain parses and validates `.aip` against grammar + MUST rules.
+2. Emit useful artifacts: **PostgreSQL** (primary), **OpenAPI**, **TypeScript**, then the full Preview matrix.
+3. Shared AST — not by rewriting the playground demo.
+
+### Non-goals (still out of scope for Phase C / early Phase D)
 
 | Out of scope | Why |
 |---|---|
-| Implementing Proposed syntax (`permission` decl, `endpoint`) | Preview only until promoted in grammar |
-| Roadmap language features (`has_many`, top-level `enum{}`, `custom`) | Explicitly not v0.1 |
-| MySQL / Go / Python / PHP / Workers / Docs / Tests emitters | Matrix items deferred after the reference path |
-| Replacing Mintlify or rewriting the marketing site | Separate from toolchain |
-| Full Behavior runtime (Temporal-like) | Behavior is beta; parse/validate first, emit later |
+| Proposed syntax (`permission` decl, `endpoint`) | Preview in grammar comments until promoted |
+| Roadmap language features (`has_many`, top-level `enum{}`, `custom`) | Not v0.1 |
+| Full Behavior runtime (Temporal-like) | Parse/validate + stubs first |
+| Replacing Mintlify / full site redesign | Separate from toolchain |
 
----
-
-## Implementation language
-
-| Role | Choice | Rationale |
-|---|---|---|
-| Toolchain (parser, AST, validator, CLI) | **TypeScript** | Matches monorepo (`site/`), enables shared package with future playground |
-| First SQL emitter | **PostgreSQL** | Documented primary target |
-| First API contract emitter | **OpenAPI** | Paths/schemas/security from `entity` + `crud` (+ `api`/`auth`) |
-| First application backend emitter | **TypeScript** | Interfaces + guards (matrix); same language as toolchain |
-| Second application backend (later) | **Go** | structs, handlers, JWT middleware — after TS reference is stable |
-
----
-
-## Package layout (target)
+### Package layout
 
 ```text
 packages/
-  parser/          # lexer + parser → AST (grammar.ebnf)
-  validator/       # semantic MUST rules (Specification § Validation)
+  parser/          # lexer + parser → AST
+  validator/       # semantic MUST rules
   cli/             # aip parse | validate | emit
 transpilers/
-  sql/             # PostgreSQL DDL, indexes, seed → SQL
-  openapi/         # OpenAPI 3.x
-  typescript/      # interfaces, guards, minimal handlers
-  go/              # (Phase C follow-up)
+  sql/ openapi/ typescript/ go/
+  mysql/ workers/ python/ php/ docs/ tests/
 ```
 
-Exact npm package names may use an `@aiparlance/*` scope when scaffolding begins.
+**Input to every transpiler:** validated AST (not raw `.aip` text).
 
-**Input to every transpiler:** validated AST (not raw `.aip` text).  
-**Fixtures:** [`examples/minimal.aip`](examples/minimal.aip) → [`crm-reference.aip`](examples/crm-reference.aip) → [`ops-reference.aip`](examples/ops-reference.aip).
+### Milestones M0–M6
 
----
-
-## Milestones
-
-### M0 — Scaffold (prep)
-
-- [x] Monorepo workspace for `packages/*` and `transpilers/*` (`@aiparlance/*`)
-- [x] Test runner (Vitest) + CI (`.github/workflows/ci.yml`: typecheck + build + test)
-- [x] CLI UX draft (`packages/cli` — `aip parse | validate | emit …`)
-
-**Done when:** empty packages build in CI; no public claim that the toolchain ships yet. **M0 complete** — next is M1 (Core parser).
-
----
-
-### M1 — Parser + AST (Core)
-
-**Coverage (Core, stable):** `app`, `entity`, field types (`primitive`, inline `enum`, `belongs_to`), field modifiers, `crud`, `validation` block, line comments `//`, entity modifiers `timestamps` / `soft_delete`.
-
-**Grammar source of truth:** [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf).
-
-**Accept:**
-
-- [x] `aip parse examples/minimal.aip` succeeds and prints AST JSON
-- [x] Rejects malformed Core with actionable errors (line/column)
-- [x] Infra / Security / Behavior top-level blocks → `unsupported_tier` (`ParseError.code`)
-
-**Out:** semantic validation beyond “tree is well-formed” (M2).
-
-**Status:** **M1 complete** — next is M2 (semantic validator).
-
----
-
-### M2 — Semantic validator
-
-Implement Specification [§ Validation](https://docs.aiparlance.org/en/specification#validation) for Core (+ Infra pieces needed by emitters):
-
-- [x] Missing `database` on `app` (parse always has one `app`)
-- [x] References to missing `entity` (`crud`, `belongs_to`, `validation` target)
-- [x] Unknown fields in `validation` blocks
-- [x] Modifier order / duplicates (error vs warning per rule)
-- [x] Implicit fields awareness (`id`, `created_at`, `updated_at`; `soft_delete` → `deleted_at`) — warnings on shadow
-
-**Accept:**
-
-- [x] `aip validate examples/minimal.aip` exits 0
-- [x] Invalid fixtures exit non-zero with stable error codes/messages
-
-Extend progressively: when Security/Behavior parse lands, add rules for `policy`+`auth`, `workflow` without `when`, missing `event`/`job`, unregistered builtins.
-
-**Status:** **M2 complete** — next is M3 (PostgreSQL emitter).
-
----
-
-### M3 — Transpiler: PostgreSQL (primary)
-
-Per matrix: **DDL, migrations, indexes**. Per Database docs: naming (`User` → `users`, FK `user_id`), semantic types → PostgreSQL, implicit fields in `CREATE TABLE`.
-
-**MVP artifacts from Core:**
-
-- [x] `CREATE TABLE` for each `entity`
-- [x] `belongs_to` → FK columns + `REFERENCES`
-- [x] `unique` / `required` → constraints; `enum` → `CHECK` + `DEFAULT`
-- [x] `soft_delete` / implicit `id` / timestamps in DDL
-- [ ] `index` blocks → `CREATE INDEX` (needs Infra parse — deferred)
-- [ ] `seed` → `INSERT` (needs Infra parse — deferred)
-
-**Accept:**
-
-- [x] `aip emit sql examples/minimal.aip` produces runnable PostgreSQL for the Core example
-- [x] Golden-file tests against `transpilers/sql/fixtures/minimal.sql`
-
-**Defer:** full migration versioning UX; MySQL dialect; `index` / `seed` until Infra-tier parse.
-
-**Status:** **M3 complete** (Core DDL) — next is M4 (OpenAPI).
-
----
-
-### M4 — Transpiler: OpenAPI
-
-Per matrix: **paths, schemas, security**.
-
-**MVP from `entity` + `crud` (+ `app.auth` when present):**
-
-- [x] Schemas from entities (including implicit fields) + Create/Update variants
-- [x] CRUD paths (`POST/GET/PUT/DELETE` per Syntax)
-- [ ] `api.prefix` / `format` (needs Infra `api` parse — deferred; paths at `/`)
-- [x] Security schemes from `app.auth` (`jwt`, `session`, `api_key`, `oauth`)
-
-**Accept:**
-
-- [x] Valid OpenAPI 3.0.3 JSON for `minimal.aip` (golden: `transpilers/openapi/fixtures/minimal.openapi.json`)
-
-**Status:** **M4 complete** — next is M5 (TypeScript emitter).
-
----
-
-### M5 — Transpiler: TypeScript (first backend)
-
-Per matrix: **interfaces, guards**. Per Security multi-target notes: guards/decorators for TypeScript.
-
-**MVP:**
-
-- [x] TypeScript interfaces (or types) per `entity` (`Entity` / `EntityCreate` / `EntityUpdate`)
-- [x] Runtime type guards from field modifiers / `validation` (zero deps; zod deferred)
-- [x] Thin typed CRUD path helpers when `crud` is declared (framework-free)
-
-**Accept:**
-
-- [x] Emitted TS typechecks in isolation
-- [x] Golden tests for `minimal.aip` (`transpilers/typescript/fixtures/minimal.ts`)
-
-**Playground:** only after M5, optionally replace `site/src/lib/transpiler/` with the official packages — never the reverse.
-
-**Status:** **M5 complete** — next is M6 (CLI + CI + docs status).
-
----
-### M6 — CLI + CI + docs status
-
-- [x] CLI: `parse` | `validate` | `emit <sql|openapi|typescript>`
-- [x] CI: validate Core-supported examples (`minimal.aip`); assert richer references fail only with `unsupported_tier`; emit goldens for `minimal.aip` (`scripts/examples.test.ts`)
-- [x] Introduction Note and Specification toolchain line reflect monorepo preview toolchain — **EN + PT**
-- [x] Transpiler matrix: SQL, OpenAPI, TypeScript → **Preview** — **EN + PT**
-- [x] Changelog + CONTRIBUTING for first toolchain / toolchain PRs
-
-**Done when:** public docs no longer say “parser, validator, and transpilers are not published yet” without qualification; matrix reflects reality.
-
-**Status:** **M6 complete** — Phase C Core reference path done. See [Follow-ups](#follow-ups-after-m6).
-
----
-
-## Follow-ups (after M6)
-
-| Order | Target | Notes |
+| Milestone | Deliverable | Status |
 |---|---|---|
-| 1 | **Go** | ✅ Preview — `@aiparlance/go` · `aip emit go` |
-| 2 | Expand Security + Behavior parse/validate | ✅ Infra + Security + Behavior parse/validate; CRM/ops examples validate |
-| 3 | Workers | ✅ Preview — `@aiparlance/workers` · `aip emit workers` |
-| 4 | MySQL | ✅ Preview — `@aiparlance/mysql` · `aip emit mysql` |
-| 5 | Python, PHP | ✅ Preview — `aip emit python\|php` |
-| 6 | Docs / Tests emitters | ✅ Preview — `aip emit docs\|tests` |
+| **M0** | Workspaces, Vitest, CI, CLI UX | ✅ |
+| **M1** | Core parser + AST | ✅ |
+| **M2** | Semantic validator (Core+) | ✅ |
+| **M3** | PostgreSQL DDL (`aip emit sql`) | ✅ — indexes + seeds added in follow-up |
+| **M4** | OpenAPI 3 (`aip emit openapi`) | ✅ — `api.prefix` added in follow-up |
+| **M5** | TypeScript interfaces/guards | ✅ |
+| **M6** | CLI + examples CI + docs status | ✅ |
 
-Further polish: deepen emitters (policy → guards, full MySQL migrations, playground wiring, npm publish).
+### Follow-ups after M6 (complete)
 
-Language features marked **roadmap** in the Specification stay documentation-only until a future language version.
+| Order | Target | Status |
+|---|---|---|
+| 1 | Go emitter | ✅ Preview |
+| 2 | Infra + Security + Behavior parse/validate | ✅ |
+| 3 | Workers | ✅ Preview |
+| 4 | MySQL | ✅ Preview |
+| 5 | Python, PHP | ✅ Preview |
+| 6 | Docs / Tests emitters | ✅ Preview |
+| — | Robust examples + Examples docs menu | ✅ |
+
+Historical detail for M0–M6 accept criteria remains in git history; this file tracks **current** status and **Phase D** forward.
+
+---
+
+## Phase D — Depth & distribution (active)
+
+Close the gap between “Preview stubs” and a **usable happy path**, then distribute packages.
+
+### Goals
+
+1. **Deepen** TypeScript, OpenAPI, and PostgreSQL until a blog CRUD demo can migrate + serve + match OpenAPI with minimal glue.
+2. Reflect **policies** in OpenAPI security and TS guards.
+3. Optionally wire the **playground** to official packages.
+4. **Publish** `@aiparlance/*` to npm when depth is honest enough for early adopters.
+
+### Non-goals (Phase D)
+
+| Out of scope | Why |
+|---|---|
+| Ten more shallow emitters | Prefer depth over matrix width |
+| UI / mobile emitters | Outside IR scope |
+| Language v0.2 features | Separate language milestone |
+| Production Behavior orchestrator | Stubs + one concrete worker adapter max |
+
+### Priority order (deepen first)
+
+| Priority | Emitter | Target depth |
+|---|---|---|
+| **P0** | **TypeScript** | Zod (or richer guards), thin runnable CRUD (e.g. Hono), policy checks |
+| **P0** | **OpenAPI** | Policy → security/scopes; richer examples from seeds |
+| **P0** | **SQL (PostgreSQL)** | Versioned migrations story; keep indexes/seeds solid |
+| P1 | Go | Mirror TS happy-path depth as second backend |
+| P1 | Workers | One concrete adapter (e.g. BullMQ-shaped stubs) |
+| P1 | MySQL | Parity with Postgres migration story |
+| P2 | python / php / docs / tests | Polish only; no new scope |
+
+### New emitters worth considering (after P0)
+
+Only if they close ecosystem loops — not for coverage:
+
+1. Prisma or Drizzle schema  
+2. Zod as dedicated emit (if not folded into TypeScript)  
+3. TS HTTP client / SDK  
+4. One runnable scaffold (Hono or FastAPI) — may live inside `typescript` deepen
+
+### Milestones (Phase D)
+
+#### D1 — Truth sync & docs hygiene
+
+- [x] Docs/site match 10-emitter reality (EN + PT)
+- [x] Examples menu + CRUD walkthrough + robust `.aip` fixtures
+- [x] This roadmap rewritten for post–Phase C reality
+- [x] CONTRIBUTING + CHANGELOG always reflect current CI/examples rules
+- [x] Cursor / contributor rule: update docs + roadmap after implementations
+
+#### D2 — Deepen TypeScript + OpenAPI + SQL
+
+- [ ] TS: stronger validation story (Zod or equivalent); policy-aware guards
+- [ ] TS: minimal runnable CRUD handlers (framework chosen and documented)
+- [ ] OpenAPI: per-operation security from `policy` + `auth`
+- [ ] SQL: documented migration workflow (beyond single DDL dump)
+- [ ] Golden / integration tests for `examples/blog-crud.aip` across the three
+
+**Done when:** README can show “validate blog-crud → migrate → run API → OpenAPI matches” with ≤ one thin glue file.
+
+#### D3 — Playground + npm
+
+- [ ] Marketing playground calls official `@aiparlance/*` (or clearly documents remaining limits)
+- [ ] Publish packages to npm (`parser`, `validator`, `cli`, priority emitters)
+- [ ] Getting started uses `npx` / global CLI without cloning (or documents both paths)
+
+#### D4 — Secondary depth (optional)
+
+- [ ] Go parity with TS happy path (thin)
+- [ ] Workers: one queue adapter
+- [ ] MySQL migration parity
 
 ---
 
 ## Tier rollout (parse / validate)
 
-Emitters may start on Core-only AST. Expand parsing in this order (matches stability):
-
 ```text
-Core (stable)     → M1–M5 foundation
-Infra (stable)    → index, api, seed, timestamps, soft_delete (needed for M3/M4 depth)
-Security (beta)   → auth, policy, predicates (OpenAPI security + TS guards)
-Behavior (beta)   → workflow, event, lifecycle, job, queue, ai_context (Workers later)
+Core (stable)     → ✅ M1–M5 foundation
+Infra (stable)    → ✅ index, api, seed, timestamps, soft_delete
+Security (beta)   → ✅ auth, policy, predicates (emitter enrichment = Phase D)
+Behavior (beta)   → ✅ workflow, event, lifecycle, job, queue, ai_context
 ```
 
-Beta syntax may change between v0.x minors; keep emitters tolerant or version-gated.
+Beta syntax may still change between v0.x minors; keep emitters tolerant or version-gated.
 
 ---
 
-## Success criteria (Phase C complete)
+## Success criteria
 
-- [x] Reference parser + validator published (TypeScript packages in monorepo)
-- [x] `examples/minimal.aip` validates and emits SQL + OpenAPI + TypeScript
-- [x] PostgreSQL remains documented and implemented as primary SQL target
-- [x] Transpiler matrix updated for shipped targets (EN + PT)
-- [x] Playground either still labeled illustrative or wired to official packages
-- [x] CONTRIBUTING updated: toolchain PRs welcome under package guidelines
+### Phase C (met)
+
+- [x] Reference parser + validator in monorepo
+- [x] `minimal.aip` validates and emits SQL + OpenAPI + TypeScript
+- [x] PostgreSQL primary SQL target
+- [x] Matrix updated for shipped Preview targets (EN + PT)
+- [x] Playground labeled illustrative **or** wired to official packages
+- [x] CONTRIBUTING welcomes toolchain PRs
+
+### Phase D (in progress)
+
+- [ ] One documented end-to-end happy path (blog CRUD)
+- [ ] Policy reflected in OpenAPI + TS
+- [ ] npm publish of core packages
+- [ ] Docs/roadmap stay in sync after every implementation (process)
+
+---
+
+## Documentation & roadmap policy
+
+**After every implementation** (feature, emitter depth, parse/validate change, or public example):
+
+1. Update **this file** if status, milestones, or priorities changed.
+2. Update **EN + PT** Mintlify pages that mention the old behavior.
+3. Update [`CHANGELOG.md`](CHANGELOG.md) under `[Unreleased]`.
+4. Update [`CONTRIBUTING.md`](CONTRIBUTING.md) / [`examples/README.md`](examples/README.md) when CI or contributor flows change.
+5. Keep site i18n (`site/src/i18n/locales/*.json`) honest about emit targets and playground limits.
+
+Do not leave “Planned” / `unsupported_tier` / “Core only” claims in docs when the toolchain already supports more.
 
 ---
 
@@ -240,13 +215,11 @@ Beta syntax may change between v0.x minors; keep emitters tolerant or version-ga
 
 | Doc | Role |
 |---|---|
-| [Introduction](https://docs.aiparlance.org/en/introduction) | Pipeline + draft-language / toolchain note |
 | [Getting started](https://docs.aiparlance.org/en/getting-started) | Install, CLI, emit matrix |
-| [CRUD walkthrough](https://docs.aiparlance.org/en/crud-walkthrough) | Complete blog CRUD → emit |
-| [Specification](https://docs.aiparlance.org/en/specification) | Grammar summary, validation MUST, matrix, stability |
-| [Syntax](https://docs.aiparlance.org/en/syntax) | Core + Infra blocks |
-| [Database](https://docs.aiparlance.org/en/database) | PostgreSQL primary, naming, seed |
-| [Security](https://docs.aiparlance.org/en/security) | auth, policy, OpenAPI/TS artifacts |
-| [Workflows](https://docs.aiparlance.org/en/workflows) | Behavior beta (post-MVP emit) |
-| [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf) | Normative EBNF |
+| [First emitters](https://docs.aiparlance.org/en/first-transpiler) | Emitter story |
+| [CRUD walkthrough](https://docs.aiparlance.org/en/crud-walkthrough) | Blog CRUD → emit |
+| [Examples](https://docs.aiparlance.org/en/examples) | Reference specs |
+| [Database](https://docs.aiparlance.org/en/database) | PostgreSQL primary, MySQL Preview |
+| [Security](https://docs.aiparlance.org/en/security) | auth, policy |
+| [Workflows](https://docs.aiparlance.org/en/workflows) | Behavior beta |
 | [`examples/`](examples/) | Conformance fixtures |

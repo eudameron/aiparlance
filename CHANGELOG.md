@@ -9,17 +9,26 @@ and this project uses a draft **v0.1** language version. A **reference toolchain
 
 ### Added
 
-- **Infra / Security / Behavior parse + validate** — `index`, `api`, `seed`, `policy`, `workflow`, `event`, `lifecycle`, `job`, `queue`, `ai_context`; `crm-reference` / `ops-reference` validate
+- Docs **Examples** / **Exemplos** menu with pages for every reference `.aip` (EN + PT)
+- Robust examples: `blog-crud.aip`, `inventory-crud.aip`, `mysql-minimal.aip`
+- CRUD walkthrough docs (EN + PT)
+- **Infra / Security / Behavior parse + validate** — `index`, `api`, `seed`, `policy`, `workflow`, `event`, `lifecycle`, `job`, `queue`, `ai_context`
 - SQL: `CREATE INDEX` + `INSERT` seeds; OpenAPI: `api.prefix` on paths
 - Matrix emitters (Preview): `mysql`, `workers`, `python`, `php`, `docs`, `tests`
-- **Go emitter** (`@aiparlance/go`) and `aip emit go` — structs, thin handlers, auth middleware stubs
+- **Go emitter** (`@aiparlance/go`) and `aip emit go`
 - Phase C **M6**: CI covers examples + goldens; CONTRIBUTING for toolchain PRs
-- Docs: Getting started + First emitters; site toolchain pages
+- Getting started + First emitters docs; site toolchain pages for the full matrix
 
 ### Changed
 
-- Docs, site copy, and CONTRIBUTING treat Core **parser / validator / SQL / OpenAPI / TypeScript** emitters as available in the monorepo (`aip parse` / `validate` / `emit`), not specification-only
-- Transpiler matrix: PostgreSQL, OpenAPI, and TypeScript marked **Preview** (EN + PT)
+- [`ROADMAP.md`](ROADMAP.md): Phase C marked complete; **Phase D** (depth & distribution) is active
+- CONTRIBUTING: full-tier examples CI; docs/roadmap sync policy; Phase D PR guidance
+- Docs/site treat all ten Preview emitters and full-tier validate as current reality
+- Transpiler matrix: all listed targets **Preview** (EN + PT); MySQL no longer Planned
+
+### Policy
+
+- After every implementation, update roadmap + documentation (EN/PT) + changelog (see ROADMAP § Documentation & roadmap policy)
 
 ## [0.1.0] — 2026-08-06
 
@@ -27,7 +36,7 @@ and this project uses a draft **v0.1** language version. A **reference toolchain
 
 - Normative prose documentation (EN + PT) via Mintlify — [docs.aiparlance.org](https://docs.aiparlance.org)
 - Marketing site (Astro) — [aiparlance.org](https://aiparlance.org)
-- Machine-oriented grammar at [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf) with all Core / Infra / Security (beta) / Behavior (beta) nonterminals defined
+- Machine-oriented grammar at [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf)
 - Reference examples: `minimal.aip`, `crm-reference.aip`, `ops-reference.aip`
 - [`CONTRIBUTING.md`](CONTRIBUTING.md)
 - Phase C reference toolchain (M0–M5):
@@ -45,10 +54,9 @@ and this project uses a draft **v0.1** language version. A **reference toolchain
 - Docs EBNF summary requires `app` first (`program = app_block , { block }`)
 - Proposed features (`permission` decl, `endpoint`) stay comments-only in the grammar
 
-### Known gaps
+### Known gaps (at 0.1.0 release; largely addressed in Unreleased)
 
-- Infra / Security / Behavior blocks are not fully parsed yet (Core-tier validate with warnings on richer examples)
-- Remaining matrix targets (Go, MySQL, Python, PHP, Workers, …) are **Planned**
-- Playground on the marketing site is illustrative only
+- At tag time, Infra / Security / Behavior parse and remaining matrix emitters were still in progress
+- Playground on the marketing site remains illustrative until Phase D
 
-See [`ROADMAP.md`](ROADMAP.md) for follow-ups after Phase C.
+See [`ROADMAP.md`](ROADMAP.md) for Phase D.

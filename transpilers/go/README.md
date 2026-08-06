@@ -14,4 +14,6 @@ Emits per entity:
 
 Stdlib only — no Gin/Chi/Echo lock-in.
 
-Status: **Preview** (post–Phase C follow-up).
+Status: **Preview** · Phase D P1 (after TS/OpenAPI/SQL deepen).
+
+See [`ROADMAP.md`](../../ROADMAP.md).

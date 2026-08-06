@@ -120,7 +120,7 @@ Line comments: `//` to end of line (ignored by the parser).
 
 Top-level `enum { }` / `relation { }` blocks and `has_one` / `has_many` / `many_to_many` are **roadmap**, not v0.1.
 
-Beta blocks may change syntax between minor v0.x releases. Core is stable within v0.1; the overall spec remains **draft** until a reference toolchain ships.
+Beta blocks may change syntax between minor v0.x releases. Core is stable within v0.1; the overall language remains **draft** (Preview toolchain in the monorepo — not a frozen v1.0). See [ROADMAP](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
 
 ---
 
@@ -241,13 +241,13 @@ The semantic validator must reject:
 
 | Target | Artifacts | Status v0.1 |
 |---|---|---|
-| PostgreSQL | DDL, indexes (Core entities) | Preview (`aip emit sql`) |
-| MySQL | DDL, migrations | Preview (`aip emit mysql`) |
-| Go | structs, handlers, JWT middleware | Preview (`aip emit go`) |
-| TypeScript | interfaces, guards | Preview (`aip emit typescript`) |
-| Python | models, decorators | Preview (`aip emit python`) |
-| PHP | classes, policies | Preview (`aip emit php`) |
-| OpenAPI | paths, schemas, security | Preview (`aip emit openapi`) |
+| PostgreSQL | DDL, indexes, seeds (Core entities + Infra) | Preview (`aip emit sql`) · Phase D: migrations |
+| MySQL | DDL, indexes, seeds | Preview (`aip emit mysql`) |
+| Go | structs, handlers, JWT middleware stubs | Preview (`aip emit go`) |
+| TypeScript | interfaces, guards | Preview (`aip emit typescript`) · Phase D: deepen |
+| Python | models / dataclasses MVP | Preview (`aip emit python`) |
+| PHP | classes MVP | Preview (`aip emit php`) |
+| OpenAPI | paths, schemas, security schemes | Preview (`aip emit openapi`) · Phase D: policy |
 | Docs | Markdown / API reference | Preview (`aip emit docs`) |
 | Tests | CRUD fixtures | Preview (`aip emit tests`) |
 | Workers | queues, jobs from `workflow` | Preview (`aip emit workers`) |

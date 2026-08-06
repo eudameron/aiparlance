@@ -1,0 +1,20 @@
+---
+description: Always update ROADMAP and docs (EN+PT) after implementations
+alwaysApply: true
+---
+
+# Docs and roadmap stay current
+
+After **every** implementation (toolchain, emitter, example, parse/validate, site claim):
+
+1. Update [`ROADMAP.md`](ROADMAP.md) — status tables, milestone checkboxes, Phase D priorities.
+2. Update affected Mintlify pages in **both** `docs/en/` and `docs/pt/` (and `docs/docs.json` if nav changes).
+3. Add a bullet under `[Unreleased]` in [`CHANGELOG.md`](CHANGELOG.md).
+4. If examples or CI change: [`examples/README.md`](examples/README.md), docs Examples pages, [`CONTRIBUTING.md`](CONTRIBUTING.md).
+5. If public emit/playground claims change: `site/src/i18n/locales/en.json` and `pt.json`.
+
+Never leave stale wording such as `unsupported_tier` for tiers that already parse, “Planned” for shipped Preview emitters, or “Core only” when full-tier validate works.
+
+Prefer updating docs in the **same PR/commit** as the code. If split, docs follow immediately in the next commit before starting unrelated work.
+
+Phase context: **Phase C complete** · **Phase D** = deepen TypeScript / OpenAPI / SQL, then playground + npm (see ROADMAP).

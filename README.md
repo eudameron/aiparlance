@@ -38,7 +38,7 @@ aiparlance.org/
 | [site/](site/) | Public marketing site ([EN](https://aiparlance.org/en) · [PT](https://aiparlance.org/pt)) |
 | [transpilers/](transpilers/) | Emitters (matrix Preview packages) |
 | [packages/](packages/) | Toolchain packages (`@aiparlance/*`) |
-| [ROADMAP.md](ROADMAP.md) | Phase C toolchain roadmap |
+| [ROADMAP.md](ROADMAP.md) | Phase C complete · Phase D (depth & distribution) |
 | [CHANGELOG.md](CHANGELOG.md) | Project changelog |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
 
@@ -53,7 +53,7 @@ node packages/cli/dist/cli.js emit openapi examples/blog-crud.aip
 node packages/cli/dist/cli.js emit mysql examples/mysql-minimal.aip
 ```
 
-See [ROADMAP.md](ROADMAP.md) (Phase C **M6** complete) and [CONTRIBUTING.md](CONTRIBUTING.md).
+See [ROADMAP.md](ROADMAP.md) (**Phase C** complete · **Phase D** active) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Official site
 

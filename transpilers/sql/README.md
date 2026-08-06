@@ -1,6 +1,6 @@
 # @aiparlance/sql
 
-PostgreSQL DDL emitter (**primary** SQL target — Phase C / M3).
+PostgreSQL DDL emitter (**primary** SQL target). Phase C / M3 MVP; Infra follow-up added indexes and seeds. **Phase D** deepens migrations.
 
 ## Coverage
 
@@ -11,11 +11,13 @@ PostgreSQL DDL emitter (**primary** SQL target — Phase C / M3).
 | `enum(…)` → `CHECK` | Yes |
 | `belongs_to` → `*_id` FK | Yes |
 | `soft_delete` → `deleted_at` | Yes |
-| `index` / `seed` blocks | Deferred (Infra parse) |
-| MySQL | Deferred |
+| `index` → `CREATE INDEX` | Yes |
+| `seed` → `INSERT` | Yes |
+| Versioned migrations UX | Phase D |
+| MySQL dialect | Use `@aiparlance/mysql` |
 
 ```bash
-node packages/cli/dist/cli.js emit sql examples/minimal.aip
+node packages/cli/dist/cli.js emit sql examples/blog-crud.aip
 ```
 
 ```ts
@@ -28,4 +30,4 @@ if (!validate(doc).ok) throw new Error("invalid");
 console.log(emitSql(doc));
 ```
 
-See [`ROADMAP.md`](../../ROADMAP.md).
+See [`ROADMAP.md`](../../ROADMAP.md) (Phase D · P0 deepen SQL).

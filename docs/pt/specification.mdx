@@ -120,7 +120,7 @@ Comentários de linha: `//` até o fim da linha.
 
 Blocos de topo `enum { }` / `relation { }` e `has_one` / `has_many` / `many_to_many` estão no **roadmap**, não no v0.1.
 
-Blocos beta podem mudar entre releases v0.x menores. O Core é estável dentro do v0.1; a spec global permanece **rascunho** até existir toolchain de referência.
+Blocos beta podem mudar entre releases v0.x menores. O Core é estável dentro do v0.1; a linguagem permanece **rascunho** (toolchain em Prévia no monorepo — ainda não é v1.0 congelada). Ver [ROADMAP](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
 
 ---
 
@@ -239,13 +239,13 @@ O validador deve rejeitar:
 
 | Alvo | Artefatos | Status v0.1 |
 |---|---|---|
-| PostgreSQL | DDL, índices (entidades Core) | Prévia (`aip emit sql`) |
-| MySQL | DDL, migrations | Prévia (`aip emit mysql`) |
-| Go | structs, handlers, middleware JWT | Prévia (`aip emit go`) |
-| TypeScript | interfaces, guards | Prévia (`aip emit typescript`) |
-| Python | models, decorators | Prévia (`aip emit python`) |
-| PHP | classes, policies | Prévia (`aip emit php`) |
-| OpenAPI | paths, schemas, security | Prévia (`aip emit openapi`) |
+| PostgreSQL | DDL, índices, seeds (Core + Infra) | Prévia (`aip emit sql`) · Phase D: migrations |
+| MySQL | DDL, índices, seeds | Prévia (`aip emit mysql`) |
+| Go | structs, handlers, stubs de middleware JWT | Prévia (`aip emit go`) |
+| TypeScript | interfaces, guards | Prévia (`aip emit typescript`) · Phase D: aprofundar |
+| Python | models / dataclasses MVP | Prévia (`aip emit python`) |
+| PHP | classes MVP | Prévia (`aip emit php`) |
+| OpenAPI | paths, schemas, security schemes | Prévia (`aip emit openapi`) · Phase D: policy |
 | Docs | Markdown / referência API | Prévia (`aip emit docs`) |
 | Testes | fixtures CRUD | Prévia (`aip emit tests`) |
 | Workers | filas, jobs | Prévia (`aip emit workers`) |

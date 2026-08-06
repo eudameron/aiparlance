@@ -16,4 +16,6 @@ Dialect notes:
 - timestamps → `DATETIME(6)`
 - `CREATE INDEX` + `seed` `INSERT` when present
 
-Status: **MVP Preview**.
+Status: **MVP Preview** · Phase D P1 (migration parity after Postgres deepen).
+
+See [`ROADMAP.md`](../../ROADMAP.md).

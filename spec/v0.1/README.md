@@ -1,6 +1,6 @@
 # AI Parlance v0.1
 
-Normative artifacts for version **0.1** (draft until a reference toolchain ships).
+Normative artifacts for version **0.1** (language remains **draft**; Preview reference toolchain ships in the monorepo — see [`ROADMAP.md`](../../ROADMAP.md)).
 
 ## Files
 

@@ -1,6 +1,6 @@
 # @aiparlance/typescript
 
-TypeScript interfaces + type guards emitter (first application backend).
+TypeScript interfaces + type guards emitter (first application backend). Phase C / M5 MVP. **Phase D** deepens toward Zod / runnable CRUD / policy guards.
 
 ```ts
 import { parse } from "@aiparlance/parser";
@@ -10,7 +10,7 @@ const doc = parse(source, "app.aip");
 process.stdout.write(emitTypeScript(doc));
 ```
 
-Or via CLI: `aip emit typescript examples/minimal.aip`
+Or via CLI: `aip emit typescript examples/blog-crud.aip`
 
 Emits per entity:
 
@@ -18,4 +18,6 @@ Emits per entity:
 - `isEntity` / `isEntityCreate` type guards (zero runtime deps)
 - Thin `entityPaths` helpers when `crud Entity` is declared
 
-Status: Phase C / **M5**.
+Status: **Preview** · Phase D P0 deepen target.
+
+See [`ROADMAP.md`](../../ROADMAP.md).
