@@ -1,0 +1,187 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { getMessages, locales, localePath, type Locale } from "@/i18n";
+
+export function getStaticPaths() {
+  const slugs = ["postgresql", "openapi", "typescript"] as const;
+  return locales.flatMap((lang) =>
+    slugs.map((slug) => ({ params: { lang, slug } }))
+  );
+}
+
+const { lang, slug } = Astro.params;
+const locale = lang as Locale;
+const t = getMessages(locale);
+const m = t.emittersMarketing;
+const page = m.pages[slug as "postgresql" | "openapi" | "typescript"];
+const path = `emitters/${slug}`;
+---
+
+<Layout locale={locale} t={t} title={page.title} description={page.description} path={path}>
+  <Header locale={locale} t={t} path={path} />
+  <main>
+    <section class="section mkt-hero">
+      <div class="container">
+        <a class="back" href={localePath(locale, "/emitters")}>{m.backHub}</a>
+        <span class="badge">{page.badge}</span>
+        <h1>{page.headline}</h1>
+        <p class="lead">{page.sub}</p>
+        <code class="cmd">{page.command}</code>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container split">
+        <div>
+          <h2>{m.benefitsTitle}</h2>
+          <ul class="bullets">
+            {page.benefits.map((b) => <li>{b}</li>)}
+          </ul>
+        </div>
+        <div>
+          <h2>{m.forWhomTitle}</h2>
+          <ul class="bullets">
+            {page.forWhom.map((b) => <li>{b}</li>)}
+          </ul>
+          <h2 class="mt">{m.notTitle}</h2>
+          <ul class="bullets muted">
+            {page.notFor.map((b) => <li>{b}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section try-section">
+      <div class="container">
+        <h2>{m.exampleTitle}</h2>
+        <pre class="code"><code>{page.example}</code></pre>
+        <h3>{m.honestyTitle}</h3>
+        <p class="honesty">{page.honesty}</p>
+        <div class="actions">
+          <a
+            class="btn btn-primary"
+            href={`https://docs.aiparlance.org/${locale}/${page.docsPath}`}
+            rel="noopener"
+          >
+            {m.ctaDocs}
+          </a>
+          <a
+            class="btn btn-ghost"
+            href={`https://docs.aiparlance.org/${locale}/getting-started`}
+            rel="noopener"
+          >
+            {m.ctaStart}
+          </a>
+          <a class="btn btn-ghost" href={localePath(locale, "/emitters")}>{m.ctaHub}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer t={t} locale={locale} />
+</Layout>
+
+<style>
+  .mkt-hero {
+    padding-top: 3rem;
+  }
+  .back {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--accent-cyan);
+    margin-bottom: 1rem;
+  }
+  h1 {
+    font-size: clamp(1.85rem, 4vw, 2.6rem);
+    letter-spacing: -0.03em;
+    margin: 0 0 1rem;
+    max-width: 18ch;
+  }
+  .lead {
+    color: var(--text-muted);
+    max-width: 62ch;
+    font-size: 1.05rem;
+    margin: 0 0 1rem;
+  }
+  .cmd {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent-cyan);
+  }
+  .split {
+    display: grid;
+    gap: 2rem;
+  }
+  @media (min-width: 900px) {
+    .split {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3rem;
+    }
+  }
+  h2 {
+    margin: 0 0 0.85rem;
+    font-size: 1.2rem;
+  }
+  h2.mt {
+    margin-top: 1.75rem;
+  }
+  h3 {
+    margin: 0 0 0.65rem;
+    font-size: 1.05rem;
+  }
+  .bullets {
+    margin: 0;
+    padding-left: 1.15rem;
+    color: var(--text-muted);
+  }
+  .bullets li {
+    margin-bottom: 0.55rem;
+  }
+  .bullets.muted {
+    opacity: 0.9;
+  }
+  .try-section {
+    background: var(--bg-elevated);
+    border-block: 1px solid var(--border);
+  }
+  .code {
+    margin: 0 0 1.5rem;
+    padding: 1.15rem 1.25rem;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+  }
+  .code code {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--accent-cyan);
+    white-space: pre;
+  }
+  .honesty {
+    margin: 0 0 1.5rem;
+    max-width: 62ch;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

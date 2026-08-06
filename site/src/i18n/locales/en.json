@@ -58,60 +58,86 @@
       {
         "name": "PostgreSQL",
         "badge": "1st",
-        "body": "DDL, indexes, seeds. aip emit sql"
+        "body": "DDL, indexes, seeds. aip emit sql",
+        "slug": "postgresql",
+        "docs": ""
       },
       {
         "name": "OpenAPI 3",
         "badge": "Preview",
-        "body": "Schemas + CRUD paths (+ auth). aip emit openapi"
+        "body": "Schemas + CRUD paths (+ auth). aip emit openapi",
+        "slug": "openapi",
+        "docs": ""
       },
       {
         "name": "TypeScript",
         "badge": "Preview",
-        "body": "Interfaces, guards, path helpers. aip emit typescript"
+        "body": "Interfaces, guards, path helpers. aip emit typescript",
+        "slug": "typescript",
+        "docs": ""
       },
       {
         "name": "Go",
         "badge": "Preview",
-        "body": "Structs, net/http stubs, auth. aip emit go"
+        "body": "Structs, net/http stubs, auth. aip emit go",
+        "slug": "",
+        "docs": "go"
       },
       {
         "name": "MySQL",
         "badge": "Preview",
-        "body": "DDL for database mysql. aip emit mysql"
+        "body": "DDL for database mysql. aip emit mysql",
+        "slug": "",
+        "docs": "mysql"
       },
       {
         "name": "Workers",
         "badge": "Preview",
-        "body": "Jobs and queues stubs. aip emit workers"
+        "body": "Jobs and queues stubs. aip emit workers",
+        "slug": "",
+        "docs": "workers"
       },
       {
         "name": "Python",
         "badge": "Preview",
-        "body": "Dataclasses MVP. aip emit python"
+        "body": "Dataclasses MVP. aip emit python",
+        "slug": "",
+        "docs": "python"
       },
       {
         "name": "PHP",
         "badge": "Preview",
-        "body": "Classes MVP. aip emit php"
+        "body": "Classes MVP. aip emit php",
+        "slug": "",
+        "docs": "php"
       },
       {
         "name": "Docs",
         "badge": "Preview",
-        "body": "Markdown API reference. aip emit docs"
+        "body": "Markdown API reference. aip emit docs",
+        "slug": "",
+        "docs": "docs"
       },
       {
         "name": "Tests",
         "badge": "Preview",
-        "body": "CRUD fixtures. aip emit tests"
+        "body": "CRUD fixtures. aip emit tests",
+        "slug": "",
+        "docs": "tests"
       }
     ],
-    "cta": "Read the emitters story",
+    "cta": "Explore emitters",
     "ctaSecondary": "Install & test"
   },
   "pipeline": {
     "title": "How it works",
-    "steps": ["Human or AI", ".aip spec", "AST + validation", "Emitters", "SQL · OpenAPI · TS · Go · …"]
+    "steps": [
+      "Human or AI",
+      ".aip spec",
+      "AST + validation",
+      "Emitters",
+      "SQL · OpenAPI · TS · Go · …"
+    ]
   },
   "playground": {
     "title": "Illustrative demo",
@@ -136,7 +162,7 @@
     "title": "Try the reference toolchain",
     "body": "Clone the repo, run the test suite, and emit from examples/minimal.aip or the blog CRUD walkthrough.",
     "button": "Getting started guide",
-    "buttonSecondary": "First emitters"
+    "buttonSecondary": "Emitter pages"
   },
   "footer": {
     "tagline": "AI-first IR · 10 Preview emitters.",
@@ -157,57 +183,275 @@
       {
         "title": "PostgreSQL DDL",
         "command": "aip emit sql",
-        "body": "Tables, FKs, enums, soft delete, indexes, and seeds. Primary SQL target in the docs."
+        "body": "Tables, FKs, enums, soft delete, indexes, and seeds. Primary SQL target in the docs.",
+        "slug": "postgresql",
+        "docs": ""
       },
       {
         "title": "OpenAPI 3",
         "command": "aip emit openapi",
-        "body": "Entity / Create / Update schemas and CRUD paths. Optional security schemes from app.auth."
+        "body": "Entity / Create / Update schemas and CRUD paths. Optional security schemes from app.auth.",
+        "slug": "openapi",
+        "docs": ""
       },
       {
         "title": "TypeScript",
         "command": "aip emit typescript",
-        "body": "Interfaces plus zero-dependency type guards and thin path helpers."
+        "body": "Interfaces plus zero-dependency type guards and thin path helpers.",
+        "slug": "typescript",
+        "docs": ""
       },
       {
         "title": "Go",
         "command": "aip emit go",
-        "body": "Structs, thin net/http CRUD stubs, and AuthMiddleware from app.auth."
+        "body": "Structs, thin net/http CRUD stubs, and AuthMiddleware from app.auth.",
+        "slug": "",
+        "docs": "go"
       },
       {
         "title": "MySQL DDL",
         "command": "aip emit mysql",
-        "body": "MySQL dialect DDL for specs with database mysql (see examples/mysql-minimal.aip)."
+        "body": "MySQL dialect DDL for specs with database mysql (see examples/mysql-minimal.aip).",
+        "slug": "",
+        "docs": "mysql"
       },
       {
         "title": "Workers",
         "command": "aip emit workers",
-        "body": "Job and queue stubs from Behavior blocks."
+        "body": "Job and queue stubs from Behavior blocks.",
+        "slug": "",
+        "docs": "workers"
       },
       {
         "title": "Python",
         "command": "aip emit python",
-        "body": "Dataclass MVP from entities."
+        "body": "Dataclass MVP from entities.",
+        "slug": "",
+        "docs": "python"
       },
       {
         "title": "PHP",
         "command": "aip emit php",
-        "body": "Class MVP from entities."
+        "body": "Class MVP from entities.",
+        "slug": "",
+        "docs": "php"
       },
       {
         "title": "Docs",
         "command": "aip emit docs",
-        "body": "Markdown API reference from the spec."
+        "body": "Markdown API reference from the spec.",
+        "slug": "",
+        "docs": "docs"
       },
       {
         "title": "Tests",
         "command": "aip emit tests",
-        "body": "CRUD-oriented test fixtures."
+        "body": "CRUD-oriented test fixtures.",
+        "slug": "",
+        "docs": "tests"
       }
     ],
     "tryTitle": "Try it",
     "tryBody": "Clone, install, build, then emit from examples/minimal.aip or examples/blog-crud.aip.",
     "docsCta": "Full getting started",
-    "storyCta": "Docs: first emitters"
+    "storyCta": "Marketing: emitters hub"
+  },
+  "emittersHub": {
+    "title": "AI Parlance emitters — SQL, OpenAPI, TypeScript from one .aip",
+    "description": "Turn a compact .aip spec into PostgreSQL DDL, OpenAPI contracts, and TypeScript types. Preview toolchain — less boilerplate, one source of truth.",
+    "badge": "Marketing · Preview",
+    "heading": "Emitters that multiply one intent",
+    "lead": "Write the domain once. Official Preview emitters produce artifacts your team already reviews — without regenerating the same CRUD story in every stack.",
+    "back": "Back to home",
+    "featuredTitle": "Start here",
+    "featuredLead": "Deepest marketing pages for the Phase D happy path: schema, contract, and app types.",
+    "matrixTitle": "Full Preview matrix",
+    "matrixLead": "Every target shares the same validated AST. Stub-depth emitters link to docs maturity pages — not empty hype.",
+    "docsMaturity": "Maturity scorecards (docs)",
+    "gettingStarted": "Getting started",
+    "featured": [
+      {
+        "slug": "postgresql",
+        "name": "PostgreSQL",
+        "command": "aip emit sql",
+        "benefit": "Ship a reviewable schema from entities — tables, FKs, indexes, seeds — before hand-writing migrations."
+      },
+      {
+        "slug": "openapi",
+        "name": "OpenAPI 3",
+        "command": "aip emit openapi",
+        "benefit": "Publish a CRUD contract your API, clients, and agents can share — paths and schemas from one spec."
+      },
+      {
+        "slug": "typescript",
+        "name": "TypeScript",
+        "command": "aip emit typescript",
+        "benefit": "Keep app types and guards aligned with the schema and OpenAPI — less drift between layers."
+      }
+    ],
+    "matrix": [
+      {
+        "name": "PostgreSQL",
+        "command": "aip emit sql",
+        "blurb": "Primary SQL DDL",
+        "slug": "postgresql",
+        "docs": ""
+      },
+      {
+        "name": "OpenAPI",
+        "command": "aip emit openapi",
+        "blurb": "HTTP contract",
+        "slug": "openapi",
+        "docs": ""
+      },
+      {
+        "name": "TypeScript",
+        "command": "aip emit typescript",
+        "blurb": "Types + guards",
+        "slug": "typescript",
+        "docs": ""
+      },
+      {
+        "name": "Go",
+        "command": "aip emit go",
+        "blurb": "Structs + stubs",
+        "docs": "go",
+        "slug": ""
+      },
+      {
+        "name": "MySQL",
+        "command": "aip emit mysql",
+        "blurb": "MySQL DDL",
+        "docs": "mysql",
+        "slug": ""
+      },
+      {
+        "name": "Workers",
+        "command": "aip emit workers",
+        "blurb": "Jobs / queues",
+        "docs": "workers",
+        "slug": ""
+      },
+      {
+        "name": "Python",
+        "command": "aip emit python",
+        "blurb": "Dataclasses MVP",
+        "docs": "python",
+        "slug": ""
+      },
+      {
+        "name": "PHP",
+        "command": "aip emit php",
+        "blurb": "Classes MVP",
+        "docs": "php",
+        "slug": ""
+      },
+      {
+        "name": "Docs",
+        "command": "aip emit docs",
+        "blurb": "Markdown ref",
+        "docs": "docs",
+        "slug": ""
+      },
+      {
+        "name": "Tests",
+        "command": "aip emit tests",
+        "blurb": "CRUD fixtures",
+        "docs": "tests",
+        "slug": ""
+      }
+    ],
+    "honesty": "Preview depth varies by target. Marketing pages explain why; documentation tracks what already passes."
+  },
+  "emittersMarketing": {
+    "backHub": "All emitters",
+    "benefitsTitle": "Why teams use it",
+    "forWhomTitle": "Best when",
+    "notTitle": "Not a substitute for",
+    "exampleTitle": "Try the emit",
+    "honestyTitle": "Honest Preview",
+    "ctaDocs": "Docs scorecard",
+    "ctaStart": "Getting started",
+    "ctaHub": "Emitter hub",
+    "pages": {
+      "postgresql": {
+        "title": "PostgreSQL from .aip — AI Parlance SQL emitter",
+        "description": "Generate PostgreSQL DDL (tables, FKs, indexes, seeds) from a compact AI Parlance spec. One IR, reviewable schema, less migration boilerplate.",
+        "badge": "Primary SQL target",
+        "headline": "Schema first. Migrations later — on purpose.",
+        "sub": "Describe entities in .aip and emit PostgreSQL you can read in code review. Indexes and seeds travel with the same source of truth.",
+        "benefits": [
+          "Cut repetitive CREATE TABLE / FK boilerplate when iterating on domain models with an LLM or a human.",
+          "Keep naming consistent (plural tables, *_id) across SQL and other emitters.",
+          "Validate the spec before you touch the database — aip validate, then aip emit sql."
+        ],
+        "forWhom": [
+          "Greenfield APIs where Postgres is the system of record",
+          "Teams aligning agents on a short domain file instead of huge SQL diffs",
+          "Reviews that need DDL without committing to a full ORM yet"
+        ],
+        "notFor": [
+          "A finished migration product with up/down history (Phase D deepens this)",
+          "MySQL apps — use aip emit mysql with database mysql",
+          "Running the database for you — you still apply SQL"
+        ],
+        "command": "aip emit sql",
+        "example": "node packages/cli/dist/cli.js emit sql examples/blog-crud.aip",
+        "honesty": "Strong on DDL, indexes, and seeds. Versioned migrations and soft-delete query semantics are still on the maturity checklist.",
+        "docsPath": "emitters/sql"
+      },
+      "openapi": {
+        "title": "OpenAPI from .aip — AI Parlance contract emitter",
+        "description": "Emit OpenAPI 3 schemas and CRUD paths from AI Parlance. Share one contract across backends, clients, and agents — less hand-synced YAML.",
+        "badge": "API contract",
+        "headline": "One contract. Many consumers.",
+        "sub": "CRUD entities become paths and schemas. api.prefix and app.auth feed the document so humans and tools negotiate the same surface.",
+        "benefits": [
+          "Stop rewriting OpenAPI by hand every time an entity field changes.",
+          "Give agents a stable HTTP map instead of scraping route files.",
+          "Align path prefixes and auth schemes with the same .aip that drives SQL and TypeScript."
+        ],
+        "forWhom": [
+          "API-first teams that treat OpenAPI as a deliverable",
+          "Multi-consumer setups (web, mobile, partners, codegen)",
+          "Specs where CRUD is the bulk of the surface area"
+        ],
+        "notFor": [
+          "Fully policy-aware per-operation security yet (tracked in docs maturity)",
+          "Replacing your gateway or rate-limiter product",
+          "GraphQL-only stacks (SDL emitter is a later option)"
+        ],
+        "command": "aip emit openapi",
+        "example": "node packages/cli/dist/cli.js emit openapi examples/blog-crud.aip",
+        "honesty": "Excellent for schemas and CRUD paths. Policy→security enrichment and richer error models are Phase D work.",
+        "docsPath": "emitters/openapi"
+      },
+      "typescript": {
+        "title": "TypeScript from .aip — AI Parlance app emitter",
+        "description": "Generate TypeScript interfaces and type guards from AI Parlance entities. Keep app types aligned with SQL and OpenAPI from one compact spec.",
+        "badge": "App types · Phase D focus",
+        "headline": "Types that follow the domain — not the other way around.",
+        "sub": "Emit Entity / Create / Update interfaces and zero-dependency guards. Path helpers hint at CRUD without locking you into Nest or Express.",
+        "benefits": [
+          "Shrink LLM context: edit .aip instead of regenerating DTOs across the tree.",
+          "Stay consistent with PostgreSQL and OpenAPI naming from the same AST.",
+          "Start thin today; Phase D deepens toward runnable CRUD and stronger validation."
+        ],
+        "forWhom": [
+          "TypeScript backends and full-stack apps on the happy path",
+          "Teams pairing agents with strict typecheck gates",
+          "Projects that want IR now and richer runtime emit next"
+        ],
+        "notFor": [
+          "A production server out of the box — handlers are not the MVP yet",
+          "Replacing your ORM (pair with emit sql / future Drizzle-style targets)",
+          "Ignoring Preview limits — see the docs scorecard before promising runtimes"
+        ],
+        "command": "aip emit typescript",
+        "example": "node packages/cli/dist/cli.js emit typescript examples/blog-crud.aip",
+        "honesty": "Solid on types and guards. Runnable API, Zod-depth validation, and policy checks are the Phase D priority — tracked openly in docs.",
+        "docsPath": "emitters/typescript"
+      }
+    }
   }
 }

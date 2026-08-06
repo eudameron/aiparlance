@@ -1,9 +1,10 @@
 ---
-import type { Messages } from "@/i18n";
+import type { Locale, Messages } from "@/i18n";
+import { localePath } from "@/i18n";
 
 interface Props {
   t: Messages;
-  locale: string;
+  locale: Locale;
 }
 
 const { t, locale } = Astro.props;
@@ -18,7 +19,7 @@ const year = new Date().getFullYear();
     <nav class="footer-nav">
       <a href={`https://docs.aiparlance.org/${locale}/introduction`}>{t.footer.docs}</a>
       <a href={`https://docs.aiparlance.org/${locale}/getting-started`}>{t.footer.gettingStarted}</a>
-      <a href={`https://docs.aiparlance.org/${locale}/first-transpiler`}>{t.footer.emitters}</a>
+      <a href={localePath(locale, "/emitters")}>{t.footer.emitters}</a>
       <a href="https://github.com/eudameron/aiparlance" rel="noopener noreferrer">{t.footer.github}</a>
       <span>{t.footer.license}</span>
     </nav>

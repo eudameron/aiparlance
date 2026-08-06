@@ -1,5 +1,6 @@
 ---
 import type { Locale, Messages } from "@/i18n";
+import { localePath } from "@/i18n";
 
 interface Props {
   locale: Locale;
@@ -17,7 +18,7 @@ const { locale, t } = Astro.props;
       <a class="btn btn-primary" href={`https://docs.aiparlance.org/${locale}/getting-started`} rel="noopener">
         {t.cta.button}
       </a>
-      <a class="btn btn-ghost" href={`https://docs.aiparlance.org/${locale}/first-transpiler`} rel="noopener">
+      <a class="btn btn-ghost" href={localePath(locale, "/emitters")}>
         {t.cta.buttonSecondary}
       </a>
     </div>

@@ -29,13 +29,23 @@ const p = t.emittersPage;
     <section class="section">
       <div class="container emitters-list">
         {
-          p.sections.map((section) => (
-            <article class="emitters-block">
-              <h2>{section.title}</h2>
-              <code class="cmd">{section.command}</code>
-              <p>{section.body}</p>
-            </article>
-          ))
+          p.sections.map((section) => {
+            const href = section.slug
+              ? localePath(locale, `/emitters/${section.slug}`)
+              : `https://docs.aiparlance.org/${locale}/emitters/${section.docs}`;
+            const external = !section.slug;
+            return (
+              <a
+                class="emitters-block"
+                href={href}
+                rel={external ? "noopener" : undefined}
+              >
+                <h2>{section.title}</h2>
+                <code class="cmd">{section.command}</code>
+                <p>{section.body}</p>
+              </a>
+            );
+          })
         }
       </div>
     </section>
@@ -60,8 +70,7 @@ node packages/cli/dist/cli.js emit go examples/minimal.aip`}</code></pre>
           </a>
           <a
             class="btn btn-ghost"
-            href={`https://docs.aiparlance.org/${locale}/first-transpiler`}
-            rel="noopener"
+            href={localePath(locale, "/emitters")}
           >
             {p.storyCta}
           </a>
@@ -115,10 +124,18 @@ node packages/cli/dist/cli.js emit go examples/minimal.aip`}</code></pre>
     }
   }
   .emitters-block {
+    display: block;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     background: var(--bg-card);
     padding: 1.35rem 1.4rem;
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 0.15s;
+  }
+  .emitters-block:hover {
+    border-color: var(--accent-cyan);
+    text-decoration: none;
   }
   .emitters-block h2 {
     margin: 0 0 0.65rem;

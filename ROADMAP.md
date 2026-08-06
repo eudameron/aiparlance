@@ -141,6 +141,7 @@ Only if they close ecosystem loops — not for coverage:
 - [x] This roadmap rewritten for post–Phase C reality
 - [x] CONTRIBUTING + CHANGELOG always reflect current CI/examples rules
 - [x] Cursor / contributor rule: update docs + roadmap after implementations
+- [x] Marketing site emitters hub + featured pages (PostgreSQL / OpenAPI / TypeScript) EN+PT
 
 #### D2 — Deepen TypeScript + OpenAPI + SQL
 
@@ -223,6 +224,7 @@ Do not leave “Planned” / `unsupported_tier` / “Core only” claims in docs
 |---|---|
 | [Getting started](https://docs.aiparlance.org/en/getting-started) | Install, CLI, emit matrix |
 | [First emitters](https://docs.aiparlance.org/en/first-transpiler) | Emitter story |
+| [Emitters (marketing)](https://aiparlance.org/en/emitters) | Hub + featured SEO pages |
 | [CRUD walkthrough](https://docs.aiparlance.org/en/crud-walkthrough) | Blog CRUD → emit |
 | [Examples](https://docs.aiparlance.org/en/examples) | Reference specs |
 | [Database](https://docs.aiparlance.org/en/database) | PostgreSQL primary, MySQL Preview |
