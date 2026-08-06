@@ -8,7 +8,7 @@ This roadmap turns AI Parlance from **specification-only** into a **reference to
 - Transpiler matrix: all targets currently **Planned** ([Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix))
 - PostgreSQL is the **primary** SQL target ([Database](https://docs.aiparlance.org/en/database))
 
-**Status today:** Phase C **M1** — Core parser ships in `@aiparlance/parser` / `aip parse`. Validator and emitters are **not** implemented yet. The marketing playground (`site/src/lib/transpiler/`) remains **illustrative only**.
+**Status today:** Phase C **M2** — Core parser + semantic validator ship in `@aiparlance/parser` / `@aiparlance/validator` (`aip parse`, `aip validate`). Emitters are **not** implemented yet. The marketing playground remains **illustrative only**.
 
 The overall language remains **draft** until this reference toolchain ships (per Specification).
 
@@ -99,17 +99,20 @@ Exact npm package names may use an `@aiparlance/*` scope when scaffolding begins
 
 Implement Specification [§ Validation](https://docs.aiparlance.org/en/specification#validation) for Core (+ Infra pieces needed by emitters):
 
-- Missing or duplicate `app`
-- References to missing `entity`
-- Modifier order / duplicates (warn vs error per rule)
-- Implicit fields awareness (`id`, `created_at`, `updated_at`; `soft_delete` → `deleted_at`) for later emitters
+- [x] Missing `database` on `app` (parse always has one `app`)
+- [x] References to missing `entity` (`crud`, `belongs_to`, `validation` target)
+- [x] Unknown fields in `validation` blocks
+- [x] Modifier order / duplicates (error vs warning per rule)
+- [x] Implicit fields awareness (`id`, `created_at`, `updated_at`; `soft_delete` → `deleted_at`) — warnings on shadow
 
 **Accept:**
 
-- `aip validate examples/minimal.aip` exits 0
-- Invalid fixtures exit non-zero with stable error codes/messages
+- [x] `aip validate examples/minimal.aip` exits 0
+- [x] Invalid fixtures exit non-zero with stable error codes/messages
 
 Extend progressively: when Security/Behavior parse lands, add rules for `policy`+`auth`, `workflow` without `when`, missing `event`/`job`, unregistered builtins.
+
+**Status:** **M2 complete** — next is M3 (PostgreSQL emitter).
 
 ---
 

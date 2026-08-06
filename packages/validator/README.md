@@ -1,17 +1,25 @@
 # @aiparlance/validator
 
-Semantic checks on a parsed AST (Specification § Validation).
+Semantic checks on a parsed AST (Specification § Validation — Core subset).
 
 | | |
 |---|---|
-| Status | **Scaffold (M0)** — not implemented |
-| Next | **M2** — Core MUST rules |
+| Status | **M2** — Core rules implemented |
 | Depends on | `@aiparlance/parser` |
 
 ```ts
-import { validate } from "@aiparlance/validator";
+import { parse } from "@aiparlance/parser";
+import { validate, formatDiagnostic } from "@aiparlance/validator";
 
+const doc = parse(source, "minimal.aip");
 const result = validate(doc);
+if (!result.ok) {
+  for (const d of result.diagnostics) console.error(formatDiagnostic(d, "minimal.aip"));
+}
+```
+
+```bash
+node packages/cli/dist/cli.js validate examples/minimal.aip
 ```
 
 See [`ROADMAP.md`](../../ROADMAP.md).
