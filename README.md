@@ -32,7 +32,7 @@ aiparlance.org/
 | [examples/minimal.aip](examples/minimal.aip) | Minimal valid v0.1 spec |
 | [examples/blog-crud.aip](examples/blog-crud.aip) | Complete blog CRUD (entities, policy, API, seed) |
 | [examples/inventory-crud.aip](examples/inventory-crud.aip) | Inventory CRUD + jobs/queues |
-| [examples/mysql-minimal.aip](examples/mysql-minimal.aip) | MySQL dialect fixture |
+| [examples/mysql-minimal.aip](examples/mysql-minimal.aip) | MySQL fixture |
 | [examples/crm-reference.aip](examples/crm-reference.aip) | Full CRM reference spec |
 | [examples/ops-reference.aip](examples/ops-reference.aip) | Infra + Behavior extras |
 | [site/](site/) | Public marketing site ([EN](https://aiparlance.org/en) · [PT](https://aiparlance.org/pt)) |

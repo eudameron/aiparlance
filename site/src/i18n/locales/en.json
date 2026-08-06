@@ -17,7 +17,7 @@
     "title": "Intent first.",
     "titleHighlight": "Code follows.",
     "subtitle": "AI Parlance is an AI-first intermediate representation. Humans and LLMs write .aip; official emitters turn validated specs into SQL, OpenAPI, TypeScript, Go, and the rest of the matrix.",
-    "ctaDocs": "Get started",
+    "ctaDocs": "Get started here",
     "ctaTry": "See emitters",
     "note": "Reference CLI in the monorepo: aip parse · validate · emit sql|openapi|typescript|go|mysql|…. Site playground below is illustrative only."
   },
@@ -53,74 +53,74 @@
   },
   "toolchain": {
     "title": "Official Preview emitters",
-    "subtitle": "Ten reference emitters from a shared AST. PostgreSQL was first; the matrix followed.",
+    "subtitle": "Ten reference emitters from a shared AST. PostgreSQL was first; the matrix followed. Badge shows the current maturity score.",
     "items": [
       {
         "name": "PostgreSQL",
-        "badge": "1st",
+        "badge": "65%",
         "body": "DDL, indexes, seeds. aip emit sql",
         "slug": "postgresql",
         "docs": ""
       },
       {
         "name": "OpenAPI 3",
-        "badge": "Preview",
+        "badge": "48%",
         "body": "Schemas + CRUD paths (+ auth). aip emit openapi",
         "slug": "openapi",
         "docs": ""
       },
       {
         "name": "TypeScript",
-        "badge": "Preview",
+        "badge": "22%",
         "body": "Interfaces, guards, path helpers. aip emit typescript",
         "slug": "typescript",
         "docs": ""
       },
       {
         "name": "Go",
-        "badge": "Preview",
+        "badge": "22%",
         "body": "Structs, net/http stubs, auth. aip emit go",
         "slug": "",
         "docs": "go"
       },
       {
         "name": "MySQL",
-        "badge": "Preview",
+        "badge": "61%",
         "body": "DDL for database mysql. aip emit mysql",
         "slug": "",
         "docs": "mysql"
       },
       {
         "name": "Workers",
-        "badge": "Preview",
+        "badge": "20%",
         "body": "Jobs and queues stubs. aip emit workers",
         "slug": "",
         "docs": "workers"
       },
       {
         "name": "Python",
-        "badge": "Preview",
+        "badge": "22%",
         "body": "Dataclasses MVP. aip emit python",
         "slug": "",
         "docs": "python"
       },
       {
         "name": "PHP",
-        "badge": "Preview",
+        "badge": "20%",
         "body": "Classes MVP. aip emit php",
         "slug": "",
         "docs": "php"
       },
       {
         "name": "Docs",
-        "badge": "Preview",
+        "badge": "34%",
         "body": "Markdown API reference. aip emit docs",
         "slug": "",
         "docs": "docs"
       },
       {
         "name": "Tests",
-        "badge": "Preview",
+        "badge": "39%",
         "body": "CRUD fixtures. aip emit tests",
         "slug": "",
         "docs": "tests"
@@ -161,13 +161,13 @@
   "cta": {
     "title": "Try the reference toolchain",
     "body": "Clone the repo, run the test suite, and emit from examples/minimal.aip or the blog CRUD walkthrough.",
-    "button": "Getting started guide",
+    "button": "Get started here",
     "buttonSecondary": "Emitter pages"
   },
   "footer": {
     "tagline": "AI-first IR · 10 Preview emitters.",
     "docs": "Documentation",
-    "gettingStarted": "Getting started",
+    "gettingStarted": "Get started here",
     "emitters": "Emitters",
     "github": "Source on GitHub",
     "license": "Apache 2.0"
@@ -211,7 +211,7 @@
       {
         "title": "MySQL DDL",
         "command": "aip emit mysql",
-        "body": "MySQL dialect DDL for specs with database mysql (see examples/mysql-minimal.aip).",
+        "body": "MySQL DDL for specs with database mysql (see examples/mysql-minimal.aip).",
         "slug": "",
         "docs": "mysql"
       },
@@ -253,13 +253,13 @@
     ],
     "tryTitle": "Try it",
     "tryBody": "Clone, install, build, then emit from examples/minimal.aip or examples/blog-crud.aip.",
-    "docsCta": "Full getting started",
+    "docsCta": "Get started here",
     "storyCta": "Marketing: emitters hub"
   },
   "emittersHub": {
     "title": "AI Parlance emitters — SQL, OpenAPI, TypeScript from one .aip",
     "description": "Turn a compact .aip spec into PostgreSQL DDL, OpenAPI contracts, and TypeScript types. Preview toolchain — less boilerplate, one source of truth.",
-    "badge": "Marketing · Preview",
+    "badge": "",
     "heading": "Emitters that multiply one intent",
     "lead": "Write the domain once. Official Preview emitters produce artifacts your team already reviews — without regenerating the same CRUD story in every stack.",
     "back": "Back to home",
@@ -268,7 +268,7 @@
     "matrixTitle": "Full Preview matrix",
     "matrixLead": "Every target shares the same validated AST. Stub-depth emitters link to docs maturity pages — not empty hype.",
     "docsMaturity": "Maturity scorecards (docs)",
-    "gettingStarted": "Getting started",
+    "gettingStarted": "Get started here",
     "featured": [
       {
         "slug": "postgresql",
@@ -371,7 +371,7 @@
     "exampleTitle": "Try the emit",
     "honestyTitle": "Honest Preview",
     "ctaDocs": "Docs scorecard",
-    "ctaStart": "Getting started",
+    "ctaStart": "Get started here",
     "ctaHub": "Emitter hub",
     "pages": {
       "postgresql": {

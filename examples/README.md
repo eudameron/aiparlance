@@ -7,7 +7,7 @@ Reference AI Parlance (`.aip`) specs for learning, validation, and emitter tests
 | [minimal.aip](minimal.aip) | Smallest valid v0.1 Core spec | validate + SQL / OpenAPI / TS / Go goldens |
 | [blog-crud.aip](blog-crud.aip) | Complete blog CRUD (policy, API, index, seed, workflow) | validate + OpenAPI `/v1` paths |
 | [inventory-crud.aip](inventory-crud.aip) | Inventory + stock moves, jobs, queues | validate |
-| [mysql-minimal.aip](mysql-minimal.aip) | MySQL dialect smoke for `aip emit mysql` | validate |
+| [mysql-minimal.aip](mysql-minimal.aip) | MySQL smoke for `aip emit mysql` | validate |
 | [crm-reference.aip](crm-reference.aip) | CRM with policies, indexes, API, workflows, events | validate (Infra/Security/Behavior) |
 | [ops-reference.aip](ops-reference.aip) | Seed, ai_context, jobs, queues, lifecycle | validate + SQL seeds |
 

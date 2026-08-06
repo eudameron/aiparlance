@@ -1,4 +1,4 @@
-// AI Parlance — minimal MySQL dialect fixture for `aip emit mysql`
+// AI Parlance — minimal MySQL fixture for `aip emit mysql`
 
 app MysqlDemo @0.1 {
   database mysql

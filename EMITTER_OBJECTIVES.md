@@ -117,7 +117,7 @@ Not scored per package. **Done** when **all** are true using `typescript` + `ope
 | C3 | spec | Seeds from `seed { }` |
 | C4 | stretch | Versioned migrations (ordered **up**) |
 | C5 | stretch | Migration **down** / rollback |
-| C6 | spec | Respect `app.database` dialect |
+| C6 | spec | Respect `app.database` target |
 | C7 | stretch | Transactions for multi-statement / workflow writes |
 
 ### D — HTTP / API surface
@@ -171,7 +171,7 @@ Not scored per package. **Done** when **all** are true using `typescript` + `ope
 |---|---|---|
 | H1 | stretch | Human-readable API / domain documentation |
 | H2 | stretch | Automated test fixtures or scaffolds |
-| H3 | stretch | Golden / CI for `minimal.aip` (or dialect twin) |
+| H3 | stretch | Golden / CI for `minimal.aip` (or matching twin) |
 | H4 | stretch | Emit succeeds on matching full-tier examples without crash |
 | H5 | spec | Naming aligned with docs (plural tables, `*_id`, snake_case) |
 

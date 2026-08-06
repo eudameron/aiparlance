@@ -1,9 +1,9 @@
 ---
-title: Emitter Workers
+title: Emitter de workers
 description: "@aiparlance/workers — papel workers, nota 4/20, objetivos pass/partial/fail"
 ---
 
-# Emitter Workers
+# Emitter de workers
 
 | | |
 |---|---|
@@ -11,14 +11,14 @@ description: "@aiparlance/workers — papel workers, nota 4/20, objetivos pass/p
 | CLI | `aip emit workers` |
 | Papel | `workers` |
 | **Nota** | **4/20** (20%) |
-| Faixa | Stub em Prévia |
-| Scorecard | [transpilers/workers/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/workers/EMITTER_OBJECTIVES.md) |
+| Nível | Stub em prévia |
+| Ficha de maturidade | [transpilers/workers/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/workers/EMITTER_OBJECTIVES.md) |
 
 Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
 
 ## Resumo
 
-| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+| ✅ Passou | ⚠️ Parcial | ❌ Falhou | ➖ N/A |
 |---|---|---|---|
 | 4 | 3 | 13 | 35 |
 
@@ -32,38 +32,38 @@ Stubs TS de job/fila + arestas `dispatches` dos workflows.
 
 | ID | Objetivo |
 |---|---|
-| `G2` | Emit `queue` declarations / bindings |
-| `H3` | Golden / CI for `minimal.aip` (or dialect twin) |
-| `H4` | Emit succeeds on matching full-tier examples without crash |
-| `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
+| `G2` | Emitir declarações / bindings de `queue` |
+| `H3` | Golden / CI para `minimal.aip` (ou equivalente no alvo) |
+| `H4` | O emit funciona nos examples full-tier correspondentes sem crash |
+| `H5` | Nomenclatura alinhada à documentação (tabelas no plural, `*_id`, snake_case) |
 
 ## ⚠️ Parcial
 
 | ID | Objetivo |
 |---|---|
-| `F2` | Handlers/jobs perform real work (not only 501 / `throw`) |
-| `G1` | Emit `job` artifacts (callable or schedulable) |
-| `G3` | Wire workflow `dispatch` |
+| `F2` | Handlers/jobs fazem trabalho real (não só 501 / `throw`) |
+| `G1` | Emitir artefatos `job` (chamáveis ou agendáveis) |
+| `G3` | Conectar `dispatch` do workflow |
 
 ## ❌ Ainda falhando (aplicáveis)
 
 | ID | Objetivo |
 |---|---|
-| `F1` | Runnable server or worker entrypoint |
-| `F3` | DB read/write (or generated query / ORM layer) |
-| `F4` | Runtime request validation aligned with B\* |
-| `F5` | Runtime policy checks aligned with E\* |
-| `G4` | Wire workflow `notify` |
-| `G5` | Wire workflow `emit` + `event` types |
-| `G6` | Wire `lifecycle` hooks (`on` / `before` / `after`) |
-| `G7` | Surface `ai_context` (emit, embed, or agent-facing artifact) |
-| `H1` | Human-readable API / domain documentation |
-| `H2` | Automated test fixtures or scaffolds |
-| `J1` | Config/env for DB URL and secrets (no hardcoding) |
-| `J2` | Minimal observability (request id and/or structured logs) |
-| `J3` | Health/readiness endpoint or worker liveness hook |
+| `F1` | Ponto de entrada executável (servidor ou worker) |
+| `F3` | Leitura/escrita em DB (ou query gerada / camada ORM) |
+| `F4` | Validação de request em runtime alinhada com B\* |
+| `F5` | Checagens de policy em runtime alinhadas com E\* |
+| `G4` | Conectar `notify` do workflow |
+| `G5` | Conectar `emit` do workflow + tipos `event` |
+| `G6` | Conectar hooks de `lifecycle` (`on` / `before` / `after`) |
+| `G7` | Expor `ai_context` (emit, embed ou artefato para agentes) |
+| `H1` | Documentação legível de API / domínio |
+| `H2` | Fixtures ou scaffolds de testes automatizados |
+| `J1` | Config/env para DB URL e secrets (sem hardcoding) |
+| `J2` | Observabilidade mínima (request id e/ou logs estruturados) |
+| `J3` | Endpoint de health/readiness ou hook de liveness do worker |
 
-Scorecard completo (incluindo ➖ N/A): [transpilers/workers/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/workers/EMITTER_OBJECTIVES.md).
+Ficha de maturidade completa (incluindo ➖ N/A): [transpilers/workers/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/workers/EMITTER_OBJECTIVES.md).
 
 ## Testes
 
@@ -79,4 +79,4 @@ node packages/cli/dist/cli.js emit workers examples/ops-reference.aip
 - [Visão geral dos emitters](/pt/emitters)
 - [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
 - [Primeiros emitters](/pt/first-transpiler)
-- [Começando](/pt/getting-started)
+- [Comece aqui](/pt/getting-started)

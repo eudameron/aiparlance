@@ -1,6 +1,6 @@
 # @aiparlance/mysql
 
-MySQL DDL emitter (secondary dialect after PostgreSQL).
+MySQL DDL emitter (secondary SQL target after PostgreSQL).
 
 ```ts
 import { emitMysql } from "@aiparlance/mysql";
@@ -10,7 +10,7 @@ process.stdout.write(emitMysql(doc));
 
 Requires `app { database mysql }`. If the app targets postgres, throws and suggests `aip emit sql`.
 
-Dialect notes:
+Notes:
 
 - `uuid` → `CHAR(36)` with `DEFAULT (UUID())`
 - timestamps → `DATETIME(6)`

@@ -11,14 +11,14 @@ description: "@aiparlance/python — papel app, nota 12/55, objetivos pass/parti
 | CLI | `aip emit python` |
 | Papel | `app` |
 | **Nota** | **12/55** (22%) |
-| Faixa | Stub / app em Prévia inicial |
-| Scorecard | [transpilers/python/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/python/EMITTER_OBJECTIVES.md) |
+| Nível | Stub / app ainda inicial |
+| Ficha de maturidade | [transpilers/python/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/python/EMITTER_OBJECTIVES.md) |
 
 Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
 
 ## Resumo
 
-| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+| ✅ Passou | ⚠️ Parcial | ❌ Falhou | ➖ N/A |
 |---|---|---|---|
 | 12 | 2 | 41 | 0 |
 
@@ -32,73 +32,73 @@ Apenas dataclasses Python (`Entity` / Create / Update).
 
 | ID | Objetivo |
 |---|---|
-| `A1` | Emit entity shapes (types / structs / schemas / tables) from `entity` |
-| `A2` | Emit create-input shapes (`EntityCreate` or equivalent) |
-| `A3` | Emit update-input shapes (`EntityUpdate` or equivalent) |
-| `A4` | Emit enums / constrained variants from `enum(…)` |
-| `A5` | Emit `belongs_to` as FKs or refs |
-| `A6` | Emit implicit `id` primary key |
-| `A7` | Emit `timestamps` (`created_at` / `updated_at`) |
-| `A8` | Emit `soft_delete` field/column (`deleted_at`) |
-| `B1` | Honor `required` / `optional` |
-| `H3` | Golden / CI for `minimal.aip` (or dialect twin) |
-| `H4` | Emit succeeds on matching full-tier examples without crash |
-| `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
+| `A1` | Gerar as estruturas da entidade (types / structs / schemas / tables) a partir de `entity` |
+| `A2` | Gerar tipos de entrada para criação (`EntityCreate` ou equivalente) |
+| `A3` | Gerar tipos de entrada para atualização (`EntityUpdate` ou equivalente) |
+| `A4` | Gerar enums / variantes restritas a partir de `enum(…)` |
+| `A5` | Gerar `belongs_to` como FKs ou referências |
+| `A6` | Gerar a chave primária implícita `id` |
+| `A7` | Gerar `timestamps` (`created_at` / `updated_at`) |
+| `A8` | Gerar campo/coluna `soft_delete` (`deleted_at`) |
+| `B1` | Respeitar `required` / `optional` |
+| `H3` | Golden / CI para `minimal.aip` (ou equivalente no alvo) |
+| `H4` | O emit funciona nos examples full-tier correspondentes sem crash |
+| `H5` | Nomenclatura alinhada à documentação (tabelas no plural, `*_id`, snake_case) |
 
 ## ⚠️ Parcial
 
 | ID | Objetivo |
 |---|---|
-| `B3` | Apply `validation { }` beyond required folding |
-| `B4` | Map semantic types (`email`, `phone`, …) distinctly |
+| `B3` | Aplicar `validation { }` além de marcar campos como obrigatórios |
+| `B4` | Mapear tipos semânticos (`email`, `phone`, …) de forma distinta |
 
 ## ❌ Ainda falhando (aplicáveis)
 
 | ID | Objetivo |
 |---|---|
-| `A9` | Soft-delete **semantics** (default reads filter deleted rows) |
-| `B2` | Honor `unique` |
-| `C1` | Durable schema (DDL or ORM / query models) |
-| `C2` | Indexes from `index { }` |
-| `C3` | Seeds from `seed { }` |
-| `C4` | Versioned migrations (ordered **up**) |
+| `A9` | Semântica de soft-delete (leituras padrão filtram linhas deletadas) |
+| `B2` | Respeitar `unique` |
+| `C1` | Schema persistente (DDL ou ORM / modelos de query) |
+| `C2` | Índices a partir de `index { }` |
+| `C3` | Seeds a partir de `seed { }` |
+| `C4` | Migrations versionadas (**up** ordenado) |
 | `C5` | Migration **down** / rollback |
-| `C6` | Respect `app.database` dialect |
-| `C7` | Transactions for multi-statement / workflow writes |
-| `D1` | Full CRUD surface for `crud` entities (list/create/get/update/delete) |
-| `D2` | Honor `api.prefix` |
-| `D3` | Honor `api.cors` (config or middleware) |
-| `D4` | Honor `api.rate_limit` (config or enforcement) |
-| `D5` | Pagination and/or filter/sort on list |
-| `D6` | Typed error responses (4xx/5xx + stable body shape) |
-| `D7` | Honor `api.format` (e.g. JSON) |
-| `E1` | Auth scheme from `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
-| `E2` | Wire auth into API (security requirements or middleware) |
-| `E3` | Reflect `policy` create/read/update/delete |
-| `E4` | Predicates: `public`, `authenticated`, `role(…)` |
-| `E5` | Predicates: `owner` / `owner_or_manager(…)` |
-| `E6` | Consistent **401/403** denial paths (runtime **or** contract documents both) |
-| `F1` | Runnable server or worker entrypoint |
-| `F2` | Handlers/jobs perform real work (not only 501 / `throw`) |
-| `F3` | DB read/write (or generated query / ORM layer) |
-| `F4` | Runtime request validation aligned with B\* |
-| `F5` | Runtime policy checks aligned with E\* |
-| `G1` | Emit `job` artifacts (callable or schedulable) |
-| `G2` | Emit `queue` declarations / bindings |
-| `G3` | Wire workflow `dispatch` |
-| `G4` | Wire workflow `notify` |
-| `G5` | Wire workflow `emit` + `event` types |
-| `G6` | Wire `lifecycle` hooks (`on` / `before` / `after`) |
-| `G7` | Surface `ai_context` (emit, embed, or agent-facing artifact) |
-| `H1` | Human-readable API / domain documentation |
-| `H2` | Automated test fixtures or scaffolds |
-| `I1` | Typed API client / SDK (or codegen from the contract) |
-| `I2` | Contract↔runtime parity story (shared paths/types or CI check) |
-| `J1` | Config/env for DB URL and secrets (no hardcoding) |
-| `J2` | Minimal observability (request id and/or structured logs) |
-| `J3` | Health/readiness endpoint or worker liveness hook |
+| `C6` | Respeitar o alvo definido em `app.database` |
+| `C7` | Transações para writes multi-statement / de workflow |
+| `D1` | CRUD completo para entidades listadas em `crud` (list/create/get/update/delete) |
+| `D2` | Respeitar `api.prefix` |
+| `D3` | Respeitar `api.cors` (config ou middleware) |
+| `D4` | Respeitar `api.rate_limit` (config ou aplicação) |
+| `D5` | Paginação e/ou filter/sort em list |
+| `D6` | Respostas de erro tipadas (4xx/5xx + shape estável do body) |
+| `D7` | Respeitar `api.format` (ex.: JSON) |
+| `E1` | Esquema de autenticação a partir de `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
+| `E2` | Integrar autenticação na API (requisitos de segurança ou middleware) |
+| `E3` | Refletir `policy` create/read/update/delete |
+| `E4` | Predicados: `public`, `authenticated`, `role(…)` |
+| `E5` | Predicados: `owner` / `owner_or_manager(…)` |
+| `E6` | Caminhos consistentes de negação **401/403** (runtime **ou** contrato documenta ambos) |
+| `F1` | Ponto de entrada executável (servidor ou worker) |
+| `F2` | Handlers/jobs fazem trabalho real (não só 501 / `throw`) |
+| `F3` | Leitura/escrita em DB (ou query gerada / camada ORM) |
+| `F4` | Validação de request em runtime alinhada com B\* |
+| `F5` | Checagens de policy em runtime alinhadas com E\* |
+| `G1` | Emitir artefatos `job` (chamáveis ou agendáveis) |
+| `G2` | Emitir declarações / bindings de `queue` |
+| `G3` | Conectar `dispatch` do workflow |
+| `G4` | Conectar `notify` do workflow |
+| `G5` | Conectar `emit` do workflow + tipos `event` |
+| `G6` | Conectar hooks de `lifecycle` (`on` / `before` / `after`) |
+| `G7` | Expor `ai_context` (emit, embed ou artefato para agentes) |
+| `H1` | Documentação legível de API / domínio |
+| `H2` | Fixtures ou scaffolds de testes automatizados |
+| `I1` | Client / SDK tipado da API (ou codegen a partir do contrato) |
+| `I2` | História de paridade contrato↔runtime (paths/types compartilhados ou check de CI) |
+| `J1` | Config/env para DB URL e secrets (sem hardcoding) |
+| `J2` | Observabilidade mínima (request id e/ou logs estruturados) |
+| `J3` | Endpoint de health/readiness ou hook de liveness do worker |
 
-Scorecard completo (incluindo ➖ N/A): [transpilers/python/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/python/EMITTER_OBJECTIVES.md).
+Ficha de maturidade completa (incluindo ➖ N/A): [transpilers/python/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/python/EMITTER_OBJECTIVES.md).
 
 ## Testes
 
@@ -114,4 +114,4 @@ node packages/cli/dist/cli.js emit python examples/minimal.aip
 - [Visão geral dos emitters](/pt/emitters)
 - [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
 - [Primeiros emitters](/pt/first-transpiler)
-- [Começando](/pt/getting-started)
+- [Comece aqui](/pt/getting-started)

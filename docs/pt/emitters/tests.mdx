@@ -1,9 +1,9 @@
 ---
-title: Emitter Tests
+title: Emitter de testes
 description: "@aiparlance/tests — papel tests, nota 7/18, objetivos pass/partial/fail"
 ---
 
-# Emitter Tests
+# Emitter de testes
 
 | | |
 |---|---|
@@ -11,14 +11,14 @@ description: "@aiparlance/tests — papel tests, nota 7/18, objetivos pass/parti
 | CLI | `aip emit tests` |
 | Papel | `tests` |
 | **Nota** | **7/18** (39%) |
-| Faixa | Prévia útil |
-| Scorecard | [transpilers/tests/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/tests/EMITTER_OBJECTIVES.md) |
+| Nível | Prévia útil |
+| Ficha de maturidade | [transpilers/tests/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/tests/EMITTER_OBJECTIVES.md) |
 
 Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
 
 ## Resumo
 
-| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+| ✅ Passou | ⚠️ Parcial | ❌ Falhou | ➖ N/A |
 |---|---|---|---|
 | 7 | 0 | 11 | 37 |
 
@@ -32,13 +32,13 @@ Fixtures de paths CRUD estilo Vitest (Pass = cobertura de fixture).
 
 | ID | Objetivo |
 |---|---|
-| `D1` | Full CRUD surface for `crud` entities (list/create/get/update/delete) |
-| `D2` | Honor `api.prefix` |
-| `D7` | Honor `api.format` (e.g. JSON) |
-| `H2` | Automated test fixtures or scaffolds |
-| `H3` | Golden / CI for `minimal.aip` (or dialect twin) |
-| `H4` | Emit succeeds on matching full-tier examples without crash |
-| `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
+| `D1` | CRUD completo para entidades listadas em `crud` (list/create/get/update/delete) |
+| `D2` | Respeitar `api.prefix` |
+| `D7` | Respeitar `api.format` (ex.: JSON) |
+| `H2` | Fixtures ou scaffolds de testes automatizados |
+| `H3` | Golden / CI para `minimal.aip` (ou equivalente no alvo) |
+| `H4` | O emit funciona nos examples full-tier correspondentes sem crash |
+| `H5` | Nomenclatura alinhada à documentação (tabelas no plural, `*_id`, snake_case) |
 
 ## ⚠️ Parcial
 
@@ -48,19 +48,19 @@ _Nenhum item parcial._
 
 | ID | Objetivo |
 |---|---|
-| `D3` | Honor `api.cors` (config or middleware) |
-| `D4` | Honor `api.rate_limit` (config or enforcement) |
-| `D5` | Pagination and/or filter/sort on list |
-| `D6` | Typed error responses (4xx/5xx + stable body shape) |
-| `E1` | Auth scheme from `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
-| `E2` | Wire auth into API (security requirements or middleware) |
-| `E3` | Reflect `policy` create/read/update/delete |
-| `E4` | Predicates: `public`, `authenticated`, `role(…)` |
-| `E5` | Predicates: `owner` / `owner_or_manager(…)` |
-| `E6` | Consistent **401/403** denial paths (runtime **or** contract documents both) |
-| `H1` | Human-readable API / domain documentation |
+| `D3` | Respeitar `api.cors` (config ou middleware) |
+| `D4` | Respeitar `api.rate_limit` (config ou aplicação) |
+| `D5` | Paginação e/ou filter/sort em list |
+| `D6` | Respostas de erro tipadas (4xx/5xx + shape estável do body) |
+| `E1` | Esquema de autenticação a partir de `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
+| `E2` | Integrar autenticação na API (requisitos de segurança ou middleware) |
+| `E3` | Refletir `policy` create/read/update/delete |
+| `E4` | Predicados: `public`, `authenticated`, `role(…)` |
+| `E5` | Predicados: `owner` / `owner_or_manager(…)` |
+| `E6` | Caminhos consistentes de negação **401/403** (runtime **ou** contrato documenta ambos) |
+| `H1` | Documentação legível de API / domínio |
 
-Scorecard completo (incluindo ➖ N/A): [transpilers/tests/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/tests/EMITTER_OBJECTIVES.md).
+Ficha de maturidade completa (incluindo ➖ N/A): [transpilers/tests/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/tests/EMITTER_OBJECTIVES.md).
 
 ## Testes
 
@@ -76,4 +76,4 @@ node packages/cli/dist/cli.js emit tests examples/blog-crud.aip
 - [Visão geral dos emitters](/pt/emitters)
 - [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
 - [Primeiros emitters](/pt/first-transpiler)
-- [Começando](/pt/getting-started)
+- [Comece aqui](/pt/getting-started)

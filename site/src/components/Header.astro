@@ -22,7 +22,7 @@ const homeOrPath = path ? `/${path}` : "";
     </a>
     <nav class="nav" aria-label="Main">
       <a href={`${localePath(locale)}#benefits`}>{t.nav.benefits}</a>
-      <a href={`${localePath(locale)}#toolchain`}>{t.nav.toolchain}</a>
+      <a href={localePath(locale, "/emitters")}>{t.nav.toolchain}</a>
       <a href={`${localePath(locale)}#playground`}>{t.nav.playground}</a>
       <a href={`https://docs.aiparlance.org/${locale}/getting-started`} rel="noopener">{t.nav.docs}</a>
       <a href="https://github.com/eudameron/aiparlance" rel="noopener noreferrer">{t.nav.github}</a>

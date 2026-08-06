@@ -11,6 +11,7 @@ and this project uses a draft **v0.1** language version. A **reference toolchain
 
 - Docs **Emitters** menu (EN+PT): overview + per-emitter pages with role, score, objectives, and tests
 - Marketing site: emitters hub + featured pages (PostgreSQL, OpenAPI, TypeScript) EN+PT — benefits/SEO; maturity stays in docs
+- PT Emitters docs: objective Pass/Partial/Fail lists translated to Portuguese (sidebar titles polished)
 - [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) **v2** — role-aware checklist (55 IDs), N/A scoring, combined happy path HP1–HP10; per-emitter scorecards rescored
 - Docs **Examples** / **Exemplos** menu with pages for every reference `.aip` (EN + PT)
 - Robust examples: `blog-crud.aip`, `inventory-crud.aip`, `mysql-minimal.aip`
@@ -28,6 +29,10 @@ and this project uses a draft **v0.1** language version. A **reference toolchain
 - CONTRIBUTING: full-tier examples CI; docs/roadmap sync policy; Phase D PR guidance
 - Docs/site treat all ten Preview emitters and full-tier validate as current reality
 - Transpiler matrix: all listed targets **Preview** (EN + PT); MySQL no longer Planned
+- PT docs (`docs/pt/`): natural Brazilian Portuguese copy — fewer English calques in emitter objectives and narrative pages
+- Site PT (`pt.json`): more natural Brazilian Portuguese marketing copy
+- Home toolchain cards: badge shows maturity score % (e.g. PostgreSQL 65%, MySQL 61%)
+- Site nav Emitters → `/emitters`; hub badge removed; CTAs/docs use **Comece aqui** / **Get started here**; drop “dialeto/dialect” wording in docs and site
 
 ### Policy
 

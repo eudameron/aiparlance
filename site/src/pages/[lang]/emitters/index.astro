@@ -33,7 +33,6 @@ const itemList = {
     <section class="section mkt-hero">
       <div class="container">
         <a class="back" href={localePath(locale)}>{h.back}</a>
-        <span class="badge">{h.badge}</span>
         <h1>{h.heading}</h1>
         <p class="lead">{h.lead}</p>
         <p class="honesty">{h.honesty}</p>
@@ -110,18 +109,6 @@ const itemList = {
     font-size: 0.9rem;
     color: var(--text-muted);
     margin-bottom: 1.25rem;
-  }
-  .badge {
-    display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 0.35rem 0.85rem;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    color: var(--accent-cyan);
-    margin-bottom: 1rem;
   }
   h1 {
     font-size: clamp(1.85rem, 4vw, 2.75rem);

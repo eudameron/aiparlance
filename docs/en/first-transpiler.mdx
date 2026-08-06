@@ -28,7 +28,7 @@ With Phase C **M3–M6** and the matrix follow-up, the project ships **ten Previ
 | **Docs** | `@aiparlance/docs` | `aip emit docs` |
 | **Tests** | `@aiparlance/tests` | `aip emit tests` |
 
-PostgreSQL was the **first** emitter because the docs treat it as the primary SQL dialect. OpenAPI, TypeScript, and Go completed the first multi-target wave; MySQL and the remaining matrix targets followed as Preview MVPs.
+PostgreSQL was the **first** emitter because the docs treat it as the primary SQL target. OpenAPI, TypeScript, and Go completed the first multi-target wave; MySQL and the remaining matrix targets followed as Preview MVPs.
 
 Together with `aip parse` and `aip validate` (Core + Infra + Security + Behavior), this is the **reference toolchain**.
 
@@ -43,7 +43,7 @@ Together with `aip parse` and `aip validate` (Core + Infra + Security + Behavior
   → emit sql | openapi | typescript | go | mysql | workers | python | php | docs | tests
 ```
 
-One validated spec feeds all Preview emitters. Naming (snake_case, FK `*_id`, plural tables) stays aligned across SQL dialects, OpenAPI, and Go `json` tags.
+One validated spec feeds all Preview emitters. Naming (snake_case, FK `*_id`, plural tables) stays aligned across SQL targets, OpenAPI, and Go `json` tags.
 
 ---
 
@@ -100,7 +100,7 @@ node packages/cli/dist/cli.js emit mysql examples/mysql-minimal.aip
 node packages/cli/dist/cli.js emit workers examples/ops-reference.aip
 ```
 
-Full install and a complete CRUD story: [Getting started](/en/getting-started) · [CRUD walkthrough](/en/crud-walkthrough).
+Full install and a complete CRUD story: [Get started here](/en/getting-started) · [CRUD walkthrough](/en/crud-walkthrough).
 
 ---
 
@@ -117,7 +117,7 @@ Matrix status: [Specification § Transpiler matrix](/en/specification#transpiler
 
 ## Related
 
-- [Getting started](/en/getting-started)
+- [Get started here](/en/getting-started)
 - [CRUD walkthrough](/en/crud-walkthrough)
 - [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md)
 - [CONTRIBUTING.md](https://github.com/eudameron/aiparlance/blob/main/CONTRIBUTING.md)

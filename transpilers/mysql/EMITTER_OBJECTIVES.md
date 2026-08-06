@@ -62,7 +62,7 @@
 | H1 | ❌ | |
 | H2 | ❌ | |
 | H3 | ✅ | |
-| H4 | ⚠️ | dialect-gated (mysql examples only) |
+| H4 | ⚠️ | mysql-gated (mysql examples only) |
 | H5 | ✅ | |
 
 ---

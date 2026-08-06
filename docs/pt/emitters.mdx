@@ -1,13 +1,13 @@
 ---
 title: Emitters
-description: Emitters em Prévia — papéis, notas de maturidade e como os objetivos são testados
+description: Emitters em prévia — papéis, notas de maturidade e como os objetivos são testados
 ---
 
 # Emitters
 
-Os emitters oficiais em Prévia ficam no monorepo (`transpilers/`). Todos compartilham um AST validado via `aip parse` / `aip validate`.
+Os emitters oficiais em prévia ficam no monorepo (`transpilers/`). Todos compartilham um AST validado via `aip parse` / `aip validate`.
 
-A maturidade é rastreada em [`EMITTER_OBJECTIVES.md`](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md) (**55** IDs). Cada pacote tem scorecard por papel: ✅ Pass · ⚠️ Partial · ❌ Fail · ➖ N/A (fora do papel).
+A maturidade é rastreada em [`EMITTER_OBJECTIVES.md`](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md) (**55** IDs). Cada pacote tem ficha de maturidade por papel: ✅ Passou · ⚠️ Parcial · ❌ Falhou · ➖ N/A (fora do papel).
 
 **Nota** = ✅ ÷ (55 − ➖).
 
@@ -38,9 +38,9 @@ Avaliado em: 2026-08-06 (checklist v2).
 
 | Papel | Significado |
 |---|---|
-| `schema` | DDL / schema durável |
+| `schema` | DDL / schema persistente |
 | `contract` | Contrato HTTP da API |
-| `app` | Types de aplicação → API executável |
+| `app` | Tipos de aplicação → API executável |
 | `workers` | Jobs / filas / workflows |
 | `docs` | Referência legível por humanos |
 | `tests` | Fixtures / scaffolds de teste |
@@ -53,7 +53,7 @@ Emitters especializados não precisam passar em runtime HTTP — esses itens sã
 
 1. **Testes automatizados** — Vitest em `transpilers/<nome>/` (+ `scripts/examples.test.ts` no repo).
 2. **Checklist manual** — Conferir o emit contra cada ID aplicável no [`EMITTER_OBJECTIVES.md`](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md) do pacote.
-3. **Happy path (Phase D)** — Critérios HP1–HP10 com TS + OpenAPI + SQL em `examples/blog-crud.aip`.
+3. **Caminho feliz (Phase D)** — Critérios HP1–HP10 com TS + OpenAPI + SQL em `examples/blog-crud.aip`.
 
 ```bash
 npm test

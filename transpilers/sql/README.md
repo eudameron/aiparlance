@@ -14,7 +14,7 @@ PostgreSQL DDL emitter (**primary** SQL target). Phase C / M3 MVP; Infra follow-
 | `index` → `CREATE INDEX` | Yes |
 | `seed` → `INSERT` | Yes |
 | Versioned migrations UX | Phase D |
-| MySQL dialect | Use `@aiparlance/mysql` |
+| MySQL | Use `@aiparlance/mysql` |
 
 ```bash
 node packages/cli/dist/cli.js emit sql examples/blog-crud.aip

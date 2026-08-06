@@ -1,11 +1,11 @@
 ---
-title: Começando
-description: Instale a toolchain de referência, valide specs .aip e emita SQL, OpenAPI, TypeScript, Go e a matriz completa em Prévia
+title: Comece aqui
+description: Instale as ferramentas de referência, valide specs .aip e emita SQL, OpenAPI, TypeScript, Go e a matriz completa em prévia
 ---
 
-# Começando
+# Comece aqui
 
-Use a **toolchain de referência** do monorepo hoje. Os pacotes ainda não estão no npm público — clone o repositório e rode a CLI localmente.
+Use as **ferramentas de referência** do monorepo hoje. Os pacotes ainda não estão no npm público — clone o repositório e rode a CLI localmente.
 
 Requisitos: **Node.js 20+**, Git.
 
@@ -20,7 +20,7 @@ npm ci
 npm run build
 ```
 
-Isso compila `@aiparlance/parser`, `validator`, `cli` e os emitters em Prévia (`sql`, `openapi`, `typescript`, `go`, `mysql`, `workers`, `python`, `php`, `docs`, `tests`).
+Isso compila `@aiparlance/parser`, `validator`, `cli` e os emitters em prévia (`sql`, `openapi`, `typescript`, `go`, `mysql`, `workers`, `python`, `php`, `docs`, `tests`).
 
 ---
 
@@ -66,7 +66,7 @@ node packages/cli/dist/cli.js emit typescript examples/minimal.aip > /tmp/minima
 node packages/cli/dist/cli.js emit go examples/minimal.aip > /tmp/minimal.go
 ```
 
-Walkthrough CRUD completo (entidades, policies, API, seeds, emit): [Walkthrough CRUD](/pt/crud-walkthrough).
+Passo a passo CRUD completo (entidades, policies, API, seeds, emit): [Passo a passo CRUD](/pt/crud-walkthrough).
 
 ---
 
@@ -95,7 +95,7 @@ node packages/cli/dist/cli.js emit sql my-app.aip
 ```
 
 <Note>
-Exemplos mais ricos (`blog-crud.aip`, `crm-reference.aip`, `ops-reference.aip`, `inventory-crud.aip`) incluem Infra / Security / Behavior e **fazem parse + validate** com a toolchain v0.1 completa. Use `mysql-minimal.aip` para `aip emit mysql`.
+Exemplos mais ricos (`blog-crud.aip`, `crm-reference.aip`, `ops-reference.aip`, `inventory-crud.aip`) incluem Infra / Security / Behavior e **fazem parse + validate** com as ferramentas de referência v0.1 completa. Use `mysql-minimal.aip` para `aip emit mysql`.
 </Note>
 
 ---
@@ -124,7 +124,7 @@ npm run typecheck
 
 ---
 
-## 5. O que envia vs o que é prévia
+## 5. O que já está disponível vs o que é prévia
 
 | Status | Alvos |
 |---|---|
@@ -132,7 +132,7 @@ npm run typecheck
 | **Foco Phase D** | Aprofundar TypeScript, OpenAPI, PostgreSQL → caminho feliz executável; depois playground + npm |
 | **Só ilustrativo** | [Playground](https://aiparlance.org) do site — não são os pacotes oficiais |
 
-Leia mais: [Primeiros emitters](/pt/first-transpiler) · [Walkthrough CRUD](/pt/crud-walkthrough) · [Exemplos](/pt/examples) · [Especificação § Matriz de transpiladores](/pt/specification#transpiler-matrix) · [ROADMAP](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md) · [CONTRIBUTING](https://github.com/eudameron/aiparlance/blob/main/CONTRIBUTING.md)
+Leia mais: [Primeiros emitters](/pt/first-transpiler) · [Passo a passo CRUD](/pt/crud-walkthrough) · [Exemplos](/pt/examples) · [Especificação § Matriz de transpiladores](/pt/specification#transpiler-matrix) · [ROADMAP](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md) · [CONTRIBUTING](https://github.com/eudameron/aiparlance/blob/main/CONTRIBUTING.md)
 
 ---
 

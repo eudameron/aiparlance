@@ -11,14 +11,14 @@ description: "@aiparlance/mysql — papel schema, nota 14/23, objetivos pass/par
 | CLI | `aip emit mysql` |
 | Papel | `schema` |
 | **Nota** | **14/23** (61%) |
-| Faixa | Fatia forte |
-| Scorecard | [transpilers/mysql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/mysql/EMITTER_OBJECTIVES.md) |
+| Nível | Fatia sólida |
+| Ficha de maturidade | [transpilers/mysql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/mysql/EMITTER_OBJECTIVES.md) |
 
 Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
 
 ## Resumo
 
-| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
+| ✅ Passou | ⚠️ Parcial | ❌ Falhou | ➖ N/A |
 |---|---|---|---|
 | 14 | 2 | 7 | 32 |
 
@@ -32,41 +32,41 @@ DDL MySQL espelhando PostgreSQL (exige `database mysql`).
 
 | ID | Objetivo |
 |---|---|
-| `A1` | Emit entity shapes (types / structs / schemas / tables) from `entity` |
-| `A4` | Emit enums / constrained variants from `enum(…)` |
-| `A5` | Emit `belongs_to` as FKs or refs |
-| `A6` | Emit implicit `id` primary key |
-| `A7` | Emit `timestamps` (`created_at` / `updated_at`) |
-| `A8` | Emit `soft_delete` field/column (`deleted_at`) |
-| `B1` | Honor `required` / `optional` |
-| `B2` | Honor `unique` |
-| `C1` | Durable schema (DDL or ORM / query models) |
-| `C2` | Indexes from `index { }` |
-| `C3` | Seeds from `seed { }` |
-| `C6` | Respect `app.database` dialect |
-| `H3` | Golden / CI for `minimal.aip` (or dialect twin) |
-| `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
+| `A1` | Gerar as estruturas da entidade (types / structs / schemas / tables) a partir de `entity` |
+| `A4` | Gerar enums / variantes restritas a partir de `enum(…)` |
+| `A5` | Gerar `belongs_to` como FKs ou referências |
+| `A6` | Gerar a chave primária implícita `id` |
+| `A7` | Gerar `timestamps` (`created_at` / `updated_at`) |
+| `A8` | Gerar campo/coluna `soft_delete` (`deleted_at`) |
+| `B1` | Respeitar `required` / `optional` |
+| `B2` | Respeitar `unique` |
+| `C1` | Schema persistente (DDL ou ORM / modelos de query) |
+| `C2` | Índices a partir de `index { }` |
+| `C3` | Seeds a partir de `seed { }` |
+| `C6` | Respeitar o alvo definido em `app.database` |
+| `H3` | Golden / CI para `minimal.aip` (ou equivalente no alvo) |
+| `H5` | Nomenclatura alinhada à documentação (tabelas no plural, `*_id`, snake_case) |
 
 ## ⚠️ Parcial
 
 | ID | Objetivo |
 |---|---|
-| `B4` | Map semantic types (`email`, `phone`, …) distinctly |
-| `H4` | Emit succeeds on matching full-tier examples without crash |
+| `B4` | Mapear tipos semânticos (`email`, `phone`, …) de forma distinta |
+| `H4` | O emit funciona nos examples full-tier correspondentes sem crash |
 
 ## ❌ Ainda falhando (aplicáveis)
 
 | ID | Objetivo |
 |---|---|
-| `A9` | Soft-delete **semantics** (default reads filter deleted rows) |
-| `B3` | Apply `validation { }` beyond required folding |
-| `C4` | Versioned migrations (ordered **up**) |
+| `A9` | Semântica de soft-delete (leituras padrão filtram linhas deletadas) |
+| `B3` | Aplicar `validation { }` além de marcar campos como obrigatórios |
+| `C4` | Migrations versionadas (**up** ordenado) |
 | `C5` | Migration **down** / rollback |
-| `C7` | Transactions for multi-statement / workflow writes |
-| `H1` | Human-readable API / domain documentation |
-| `H2` | Automated test fixtures or scaffolds |
+| `C7` | Transações para writes multi-statement / de workflow |
+| `H1` | Documentação legível de API / domínio |
+| `H2` | Fixtures ou scaffolds de testes automatizados |
 
-Scorecard completo (incluindo ➖ N/A): [transpilers/mysql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/mysql/EMITTER_OBJECTIVES.md).
+Ficha de maturidade completa (incluindo ➖ N/A): [transpilers/mysql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/mysql/EMITTER_OBJECTIVES.md).
 
 ## Testes
 
@@ -82,4 +82,4 @@ node packages/cli/dist/cli.js emit mysql examples/mysql-minimal.aip
 - [Visão geral dos emitters](/pt/emitters)
 - [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
 - [Primeiros emitters](/pt/first-transpiler)
-- [Começando](/pt/getting-started)
+- [Comece aqui](/pt/getting-started)

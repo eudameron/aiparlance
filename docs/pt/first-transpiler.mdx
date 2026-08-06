@@ -1,11 +1,11 @@
 ---
 title: Primeiros emitters
-description: Emitters oficiais do AI Parlance em Prévia — PostgreSQL até a matriz completa
+description: Emitters oficiais do AI Parlance em prévia — PostgreSQL até a matriz completa
 ---
 
 # Primeiros emitters
 
-A Phase C do roadmap entregou os **primeiros emitters oficiais** (transpiladores) do AI Parlance. Eles vivem no monorepo como alvos em Prévia — ainda não são pacotes no npm público, mas são pipelines reais AST → artefato que você roda com `aip emit`. A **Phase D** aprofunda TypeScript, OpenAPI e PostgreSQL rumo a um caminho feliz executável (ver [ROADMAP](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md)).
+A Phase C do roadmap entregou os **primeiros emitters oficiais** (transpiladores) do AI Parlance. Eles vivem no monorepo como alvos em prévia — ainda não são pacotes no npm público, mas são pipelines reais AST → artefato que você roda com `aip emit`. A **Phase D** aprofunda TypeScript, OpenAPI e PostgreSQL rumo a um caminho feliz executável (ver [ROADMAP](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md)).
 
 ---
 
@@ -13,7 +13,7 @@ A Phase C do roadmap entregou os **primeiros emitters oficiais** (transpiladores
 
 Historicamente, o site de marketing só tinha um playground **ilustrativo**. A linguagem era só especificação.
 
-Com a Phase C **M3–M6** e o follow-up da matriz, o projeto publica **dez emitters em Prévia** a partir de um AST validado:
+Com a Phase C **M3–M6** e o follow-up da matriz, o projeto publica **dez emitters em prévia** a partir de um AST validado:
 
 | Alvo | Pacote | CLI |
 |---|---|---|
@@ -28,9 +28,9 @@ Com a Phase C **M3–M6** e o follow-up da matriz, o projeto publica **dez emitt
 | **Docs** | `@aiparlance/docs` | `aip emit docs` |
 | **Testes** | `@aiparlance/tests` | `aip emit tests` |
 
-PostgreSQL foi o **primeiro** emitter porque a documentação o trata como dialeto SQL primário. OpenAPI, TypeScript e Go fecharam a primeira onda multi-target; MySQL e o restante da matriz seguiram como MVPs em Prévia.
+PostgreSQL foi o **primeiro** emitter porque a documentação o trata como SQL principal. OpenAPI, TypeScript e Go fecharam a primeira onda multi-target; MySQL e o restante da matriz seguiram como MVPs em prévia.
 
-Junto com `aip parse` e `aip validate` (Core + Infra + Security + Behavior), esta é a **toolchain de referência**.
+Junto com `aip parse` e `aip validate` (Core + Infra + Security + Behavior), estas são as **ferramentas de referência**.
 
 ---
 
@@ -43,7 +43,7 @@ fonte .aip
   → emit sql | openapi | typescript | go | mysql | workers | python | php | docs | tests
 ```
 
-Uma spec validada alimenta todos os emitters em Prévia. A nomenclatura (snake_case, FK `*_id`, tabelas no plural) permanece alinhada entre dialetos SQL, OpenAPI e tags `json` em Go.
+Uma spec validada alimenta todos os emitters em prévia. A nomenclatura (snake_case, FK `*_id`, tabelas no plural) permanece alinhada entre alvos SQL, OpenAPI e tags `json` em Go.
 
 ---
 
@@ -64,7 +64,7 @@ Uma spec validada alimenta todos os emitters em Prévia. A nomenclatura (snake_c
 
 ### TypeScript / Go / MySQL / demais
 
-Interfaces + guards; structs + stubs `net/http`; DDL MySQL (`database mysql`); stubs de workers, Python, PHP, docs e testes — profundidade MVP em Prévia. Ver a [matriz de transpiladores](/pt/specification#transpiler-matrix).
+Interfaces + guards; structs + stubs `net/http`; DDL MySQL (`database mysql`); stubs de workers, Python, PHP, docs e testes — profundidade MVP em prévia. Ver a [matriz de transpiladores](/pt/specification#transpiler-matrix).
 
 ---
 
@@ -82,7 +82,7 @@ node packages/cli/dist/cli.js emit mysql examples/mysql-minimal.aip
 node packages/cli/dist/cli.js emit workers examples/ops-reference.aip
 ```
 
-Instalação completa e história CRUD: [Começando](/pt/getting-started) · [Walkthrough CRUD](/pt/crud-walkthrough).
+Instalação completa e história CRUD: [Comece aqui](/pt/getting-started) · [Passo a passo CRUD](/pt/crud-walkthrough).
 
 ---
 
@@ -99,7 +99,7 @@ Status da matriz: [Especificação § Matriz de transpiladores](/pt/specificatio
 
 ## Relacionado
 
-- [Começando](/pt/getting-started)
-- [Walkthrough CRUD](/pt/crud-walkthrough)
+- [Comece aqui](/pt/getting-started)
+- [Passo a passo CRUD](/pt/crud-walkthrough)
 - [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md)
 - [CONTRIBUTING.md](https://github.com/eudameron/aiparlance/blob/main/CONTRIBUTING.md)

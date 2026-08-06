@@ -40,7 +40,7 @@ PHP typed classes; enums currently map to `string`.
 | `A7` | Emit `timestamps` (`created_at` / `updated_at`) |
 | `A8` | Emit `soft_delete` field/column (`deleted_at`) |
 | `B1` | Honor `required` / `optional` |
-| `H3` | Golden / CI for `minimal.aip` (or dialect twin) |
+| `H3` | Golden / CI for `minimal.aip` (or matching twin) |
 | `H4` | Emit succeeds on matching full-tier examples without crash |
 | `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
 
@@ -63,7 +63,7 @@ PHP typed classes; enums currently map to `string`.
 | `C3` | Seeds from `seed { }` |
 | `C4` | Versioned migrations (ordered **up**) |
 | `C5` | Migration **down** / rollback |
-| `C6` | Respect `app.database` dialect |
+| `C6` | Respect `app.database` target |
 | `C7` | Transactions for multi-statement / workflow writes |
 | `D1` | Full CRUD surface for `crud` entities (list/create/get/update/delete) |
 | `D2` | Honor `api.prefix` |
@@ -114,4 +114,4 @@ node packages/cli/dist/cli.js emit php examples/minimal.aip
 - [Emitters overview](/en/emitters)
 - [Master EMITTER_OBJECTIVES](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
 - [First emitters](/en/first-transpiler)
-- [Getting started](/en/getting-started)
+- [Get started here](/en/getting-started)
