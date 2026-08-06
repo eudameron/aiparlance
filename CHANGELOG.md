@@ -10,6 +10,8 @@ and this project uses a draft **v0.1** language version. A **reference toolchain
 ### Added
 
 - Phase C **M6**: CI covers Core-supported examples + SQL / OpenAPI / TypeScript goldens (`scripts/examples.test.ts`); CONTRIBUTING updated for toolchain PRs
+- Docs: [Getting started](https://docs.aiparlance.org/en/getting-started) (install, CLI, emit, tests) and [First emitters](https://docs.aiparlance.org/en/first-transpiler) (EN + PT)
+- Site: toolchain section, `/en|pt/first-transpiler` page, copy aligned with Preview emitters
 
 ### Changed
 

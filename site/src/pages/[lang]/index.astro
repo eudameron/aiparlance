@@ -3,6 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Hero from "@/components/Hero.astro";
 import Benefits from "@/components/Benefits.astro";
+import Toolchain from "@/components/Toolchain.astro";
 import Pipeline from "@/components/Pipeline.astro";
 import Playground from "@/components/Playground.astro";
 import Cta from "@/components/Cta.astro";
@@ -23,6 +24,7 @@ const t = getMessages(locale);
   <main>
     <Hero locale={locale} t={t} />
     <Benefits t={t} />
+    <Toolchain locale={locale} t={t} />
     <Pipeline t={t} />
     <Playground t={t} />
     <Cta locale={locale} t={t} />

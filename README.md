@@ -6,6 +6,8 @@
 
 AI-first intermediate representation (IR) for AI-assisted software generation.
 
+**Reference toolchain (Preview):** clone the repo and run `aip parse` / `validate` / `emit sql|openapi|typescript`. See [Getting started](https://docs.aiparlance.org/en/getting-started) and [First emitters](https://docs.aiparlance.org/en/first-transpiler).
+
 ## Repository layout
 
 ```text
@@ -24,6 +26,8 @@ aiparlance.org/
 |---|---|
 | [GitHub](https://github.com/eudameron/aiparlance) | Source repository |
 | [docs.aiparlance.org](https://docs.aiparlance.org) | Documentation (Mintlify); local: `cd docs && npx mintlify dev` |
+| [Getting started](https://docs.aiparlance.org/en/getting-started) | Install, CLI, emit, and test |
+| [First emitters](https://docs.aiparlance.org/en/first-transpiler) | PostgreSQL → OpenAPI → TypeScript story |
 | [spec/v0.1/](spec/v0.1/) | Grammar and normative spec artifacts |
 | [examples/minimal.aip](examples/minimal.aip) | Minimal valid v0.1 spec |
 | [examples/crm-reference.aip](examples/crm-reference.aip) | Full CRM reference spec |

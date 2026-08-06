@@ -7,10 +7,15 @@ import { absoluteUrl, withBase } from "@/lib/paths";
 interface Props {
   locale: Locale;
   t: Messages;
+  title?: string;
+  description?: string;
+  path?: string;
 }
 
-const { locale, t } = Astro.props;
-const alternates = alternateUrls(Astro.site);
+const { locale, t, title, description, path = "" } = Astro.props;
+const pageTitle = title ?? t.title;
+const pageDescription = description ?? t.description;
+const alternates = alternateUrls(Astro.site, path);
 const canonical = alternates[locale];
 const ogImage = absoluteUrl("logo.png", Astro.site);
 const gtmId = import.meta.env.PUBLIC_GTM_ID as string | undefined;
@@ -21,21 +26,21 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID as string | undefined;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{t.title}</title>
-    <meta name="description" content={t.description} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="en" href={alternates.en} />
     <link rel="alternate" hreflang="pt" href={alternates.pt} />
     <link rel="alternate" hreflang="x-default" href={alternates.en} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta property="og:title" content={t.title} />
-    <meta property="og:description" content={t.description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:locale" content={t.locale} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={t.title} />
-    <meta name="twitter:description" content={t.description} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content="#050508" />
     <link rel="icon" href={withBase("favicon.png")} type="image/png" />
@@ -51,7 +56,7 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID as string | undefined;
         "@context": "https://schema.org",
         "@type": "SoftwareSourceCode",
         name: "AI Parlance",
-        description: t.description,
+        description: pageDescription,
         url: canonical,
         programmingLanguage: "AI Parlance",
         license: "https://www.apache.org/licenses/LICENSE-2.0",

@@ -1,0 +1,136 @@
+---
+title: Começando
+description: Instale a toolchain de referência, valide specs .aip e emita SQL, OpenAPI e TypeScript
+---
+
+# Começando
+
+Use a **toolchain de referência** a partir do monorepo hoje. Os pacotes ainda não estão no npm público — clone o repositório e rode a CLI localmente.
+
+Requisitos: **Node.js 20+**, Git.
+
+---
+
+## 1. Clone e instalação
+
+```bash
+git clone https://github.com/eudameron/aiparlance.git
+cd aiparlance
+npm ci
+npm run build
+```
+
+Isso compila `@aiparlance/parser`, `validator`, `cli` e os emitters (`sql`, `openapi`, `typescript`).
+
+---
+
+## 2. Rodar a CLI
+
+O binário fica em `packages/cli/dist/cli.js` após o build:
+
+```bash
+node packages/cli/dist/cli.js --help
+```
+
+| Comando | O que faz |
+|---|---|
+| `aip parse <file.aip>` | Imprime o AST Core em JSON |
+| `aip validate <file.aip>` | Checagens semânticas (regras MUST) |
+| `aip emit sql <file.aip>` | DDL PostgreSQL |
+| `aip emit openapi <file.aip>` | OpenAPI 3.0.3 JSON |
+| `aip emit typescript <file.aip>` | Interfaces TypeScript + type guards |
+
+### Experimente o exemplo mínimo
+
+```bash
+node packages/cli/dist/cli.js validate examples/minimal.aip
+node packages/cli/dist/cli.js emit sql examples/minimal.aip
+node packages/cli/dist/cli.js emit openapi examples/minimal.aip
+node packages/cli/dist/cli.js emit typescript examples/minimal.aip
+```
+
+Gravar em arquivo:
+
+```bash
+node packages/cli/dist/cli.js emit sql examples/minimal.aip > /tmp/minimal.sql
+node packages/cli/dist/cli.js emit openapi examples/minimal.aip > /tmp/minimal.openapi.json
+node packages/cli/dist/cli.js emit typescript examples/minimal.aip > /tmp/minimal.ts
+```
+
+---
+
+## 3. Escreva seu `.aip`
+
+Toda spec v0.1 precisa de um bloco `app` primeiro, depois `entity` / `crud` / `validation` (Core). Veja [Sintaxe](/pt/syntax) e [examples/](https://github.com/eudameron/aiparlance/tree/main/examples).
+
+```aip
+app Demo @0.1 {
+  database postgres
+}
+
+entity User {
+  name: string required
+  email: email required unique
+}
+
+crud User
+```
+
+Salve como `my-app.aip` e então:
+
+```bash
+node packages/cli/dist/cli.js validate my-app.aip
+node packages/cli/dist/cli.js emit sql my-app.aip
+```
+
+<Note>
+Exemplos mais ricos (`crm-reference.aip`, `ops-reference.aip`) documentam Infra / Security / Behavior. O parser Core para nesses blocos com `unsupported_tier` até esses tiers existirem — isso é esperado. Use `minimal.aip` (ou specs só Core) para emit hoje.
+</Note>
+
+---
+
+## 4. Rodar a suíte de testes
+
+Na raiz do repositório:
+
+```bash
+npm test
+```
+
+Isso faz typecheck/build dos workspaces e roda o Vitest (parser, validator, emitters, CLI e [CI de examples](https://github.com/eudameron/aiparlance/blob/main/scripts/examples.test.ts)).
+
+Só examples:
+
+```bash
+npm run check:examples
+```
+
+Typecheck sem testes:
+
+```bash
+npm run typecheck
+```
+
+---
+
+## 5. O que já existe vs o que é prévia
+
+| Status | Alvos |
+|---|---|
+| **Prévia** (no monorepo) | DDL PostgreSQL, OpenAPI 3, interfaces/guards TypeScript |
+| **Planejado** | Emitters Go, MySQL, Python, PHP, Workers, Docs, Testes |
+| **Só ilustrativo** | [Playground](https://aiparlance.org) do site de marketing — não são os pacotes oficiais |
+
+Leia mais: [Primeiros emitters](/pt/first-transpiler) · [Especificação § Matriz de transpiladores](/pt/specification#transpiler-matrix) · [ROADMAP](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md) · [CONTRIBUTING](https://github.com/eudameron/aiparlance/blob/main/CONTRIBUTING.md)
+
+---
+
+## Opcional: docs e site localmente
+
+```bash
+# Docs (Mintlify)
+cd docs && npx mintlify dev
+
+# Site de marketing
+cd site && npm ci && npm run build:prod
+```

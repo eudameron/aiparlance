@@ -6,10 +6,13 @@ import { withBase } from "@/lib/paths";
 interface Props {
   locale: Locale;
   t: Messages;
+  /** Subpath without locale, e.g. `first-transpiler` (empty = home). */
+  path?: string;
 }
 
-const { locale, t } = Astro.props;
+const { locale, t, path = "" } = Astro.props;
 const other: Locale = locale === "en" ? "pt" : "en";
+const homeOrPath = path ? `/${path}` : "";
 ---
 
 <header class="header">
@@ -18,13 +21,14 @@ const other: Locale = locale === "en" ? "pt" : "en";
       <img src={withBase("logo-nav.png")} alt="" width="160" height="40" class="logo-img" />
     </a>
     <nav class="nav" aria-label="Main">
-      <a href="#benefits">{t.nav.benefits}</a>
-      <a href="#playground">{t.nav.playground}</a>
-      <a href={`https://docs.aiparlance.org/${locale}/introduction`} rel="noopener">{t.nav.docs}</a>
+      <a href={`${localePath(locale)}#benefits`}>{t.nav.benefits}</a>
+      <a href={`${localePath(locale)}#toolchain`}>{t.nav.toolchain}</a>
+      <a href={`${localePath(locale)}#playground`}>{t.nav.playground}</a>
+      <a href={`https://docs.aiparlance.org/${locale}/getting-started`} rel="noopener">{t.nav.docs}</a>
       <a href="https://github.com/eudameron/aiparlance" rel="noopener noreferrer">{t.nav.github}</a>
     </nav>
     <div class="header-actions">
-      <a href={localePath(other)} class="lang-switch" hreflang={other} lang={other}>
+      <a href={localePath(other, homeOrPath)} class="lang-switch" hreflang={other} lang={other}>
         {other === "en" ? "EN" : "PT"}
       </a>
     </div>

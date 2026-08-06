@@ -1,0 +1,169 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { getMessages, locales, localePath, type Locale } from "@/i18n";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const locale = lang as Locale;
+const t = getMessages(locale);
+const p = t.emittersPage;
+---
+
+<Layout locale={locale} t={t} title={p.title} description={p.description} path="first-transpiler">
+  <Header locale={locale} t={t} path="first-transpiler" />
+  <main>
+    <section class="section emitters-hero">
+      <div class="container">
+        <a class="back" href={localePath(locale)}>{p.back}</a>
+        <span class="badge">{p.badge}</span>
+        <h1>{p.heading}</h1>
+        <p class="lead">{p.lead}</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container emitters-list">
+        {
+          p.sections.map((section) => (
+            <article class="emitters-block">
+              <h2>{section.title}</h2>
+              <code class="cmd">{section.command}</code>
+              <p>{section.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section emitters-try">
+      <div class="container">
+        <h2>{p.tryTitle}</h2>
+        <p class="lead">{p.tryBody}</p>
+        <pre class="code"><code>{`git clone https://github.com/eudameron/aiparlance.git
+cd aiparlance && npm ci && npm run build
+node packages/cli/dist/cli.js emit sql examples/minimal.aip
+node packages/cli/dist/cli.js emit openapi examples/minimal.aip
+node packages/cli/dist/cli.js emit typescript examples/minimal.aip`}</code></pre>
+        <div class="actions">
+          <a
+            class="btn btn-primary"
+            href={`https://docs.aiparlance.org/${locale}/getting-started`}
+            rel="noopener"
+          >
+            {p.docsCta}
+          </a>
+          <a
+            class="btn btn-ghost"
+            href={`https://docs.aiparlance.org/${locale}/first-transpiler`}
+            rel="noopener"
+          >
+            {p.storyCta}
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer t={t} locale={locale} />
+</Layout>
+
+<style>
+  .emitters-hero {
+    padding-top: 3rem;
+  }
+  .back {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--accent-cyan);
+    margin-bottom: 1rem;
+  }
+  h1 {
+    font-size: clamp(1.85rem, 4vw, 2.75rem);
+    letter-spacing: -0.03em;
+    margin: 0 0 1rem;
+  }
+  .lead {
+    color: var(--text-muted);
+    max-width: 60ch;
+    font-size: 1.05rem;
+    margin: 0;
+  }
+  .emitters-list {
+    display: grid;
+    gap: 1.25rem;
+  }
+  @media (min-width: 900px) {
+    .emitters-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .emitters-block {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    padding: 1.35rem 1.4rem;
+  }
+  .emitters-block h2 {
+    margin: 0 0 0.65rem;
+    font-size: 1.15rem;
+  }
+  .cmd {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+    margin-bottom: 0.75rem;
+  }
+  .emitters-block p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+  .emitters-try {
+    background: var(--bg-elevated);
+    border-block: 1px solid var(--border);
+  }
+  .emitters-try h2 {
+    margin: 0 0 0.75rem;
+  }
+  .emitters-try .lead {
+    margin-bottom: 1.25rem;
+  }
+  .code {
+    margin: 0 0 1.5rem;
+    padding: 1.15rem 1.25rem;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+  }
+  .code code {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--accent-cyan);
+    white-space: pre;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

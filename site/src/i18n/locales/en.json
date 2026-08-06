@@ -4,21 +4,22 @@
   "dir": "ltr",
   "siteName": "AI Parlance",
   "title": "AI Parlance — AI-first IR for software generation",
-  "description": "Describe apps in compact .aip specs. A reference toolchain parses, validates, and emits SQL, OpenAPI, and TypeScript today. Less boilerplate, fewer tokens, consistent multi-target design.",
+  "description": "Write compact .aip specs. The reference toolchain parses, validates, and emits PostgreSQL, OpenAPI, and TypeScript today. Clone the repo, run aip emit, less boilerplate.",
   "nav": {
     "benefits": "Benefits",
-    "playground": "Try it",
-    "docs": "Documentation",
+    "toolchain": "Emitters",
+    "playground": "Demo",
+    "docs": "Docs",
     "github": "GitHub"
   },
   "hero": {
-    "badge": "v0.1 specification",
+    "badge": "v0.1 · first emitters shipped",
     "title": "Intent first.",
     "titleHighlight": "Code follows.",
-    "subtitle": "AI Parlance is an AI-first intermediate representation language. Humans and LLMs write compact .aip specs; official emitters target SQL, OpenAPI, TypeScript, and more as they ship.",
-    "ctaDocs": "Read the spec",
-    "ctaTry": "Try the playground",
-    "note": "Core parser, validator, and SQL / OpenAPI / TypeScript emitters ship in the monorepo (`aip parse` / `validate` / `emit`). The site playground remains illustrative."
+    "subtitle": "AI Parlance is an AI-first intermediate representation. Humans and LLMs write .aip; official emitters turn Core specs into SQL, OpenAPI, and TypeScript.",
+    "ctaDocs": "Get started",
+    "ctaTry": "See first emitters",
+    "note": "Reference CLI in the monorepo: aip parse · validate · emit sql|openapi|typescript. Site playground below is illustrative only."
   },
   "benefits": {
     "title": "Why AI Parlance",
@@ -30,7 +31,7 @@
       },
       {
         "title": "Multi-target from one spec",
-        "body": "One definition is designed to feed PostgreSQL, OpenAPI, TypeScript, Go, and more as emitters ship."
+        "body": "One validated Core AST already feeds PostgreSQL, OpenAPI, and TypeScript; more targets follow the matrix."
       },
       {
         "title": "Built-in domain blocks",
@@ -38,7 +39,7 @@
       },
       {
         "title": "Validate before generate",
-        "body": "The reference CLI checks Core specs (`aip validate`) and emits SQL, OpenAPI, and TypeScript (`aip emit`)."
+        "body": "aip validate checks Core specs; aip emit produces Preview artifacts you can review before shipping."
       },
       {
         "title": "LLM-friendly grammar",
@@ -50,13 +51,36 @@
       }
     ]
   },
+  "toolchain": {
+    "title": "First official emitters",
+    "subtitle": "Phase C shipped the first reference transpilers from a shared Core AST. PostgreSQL was first; OpenAPI and TypeScript completed the wave.",
+    "items": [
+      {
+        "name": "PostgreSQL",
+        "badge": "1st",
+        "body": "DDL from entities — tables, FKs, enums, soft delete. aip emit sql"
+      },
+      {
+        "name": "OpenAPI 3",
+        "badge": "Preview",
+        "body": "Schemas + CRUD paths (+ auth schemes). aip emit openapi"
+      },
+      {
+        "name": "TypeScript",
+        "badge": "Preview",
+        "body": "Interfaces, type guards, thin path helpers. aip emit typescript"
+      }
+    ],
+    "cta": "Read the emitters story",
+    "ctaSecondary": "Install & test"
+  },
   "pipeline": {
     "title": "How it works",
-    "steps": ["Human or AI", ".aip spec", "AST + validation", "Transpilers", "SQL · OpenAPI · TypeScript · …"]
+    "steps": ["Human or AI", ".aip spec", "AST + validation", "Emitters", "SQL · OpenAPI · TypeScript"]
   },
   "playground": {
-    "title": "Quick transpile demo",
-    "subtitle": "Paste a .aip spec, pick a target language, and preview illustrative output.",
+    "title": "Illustrative demo",
+    "subtitle": "Quick in-browser preview. For the official toolchain, clone the repo and use aip emit.",
     "inputLabel": ".aip source",
     "inputPlaceholder": "app Demo @0.1 {\n  database postgres\n}\n\nentity User {\n  name: string required\n  email: email required unique\n}\n\ncrud User",
     "targetLabel": "Target language",
@@ -69,19 +93,51 @@
     "outputLabel": "Generated output (preview)",
     "generate": "Generate",
     "reset": "Load example",
-    "disclaimer": "Preview only — not the official emitters. Coverage: app, entity, crud, basic fields. Use `aip parse` / `aip validate` in the repo for the reference toolchain.",
+    "disclaimer": "Not the official emitters. Official path: npm ci && npm run build, then node packages/cli/dist/cli.js emit sql|openapi|typescript examples/minimal.aip",
     "errorEmpty": "Enter .aip source first.",
     "errorParse": "Could not parse spec. Check entity and crud blocks."
   },
   "cta": {
-    "title": "Explore the specification",
-    "body": "Full grammar, security, workflows, and agent guides — in English and Portuguese.",
-    "button": "Open documentation"
+    "title": "Try the reference toolchain",
+    "body": "Clone the repo, run the test suite, and emit SQL, OpenAPI, or TypeScript from examples/minimal.aip.",
+    "button": "Getting started guide",
+    "buttonSecondary": "First emitters"
   },
   "footer": {
-    "tagline": "AI-first intermediate representation.",
+    "tagline": "AI-first IR · first emitters in Preview.",
     "docs": "Documentation",
+    "gettingStarted": "Getting started",
+    "emitters": "First emitters",
     "github": "Source on GitHub",
     "license": "Apache 2.0"
+  },
+  "emittersPage": {
+    "title": "AI Parlance — First emitters",
+    "description": "The first official AI Parlance transpilers: PostgreSQL DDL, OpenAPI 3, and TypeScript interfaces and guards.",
+    "badge": "Phase C · M3–M5",
+    "heading": "First official emitters",
+    "lead": "The reference toolchain turns validated Core .aip into concrete artifacts. PostgreSQL was the first emitter; OpenAPI and TypeScript followed from the same AST.",
+    "back": "Back to home",
+    "sections": [
+      {
+        "title": "PostgreSQL DDL",
+        "command": "aip emit sql",
+        "body": "Creates tables with implicit id and timestamps, unique/required constraints, enum checks, and belongs_to foreign keys. Primary SQL target in the docs."
+      },
+      {
+        "title": "OpenAPI 3",
+        "command": "aip emit openapi",
+        "body": "Emits Entity / Create / Update schemas and CRUD paths. Optional security schemes from app.auth."
+      },
+      {
+        "title": "TypeScript",
+        "command": "aip emit typescript",
+        "body": "Interfaces plus zero-dependency type guards and thin path helpers — no Nest or Express lock-in."
+      }
+    ],
+    "tryTitle": "Try it",
+    "tryBody": "Clone, install, build, then emit from the minimal example.",
+    "docsCta": "Full getting started",
+    "storyCta": "Docs: first emitters"
   }
 }

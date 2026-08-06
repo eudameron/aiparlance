@@ -30,6 +30,8 @@
             "group": "Overview",
             "pages": [
               "en/introduction",
+              "en/getting-started",
+              "en/first-transpiler",
               "en/cost-impact"
             ]
           },
@@ -63,6 +65,8 @@
             "group": "Visão geral",
             "pages": [
               "pt/introduction",
+              "pt/getting-started",
+              "pt/first-transpiler",
               "pt/cost-impact"
             ]
           },

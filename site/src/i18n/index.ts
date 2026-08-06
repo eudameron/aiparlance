@@ -14,10 +14,15 @@ export function getMessages(locale: string): Messages {
   return catalogs[locale as Locale] ?? catalogs[defaultLocale];
 }
 
-/** Relative path to a locale home (includes `base` in local/MAMP builds). */
-export function localePath(locale: Locale, hash = ""): string {
-  const path = hash ? `${locale}${hash}` : locale;
-  return withBase(path);
+/**
+ * Relative path under a locale (includes `base` in local/MAMP builds).
+ * Pass a hash (`#toolchain`) or a subpath (`/first-transpiler`).
+ */
+export function localePath(locale: Locale, suffix = ""): string {
+  if (!suffix) return withBase(locale);
+  if (suffix.startsWith("#")) return withBase(`${locale}${suffix}`);
+  const clean = suffix.replace(/^\//, "");
+  return withBase(`${locale}/${clean}`);
 }
 
 /** Canonical / hreflang URLs (production or local, from `Astro.site`). */

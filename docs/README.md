@@ -7,10 +7,12 @@ AI Parlance docs in **English** and **Portuguese**. Part of the [eudameron/aipar
 ```text
 /
 ├── docs/          ← you are here (Mintlify)
-├── site/          Institutional website
+├── site/          Marketing website
 ├── spec/          Normative grammar & v0.1 artifacts
-├── examples/      Reference .aip files (minimal, crm-reference, ops-reference)
-└── transpilers/   Future code generators
+├── examples/      Reference .aip files
+├── packages/      Reference toolchain (parser, validator, CLI)
+├── transpilers/   Emitters (SQL, OpenAPI, TypeScript)
+└── scripts/       CI helpers (examples suite)
 ```
 
 ## This directory
@@ -24,6 +26,8 @@ docs/
 ├── en/
 └── pt/
 ```
+
+Community onboarding: [en/getting-started.mdx](en/getting-started.mdx) · first emitters story: [en/first-transpiler.mdx](en/first-transpiler.mdx).
 
 Reference specs live in [`/examples`](../examples/), not under `docs/`.
 
@@ -42,6 +46,8 @@ npx mintlify dev
 |---|---|
 | English | https://docs.aiparlance.org/en/introduction |
 | Portuguese | https://docs.aiparlance.org/pt/introduction |
+| Getting started | https://docs.aiparlance.org/en/getting-started |
+| First emitters | https://docs.aiparlance.org/en/first-transpiler |
 
 ## Deploy
 

@@ -1,0 +1,101 @@
+---
+title: Primeiros emitters
+description: Os primeiros transpiladores oficiais do AI Parlance — PostgreSQL, OpenAPI e TypeScript
+---
+
+# Primeiros emitters
+
+A Phase C do roadmap entregou os **primeiros emitters oficiais** (transpiladores) do AI Parlance. Eles vivem no monorepo como alvos em Prévia — ainda não são pacotes no npm público, mas são pipelines reais AST Core → artefato que você roda com `aip emit`.
+
+---
+
+## O que significa “primeiro transpiler” aqui
+
+Historicamente, o site de marketing tinha só um playground **ilustrativo**. A linguagem era só especificação.
+
+Com a Phase C **M3–M5**, o projeto publicou os primeiros **emitters de referência**:
+
+| Ordem | Alvo | Pacote | CLI |
+|---|---|---|---|
+| 1º emit concreto | **DDL PostgreSQL** | `@aiparlance/sql` | `aip emit sql` |
+| 2º | **OpenAPI 3** | `@aiparlance/openapi` | `aip emit openapi` |
+| 3º | **TypeScript** | `@aiparlance/typescript` | `aip emit typescript` |
+
+PostgreSQL foi o **primeiro** emitter porque a documentação o trata como dialeto SQL primário. OpenAPI e TypeScript fecham a primeira onda multi-target a partir do mesmo AST validado.
+
+Junto com `aip parse` e `aip validate`, isso é a **toolchain de referência** Core (Phase C **M0–M6**).
+
+---
+
+## Pipeline
+
+```txt
+fonte .aip
+  → parse (AST)
+  → validate (regras MUST)
+  → emit sql | openapi | typescript
+```
+
+Uma spec Core alimenta os três emitters em Prévia. A nomenclatura (snake_case, FK `*_id`, tabelas no plural) permanece alinhada entre SQL e OpenAPI.
+
+---
+
+## O que cada emitter produz
+
+### PostgreSQL (`aip emit sql`)
+
+- `CREATE EXTENSION IF NOT EXISTS pgcrypto`
+- `CREATE TABLE` por `entity` (`id` e timestamps implícitos; `deleted_at` com `soft_delete`)
+- Tipos, `UNIQUE` / `NOT NULL`, `CHECK`s de enum, FKs de `belongs_to`
+
+Golden: [`transpilers/sql/fixtures/minimal.sql`](https://github.com/eudameron/aiparlance/blob/main/transpilers/sql/fixtures/minimal.sql)
+
+### OpenAPI 3 (`aip emit openapi`)
+
+- Schemas `Entity` / `EntityCreate` / `EntityUpdate`
+- Paths CRUD quando há `crud Entity`
+- `securitySchemes` opcional a partir de `app.auth`
+
+Golden: [`transpilers/openapi/fixtures/minimal.openapi.json`](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/fixtures/minimal.openapi.json)
+
+### TypeScript (`aip emit typescript`)
+
+- Interfaces `Entity` / `EntityCreate` / `EntityUpdate`
+- Type guards de runtime (`isEntity`, `isEntityCreate`) — sem deps de runtime
+- Helpers finos `entityPaths` quando há CRUD
+
+Golden: [`transpilers/typescript/fixtures/minimal.ts`](https://github.com/eudameron/aiparlance/blob/main/transpilers/typescript/fixtures/minimal.ts)
+
+---
+
+## Experimente em um minuto
+
+```bash
+git clone https://github.com/eudameron/aiparlance.git
+cd aiparlance && npm ci && npm run build
+
+node packages/cli/dist/cli.js emit sql examples/minimal.aip
+node packages/cli/dist/cli.js emit openapi examples/minimal.aip
+node packages/cli/dist/cli.js emit typescript examples/minimal.aip
+```
+
+Instruções completas de instalação e teste: [Começando](/pt/getting-started).
+
+---
+
+## Limites honestos (Prévia v0.1)
+
+- A linguagem continua **rascunho**; os emitters cobrem o **Core** (`app`, `entity`, `crud`, `validation`, modifiers de campo).
+- Blocos Infra / Security / Behavior em examples ricos ainda não são totalmente parseados.
+- Sem lock-in Nest/Express — o emit TypeScript permanece fino (interfaces + guards + paths).
+- O playground do site continua **ilustrativo** e não deve ser confundido com esses pacotes.
+
+Status na matriz: [Especificação § Matriz de transpiladores](/pt/specification#transpiler-matrix). Próximo item no roadmap: **Go**.
+
+---
+
+## Relacionados
+
+- [Começando](/pt/getting-started)
+- [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md)
+- [CONTRIBUTING.md](https://github.com/eudameron/aiparlance/blob/main/CONTRIBUTING.md)
