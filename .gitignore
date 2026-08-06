@@ -1,11 +1,9 @@
-# OS
-.DS_Store
-Thumbs.db
-
-# Dependencies & build (site)
+# Dependencies & build
 node_modules/
 dist/
 .astro/
+*.tsbuildinfo
+coverage/
 
 # Environment
 .env
@@ -20,3 +18,7 @@ dist/
 # Editor (optional)
 .idea/
 *.swp
+
+# OS
+.DS_Store
+Thumbs.db

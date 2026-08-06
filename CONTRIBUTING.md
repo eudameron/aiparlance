@@ -9,8 +9,11 @@ Thanks for interest in AI Parlance. v0.1 is **specification-only**: there is no 
 | [`docs/`](docs/) | Mintlify docs (EN + PT) — publish to docs.aiparlance.org |
 | [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf) | **Normative** machine-oriented grammar |
 | [`examples/`](examples/) | Reference `.aip` specs |
-| [`site/`](site/) | Marketing site (Astro) |
-| [`transpilers/`](transpilers/) | Placeholder for future generators |
+| [`site/`](site/) | Marketing site (Astro) — separate npm project |
+| [`packages/`](packages/) | Toolchain: `@aiparlance/parser`, `validator`, `cli` |
+| [`transpilers/`](transpilers/) | Emitters: `sql`, `openapi`, `typescript` |
+
+Root `npm` workspaces cover `packages/*` and `transpilers/*` only (not `site/`).
 
 ## Language / grammar changes
 
@@ -40,10 +43,20 @@ Do not invent syntax that only appears in the playground demo (`site/src/lib/tra
 - Production build: `cd site && npm run build:prod` (uses `astro.config-sample.mjs`).
 - Do not use the local-only `npm run build` config for production deploys.
 
-## Future toolchain (Phase C)
+## Toolchain (Phase C)
 
-Parser, validator, and emitters are tracked in [`ROADMAP.md`](ROADMAP.md). Open an issue before large toolchain PRs so scope can be agreed with the current milestone (M0–M6).
+See [`ROADMAP.md`](ROADMAP.md). From repo root:
 
+```bash
+npm ci
+npm run typecheck
+npm run build
+npm test
+```
+
+Open an issue before large toolchain PRs so scope matches the current milestone (M0–M6).
+
+Do not invent syntax that only appears in the playground demo (`site/src/lib/transpiler/`) — that demo is not normative.
 ## License
 
 Contributions are under the [Apache License 2.0](LICENSE).

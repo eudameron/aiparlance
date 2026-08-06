@@ -14,7 +14,8 @@ aiparlance.org/
 ├── site/          Marketing site (Astro, EN + PT)
 ├── spec/          Normative language specification (v0.1)
 ├── examples/      Reference .aip specs
-└── transpilers/   Code generators (planned)
+├── packages/      Reference toolchain (parser, validator, CLI)
+└── transpilers/   Emitters (SQL, OpenAPI, TypeScript, …)
 ```
 
 ## Quick links
@@ -28,10 +29,11 @@ aiparlance.org/
 | [examples/crm-reference.aip](examples/crm-reference.aip) | Full CRM reference spec |
 | [examples/ops-reference.aip](examples/ops-reference.aip) | Infra + Behavior extras |
 | [site/](site/) | Public marketing site ([EN](https://aiparlance.org/en) · [PT](https://aiparlance.org/pt)) |
-| [transpilers/](transpilers/) | Future Go, TypeScript, SQL, … generators |
+| [transpilers/](transpilers/) | Emitters (SQL → OpenAPI → TypeScript) |
+| [packages/](packages/) | Toolchain packages (`@aiparlance/*`) |
+| [ROADMAP.md](ROADMAP.md) | Phase C toolchain roadmap |
 | [CHANGELOG.md](CHANGELOG.md) | Project changelog |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
-| [ROADMAP.md](ROADMAP.md) | Phase C toolchain roadmap (parser → SQL → OpenAPI → TypeScript) |
 
 ## Official site
 

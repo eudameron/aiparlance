@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/parser" },
+    { "path": "packages/validator" },
+    { "path": "packages/cli" },
+    { "path": "transpilers/sql" },
+    { "path": "transpilers/openapi" },
+    { "path": "transpilers/typescript" }
+  ]
+}

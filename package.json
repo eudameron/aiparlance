@@ -1,0 +1,25 @@
+{
+  "name": "aiparlance",
+  "private": true,
+  "version": "0.1.0",
+  "description": "AI Parlance monorepo — reference toolchain (Phase C)",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "transpilers/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4"
+  }
+}

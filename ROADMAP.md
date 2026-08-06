@@ -8,7 +8,7 @@ This roadmap turns AI Parlance from **specification-only** into a **reference to
 - Transpiler matrix: all targets currently **Planned** ([Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix))
 - PostgreSQL is the **primary** SQL target ([Database](https://docs.aiparlance.org/en/database))
 
-**Status today:** docs + site + grammar published; no official parser, validator, or emitters. The marketing playground (`site/src/lib/transpiler/`) is **illustrative only** and is not the reference toolchain ([CONTRIBUTING](CONTRIBUTING.md)).
+**Status today:** Phase C **M0 scaffold** is in-repo (`packages/`, `transpilers/` stubs, Vitest, CI). Parser, validator, and emitters are **not implemented** yet. The marketing playground (`site/src/lib/transpiler/`) remains **illustrative only**.
 
 The overall language remains **draft** until this reference toolchain ships (per Specification).
 
@@ -69,11 +69,11 @@ Exact npm package names may use an `@aiparlance/*` scope when scaffolding begins
 
 ### M0 — Scaffold (prep)
 
-- Monorepo workspace for `packages/*` and `transpilers/*`
-- Test runner (e.g. Vitest) + CI job: typecheck + unit tests
-- Document CLI UX draft in this file / package READMEs
+- [x] Monorepo workspace for `packages/*` and `transpilers/*` (`@aiparlance/*`)
+- [x] Test runner (Vitest) + CI (`.github/workflows/ci.yml`: typecheck + build + test)
+- [x] CLI UX draft (`packages/cli` — `aip parse | validate | emit …`)
 
-**Done when:** empty packages build in CI; no public claim that the toolchain ships yet.
+**Done when:** empty packages build in CI; no public claim that the toolchain ships yet. **M0 complete** — next is M1 (Core parser).
 
 ---
 

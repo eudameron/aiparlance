@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "composite": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts"],
+  "references": [
+    { "path": "../parser" },
+    { "path": "../validator" },
+    { "path": "../../transpilers/sql" },
+    { "path": "../../transpilers/openapi" },
+    { "path": "../../transpilers/typescript" }
+  ]
+}

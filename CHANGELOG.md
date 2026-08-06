@@ -5,6 +5,12 @@ All notable changes to this repository are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses a draft **v0.1** language version until a reference toolchain ships.
 
+## [Unreleased]
+
+### Added
+
+- Phase C **M0** scaffold: npm workspaces (`packages/*`, `transpilers/*`), Vitest, GitHub Actions CI, CLI UX stub (`aip`)
+
 ## [0.1.0] — 2026-08-06
 
 ### Added
