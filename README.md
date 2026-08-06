@@ -26,8 +26,11 @@ aiparlance.org/
 | [spec/v0.1/](spec/v0.1/) | Grammar and normative spec artifacts |
 | [examples/minimal.aip](examples/minimal.aip) | Minimal valid v0.1 spec |
 | [examples/crm-reference.aip](examples/crm-reference.aip) | Full CRM reference spec |
+| [examples/ops-reference.aip](examples/ops-reference.aip) | Infra + Behavior extras |
 | [site/](site/) | Public marketing site ([EN](https://aiparlance.org/en) · [PT](https://aiparlance.org/pt)) |
 | [transpilers/](transpilers/) | Future Go, TypeScript, SQL, … generators |
+| [CHANGELOG.md](CHANGELOG.md) | Project changelog |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
 
 ## Official site
 

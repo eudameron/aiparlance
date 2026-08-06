@@ -1,5 +1,18 @@
-(* AI Parlance v0.1 — grammar summary *)
-(* Normative prose: docs/en/specification.mdx · docs/pt/specification.mdx *)
+(* AI Parlance v0.1 — normative grammar *)
+(* Human prose: docs/en/specification.mdx · docs/pt/specification.mdx *)
+(* Semantic MUST rules (validator) are not encoded here — see Specification § Validation *)
+
+(* --- Lexical / terminals --- *)
+(* Line comments: // to end of line (ignored). *)
+
+IDENT          = letter , { letter | digit | "_" } ;
+NUMBER         = digit , { digit } ;
+string_literal = '"' , { character } , '"' ;   (* multiline allowed for ai_context *)
+letter         = "A" | … | "Z" | "a" | … | "z" | "_" ;
+digit          = "0" | … | "9" ;
+(* character: any Unicode scalar except unescaped '"' *)
+
+ident          = IDENT ;   (* same lexical class; used where lowercase names are expected *)
 
 program        = app_block , { block } ;
 
@@ -7,50 +20,87 @@ block          = entity_block | crud_stmt | policy_block
                | index_block | api_block | workflow_block | event_block
                | lifecycle_block | seed_block | job_block | queue_block
                | ai_context_block
-               | validation_block ;   (* optional duplicate of inline rules *)
+               | validation_block ;
 
 (* --- Core --- *)
 
-app_block      = "app" IDENT [ "@version" ] "{" app_member { app_member } "}" ;
-app_member     = "database" ident | "auth" auth_strategy ;
+app_block      = "app" IDENT [ "@" version ] "{" { app_member } "}" ;
+version        = NUMBER "." NUMBER ;   (* e.g. 0.1 *)
+app_member     = "database" database_engine | "auth" auth_strategy ;
+database_engine = "postgres" | "mysql" ;
+auth_strategy  = "jwt" | "session" | "api_key" | "oauth" ;
 
 entity_block   = "entity" IDENT "{" { field_decl | entity_modifier } "}" ;
 entity_modifier = "timestamps" | "soft_delete" ;
 field_decl     = IDENT ":" type_expr [ field_modifier { field_modifier } ] ;
-type_expr      = primitive | "enum" "(" ident { "," ident } ")" | relation_type ;
+type_expr      = primitive
+               | "enum" "(" ident { "," ident } ")"
+               | relation_type
+               | IDENT ;   (* entity type-ref, e.g. event fields: lead: Lead *)
 relation_type  = "belongs_to" IDENT [ "optional" ] ;
 field_modifier = "required" | "optional" | "unique" | "default" "(" value ")" ;
+(* field_modifier order: required|optional → unique → default *)
+
+primitive      = "string" | "text" | "int" | "float" | "bool"
+               | "datetime" | "date" | "uuid" | "email" | "phone" | "json" ;
+
+value          = string_literal | NUMBER | "true" | "false" | ident ;
 
 crud_stmt      = "crud" IDENT ;
 
 validation_block = "validation" IDENT "{" { validation_rule } "}" ;
-validation_rule  = IDENT ( "required" | "unique" ) { "unique" } ;
+validation_rule  = IDENT ( "required" | "unique" ) { "required" | "unique" } ;
 
 (* --- Infra --- *)
 
 index_block    = "index" IDENT "{" { IDENT } "}" ;
+
 api_block      = "api" "{" { api_member } "}" ;
+api_member     = "prefix" string_literal
+               | "format" ident
+               | "rate_limit" rate_limit_value
+               | cors_block ;
+rate_limit_value = NUMBER "/" ident ;   (* e.g. 100/minute *)
+cors_block     = "cors" "{" { "allow" string_literal } "}" ;
+
 seed_block     = "seed" IDENT "{" { field_assign } "}" ;
+field_assign   = IDENT ":" expr ;
 
 (* --- Security (beta) --- *)
 
 policy_block   = "policy" IDENT "{" { policy_rule } "}" ;
 policy_rule    = action predicate_expr ;
 action         = "create" | "read" | "update" | "delete" | IDENT ;
+predicate_expr = "public"
+               | "authenticated"
+               | "role" "(" ident ")"
+               | "permission" "(" ident ")"
+               | "owner" "(" field_ref ")"
+               | "owner_or_manager" "(" field_ref ")" ;
 
 (* --- Behavior (beta) --- *)
 
 workflow_block = "workflow" IDENT "{" when_clause { stmt } "}" ;
 when_clause    = "when" IDENT "." lifecycle_event ;
+lifecycle_event = "created" | "updated" | "deleted" ;
+
 lifecycle_block = "lifecycle" IDENT "{" lifecycle_member { lifecycle_member } "}" ;
+lifecycle_member = "on" lifecycle_event "->" "workflow" IDENT
+                 | "before" lifecycle_hook "{" { stmt } "}"
+                 | "after" lifecycle_hook "{" { stmt } "}" ;
+lifecycle_hook = "create" | "update" | "delete" ;
+
 event_block    = "event" IDENT "{" { field_decl } "}" ;
-job_block      = "job" IDENT "{" job_member { job_member } "}" ;
+
+job_block      = "job" IDENT "{" { job_member } "}" ;
+job_member     = "retries" NUMBER | "timeout" duration ;
+
 queue_block    = "queue" IDENT ;
 
 ai_context_block = "ai_context" IDENT "{" "description" string_literal "}" ;
 
 stmt           = var_stmt | if_stmt | assign_stmt | create_stmt | emit_stmt
-               | notify_stmt | reject_stmt | dispatch_stmt ;
+               | notify_stmt | reject_stmt | dispatch_stmt | expr_stmt ;
 var_stmt       = "var" IDENT "=" expr ;
 if_stmt        = "if" expr "{" { stmt } "}" ;
 assign_stmt    = "assign" field_ref expr ;
@@ -59,12 +109,23 @@ emit_stmt      = "emit" IDENT "{" { field_assign } "}" ;
 notify_stmt    = "notify" "(" expr "," string_literal ")" ;
 reject_stmt    = "reject" string_literal ;
 dispatch_stmt  = "dispatch" IDENT [ "after" duration ] ;
+expr_stmt      = call_expr ;   (* e.g. normalize_phone(Lead.phone) in lifecycle hooks *)
 
-duration       = NUMBER ("m" | "h" | "d") ;
+field_ref      = IDENT { "." IDENT } ;
+
+expr           = additive_expr ;
+additive_expr  = primary_expr { ("+" | "-") primary_expr } ;
+primary_expr   = string_literal | NUMBER | "true" | "false"
+               | duration | field_ref | call_expr | "(" expr ")" ;
+call_expr      = IDENT "(" [ expr { "," expr } ] ")" ;
+
+duration       = NUMBER ( "m" | "h" | "d" ) ;
 
 (* --- Proposed (documented preview; not validated in v0.1) --- *)
 (* permission_decl = "permission" IDENT ; *)
-(* endpoint_block  = "endpoint" IDENT "{" ... "}" ; *)
+(* endpoint_block  = "endpoint" IDENT "{" { api_member } "}" ; *)
 
-(* field_modifier order: required|optional → unique → default *)
-(* line comments: // to end of line *)
+(* --- Roadmap (not in v0.1) --- *)
+(* top-level enum { } / relation { } blocks *)
+(* has_one / has_many / many_to_many relations *)
+(* reserved: custom block *)

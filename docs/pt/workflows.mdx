@@ -5,7 +5,7 @@ description: Camada Behavior para workflows, eventos, jobs e filas
 
 # Workflows e eventos
 
-Camada **Behavior** (beta v0.1). Builtins: [Especificação](/pt/specification#builtins). Exemplo: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip).
+Camada **Behavior** (beta v0.1). Builtins: [Especificação](/pt/specification#builtins). Exemplos: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) (workflow + event), [ops-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/ops-reference.aip) (`lifecycle`, `job`, `queue`, `if`/`reject`/`dispatch`).
 
 ---
 
@@ -122,4 +122,4 @@ Agendamento: `dispatch SendReminder after 15m`.
 - Workflows curtos; lógica longa em `job`.
 - Preferir `lifecycle` para vários ganchos por entidade.
 
-[`crm-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) contém `workflow LeadReceived`, `event LeadAssigned` e `entity Task`.
+[`crm-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) contém `workflow LeadReceived`, `event LeadAssigned` e `entity Task`. [`ops-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/ops-reference.aip) cobre `lifecycle`, `job`, `queue` e condicionais.

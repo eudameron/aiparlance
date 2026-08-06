@@ -9,7 +9,7 @@ AI Parlance docs in **English** and **Portuguese**. Part of the [eudameron/aipar
 ├── docs/          ← you are here (Mintlify)
 ├── site/          Institutional website
 ├── spec/          Normative grammar & v0.1 artifacts
-├── examples/      Reference .aip files (e.g. crm-reference.aip)
+├── examples/      Reference .aip files (minimal, crm-reference, ops-reference)
 └── transpilers/   Future code generators
 ```
 

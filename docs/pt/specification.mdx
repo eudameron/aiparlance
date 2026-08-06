@@ -86,14 +86,16 @@ Inclua `auth` ao usar `authenticated`, `role` ou `permission` em `policy`. Exemp
 
 ## Gramática (EBNF resumida) {#grammar}
 
+Gramática normativa completa: [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf). Resumo:
+
 ```ebnf
-program        = { block } ;
-block          = app_block | entity_block | crud_stmt | policy_block
+program        = app_block , { block } ;
+block          = entity_block | crud_stmt | policy_block
                | index_block | api_block | workflow_block | event_block
                | lifecycle_block | seed_block | job_block | queue_block
-               | ai_context_block ;
+               | ai_context_block | validation_block ;
 
-app_block      = "app" IDENT [ "@version" ] "{" app_member { app_member } "}" ;
+app_block      = "app" IDENT [ "@" version ] "{" { app_member } "}" ;
 entity_block   = "entity" IDENT "{" { field_decl | entity_modifier } "}" ;
 field_decl     = IDENT ":" type_expr [ field_modifier { field_modifier } ] ;
 crud_stmt      = "crud" IDENT ;
@@ -101,7 +103,7 @@ workflow_block = "workflow" IDENT "{" when_clause { stmt } "}" ;
 when_clause    = "when" IDENT "." lifecycle_event ;
 ```
 
-Ordem de modificadores: `required` | `optional` → `unique` → `default(...)`.
+Exatamente um `app_block` é obrigatório e deve aparecer primeiro. Ordem de modificadores: `required` | `optional` → `unique` → `default(...)`.
 
 Comentários de linha: `//` até o fim da linha.
 
@@ -111,10 +113,10 @@ Comentários de linha: `//` até o fim da linha.
 
 | Nível | Blocos | Status v0.1 |
 |---|---|---|
-| **Core** | `app`, `entity`, `crud`, validação inline; tipos `enum(…)` inline; relações `belongs_to` inline | Estável |
+| **Core** | `app`, `entity`, `crud`, validação inline e bloco `validation`; tipos `enum(…)` inline; relações `belongs_to` inline | Estável |
 | **Infra** | `index`, `api`, migrations, `seed`, naming; modificadores `timestamps`, `soft_delete` em `entity` | Estável |
 | **Security** | `auth` (em `app`), `policy`, predicados | Beta |
-| **Behavior** | `workflow`, `event`, `lifecycle`, `job`, `queue`; statements em workflow (`emit`, `create`, …) | Beta |
+| **Behavior** | `workflow`, `event`, `lifecycle`, `job`, `queue`, `ai_context`; statements em workflow (`emit`, `create`, …) | Beta |
 
 Blocos de topo `enum { }` / `relation { }` e `has_one` / `has_many` / `many_to_many` estão no **roadmap**, não no v0.1.
 
@@ -252,8 +254,12 @@ Custo de inferência LLM incide na **edição do `.aip`**, não na transpilaçã
 
 ---
 
-## Spec de referência
+## Specs de referência
 
-Exemplo CRM: [examples/crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip)
+| Arquivo | Papel |
+|---|---|
+| [examples/minimal.aip](https://github.com/eudameron/aiparlance/blob/main/examples/minimal.aip) | Spec Core mínima válida |
+| [examples/crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) | CRM (policy, API, workflow) |
+| [examples/ops-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/ops-reference.aip) | Extras Infra + Behavior (`seed`, `lifecycle`, `job`, …) |
 
-Capítulos de domínio documentam extensões em relação a esse arquivo.
+Capítulos de domínio ([Banco](/pt/database), [Segurança](/pt/security), [Workflows](/pt/workflows)) documentam extensões em relação a este arquivo.

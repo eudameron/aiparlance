@@ -5,7 +5,7 @@ description: Behavior layer for workflows, events, jobs, and queues
 
 # Workflows and events
 
-**Behavior** layer (beta v0.1). Builtins: [Specification](/en/specification#builtins). Example: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip).
+**Behavior** layer (beta v0.1). Builtins: [Specification](/en/specification#builtins). Examples: [crm-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) (workflow + event), [ops-reference.aip](https://github.com/eudameron/aiparlance/blob/main/examples/ops-reference.aip) (`lifecycle`, `job`, `queue`, `if`/`reject`/`dispatch`).
 
 ---
 
@@ -124,4 +124,4 @@ Delayed dispatch: `dispatch SendReminder after 15m`.
 - Keep workflows short; split long logic into jobs.
 - Prefer `lifecycle` for multiple hooks per entity.
 
-[`crm-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) contains `workflow LeadReceived`, `event LeadAssigned`, and `entity Task`.
+[`crm-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) contains `workflow LeadReceived`, `event LeadAssigned`, and `entity Task`. [`ops-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/ops-reference.aip) covers `lifecycle`, `job`, `queue`, and conditionals.
