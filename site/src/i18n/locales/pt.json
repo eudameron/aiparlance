@@ -4,7 +4,7 @@
   "dir": "ltr",
   "siteName": "AI Parlance",
   "title": "AI Parlance — IR AI-first para geração de software",
-  "description": "Descreva apps em specs .aip compactas. Transpile para Go, PHP, Python, SQL e mais. Menos boilerplate, menos tokens, saída multi-target consistente.",
+  "description": "Descreva apps em specs .aip compactas. A toolchain de referência já faz parse e validação; emitters SQL, OpenAPI e TypeScript vêm a seguir. Menos boilerplate, menos tokens, desenho multi-target consistente.",
   "nav": {
     "benefits": "Benefícios",
     "playground": "Experimentar",
@@ -15,10 +15,10 @@
     "badge": "especificação v0.1",
     "title": "Intenção primeiro.",
     "titleHighlight": "Código depois.",
-    "subtitle": "AI Parlance é uma linguagem de representação intermediária AI-first. Humanos e LLMs escrevem specs .aip compactas; transpiladores geram stacks de produção.",
+    "subtitle": "AI Parlance é uma linguagem de representação intermediária AI-first. Humanos e LLMs escrevem specs .aip compactas; emitters oficiais mirarão SQL, OpenAPI, TypeScript e mais.",
     "ctaDocs": "Ler a especificação",
     "ctaTry": "Abrir o playground",
-    "note": "Toolchain de referência em desenvolvimento — saída do playground é ilustrativa."
+    "note": "Parser e validador Core estão no monorepo (`aip parse` / `aip validate`). Emitters e o playground do site ainda são ilustrativos."
   },
   "benefits": {
     "title": "Por que AI Parlance",
@@ -30,7 +30,7 @@
       },
       {
         "title": "Multi-target numa spec",
-        "body": "A mesma definição alimenta Go, PHP, Python, SQL, OpenAPI e mais."
+        "body": "Uma definição deve alimentar PostgreSQL, OpenAPI, TypeScript, Go e mais à medida que os emitters forem lançados."
       },
       {
         "title": "Blocos de domínio integrados",
@@ -38,7 +38,7 @@
       },
       {
         "title": "Validar antes de gerar",
-        "body": "Detecte entidades ausentes, policies sem auth e builtins inválidos cedo."
+        "body": "A CLI de referência já valida specs Core (`aip validate`); emitters vêm a seguir."
       },
       {
         "title": "Gramática amigável a LLMs",
@@ -52,7 +52,7 @@
   },
   "pipeline": {
     "title": "Como funciona",
-    "steps": ["Humano ou IA", "Spec .aip", "AST + validação", "Transpiladores", "Go · PHP · Python · SQL · …"]
+    "steps": ["Humano ou IA", "Spec .aip", "AST + validação", "Transpiladores", "SQL · OpenAPI · TypeScript · …"]
   },
   "playground": {
     "title": "Demo rápida de transpilação",
@@ -69,7 +69,7 @@
     "outputLabel": "Saída gerada (prévia)",
     "generate": "Gerar",
     "reset": "Carregar exemplo",
-    "disclaimer": "Apenas prévia — não é o transpiler de produção. Cobertura: app, entity, crud, campos básicos.",
+    "disclaimer": "Apenas prévia — não são os emitters oficiais. Cobertura: app, entity, crud, campos básicos. No repo, use `aip parse` / `aip validate` para a toolchain de referência.",
     "errorEmpty": "Informe o código .aip primeiro.",
     "errorParse": "Não foi possível interpretar a spec. Verifique blocos entity e crud."
   },

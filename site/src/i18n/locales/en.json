@@ -4,7 +4,7 @@
   "dir": "ltr",
   "siteName": "AI Parlance",
   "title": "AI Parlance — AI-first IR for software generation",
-  "description": "Describe apps in compact .aip specs. Transpile to Go, PHP, Python, SQL, and more. Less boilerplate, fewer tokens, consistent multi-target output.",
+  "description": "Describe apps in compact .aip specs. A reference toolchain parses and validates today; SQL, OpenAPI, and TypeScript emitters are next. Less boilerplate, fewer tokens, consistent multi-target design.",
   "nav": {
     "benefits": "Benefits",
     "playground": "Try it",
@@ -15,10 +15,10 @@
     "badge": "v0.1 specification",
     "title": "Intent first.",
     "titleHighlight": "Code follows.",
-    "subtitle": "AI Parlance is an AI-first intermediate representation language. Humans and LLMs write compact .aip specs; transpilers generate production stacks.",
+    "subtitle": "AI Parlance is an AI-first intermediate representation language. Humans and LLMs write compact .aip specs; official emitters will target SQL, OpenAPI, TypeScript, and more.",
     "ctaDocs": "Read the spec",
     "ctaTry": "Try the playground",
-    "note": "Reference toolchain in development — playground output is illustrative."
+    "note": "Core parser and validator ship in the monorepo (`aip parse` / `aip validate`). Emitters and the site playground are still illustrative."
   },
   "benefits": {
     "title": "Why AI Parlance",
@@ -30,7 +30,7 @@
       },
       {
         "title": "Multi-target from one spec",
-        "body": "Same definition feeds Go, PHP, Python, SQL, OpenAPI, and more."
+        "body": "One definition is designed to feed PostgreSQL, OpenAPI, TypeScript, Go, and more as emitters ship."
       },
       {
         "title": "Built-in domain blocks",
@@ -38,7 +38,7 @@
       },
       {
         "title": "Validate before generate",
-        "body": "Catch missing entities, policies without auth, and invalid builtins early."
+        "body": "The reference CLI already checks Core specs (`aip validate`); emitters come next."
       },
       {
         "title": "LLM-friendly grammar",
@@ -52,7 +52,7 @@
   },
   "pipeline": {
     "title": "How it works",
-    "steps": ["Human or AI", ".aip spec", "AST + validation", "Transpilers", "Go · PHP · Python · SQL · …"]
+    "steps": ["Human or AI", ".aip spec", "AST + validation", "Transpilers", "SQL · OpenAPI · TypeScript · …"]
   },
   "playground": {
     "title": "Quick transpile demo",
@@ -69,7 +69,7 @@
     "outputLabel": "Generated output (preview)",
     "generate": "Generate",
     "reset": "Load example",
-    "disclaimer": "Preview only — not the production transpiler. Syntax coverage: app, entity, crud, basic fields.",
+    "disclaimer": "Preview only — not the official emitters. Coverage: app, entity, crud, basic fields. Use `aip parse` / `aip validate` in the repo for the reference toolchain.",
     "errorEmpty": "Enter .aip source first.",
     "errorParse": "Could not parse spec. Check entity and crud blocks."
   },
