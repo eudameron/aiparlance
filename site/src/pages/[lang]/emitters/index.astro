@@ -49,7 +49,10 @@ const itemList = {
               <li>
                 <a class="featured-card" href={localePath(locale, `/emitters/${item.slug}`)}>
                   <div class="featured-head">
-                    <h3>{item.name}</h3>
+                    <div class="card-title-row">
+                      <h3>{item.name}</h3>
+                      <span class="score-badge">{item.score}</span>
+                    </div>
                     <code>{item.command}</code>
                   </div>
                   <p>{item.benefit}</p>
@@ -76,9 +79,12 @@ const itemList = {
               return (
                 <li>
                   <a class="matrix-card" href={href} rel={external ? "noopener" : undefined}>
-                    <strong>{item.name}</strong>
+                    <div class="card-title-row">
+                      <strong>{item.name}</strong>
+                      <span class="score-badge">{item.score}</span>
+                    </div>
                     <code>{item.command}</code>
-                    <span>{item.blurb}</span>
+                    <span class="blurb">{item.blurb}</span>
                   </a>
                 </li>
               );
@@ -178,6 +184,23 @@ const itemList = {
     gap: 0.45rem;
     margin-bottom: 0.75rem;
   }
+  .card-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .score-badge {
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+  }
   .featured-card h3,
   .matrix-card strong {
     margin: 0;
@@ -190,7 +213,7 @@ const itemList = {
     color: var(--accent-cyan);
   }
   .featured-card p,
-  .matrix-card span {
+  .matrix-card .blurb {
     margin: 0;
     color: var(--text-muted);
     font-size: 0.92rem;

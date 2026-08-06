@@ -274,19 +274,22 @@
         "slug": "postgresql",
         "name": "PostgreSQL",
         "command": "aip emit sql",
-        "benefit": "Ship a reviewable schema from entities — tables, FKs, indexes, seeds — before hand-writing migrations."
+        "benefit": "Ship a reviewable schema from entities — tables, FKs, indexes, seeds — before hand-writing migrations.",
+        "score": "65%"
       },
       {
         "slug": "openapi",
         "name": "OpenAPI 3",
         "command": "aip emit openapi",
-        "benefit": "Publish a CRUD contract your API, clients, and agents can share — paths and schemas from one spec."
+        "benefit": "Publish a CRUD contract your API, clients, and agents can share — paths and schemas from one spec.",
+        "score": "48%"
       },
       {
         "slug": "typescript",
         "name": "TypeScript",
         "command": "aip emit typescript",
-        "benefit": "Keep app types and guards aligned with the schema and OpenAPI — less drift between layers."
+        "benefit": "Keep app types and guards aligned with the schema and OpenAPI — less drift between layers.",
+        "score": "22%"
       }
     ],
     "matrix": [
@@ -295,70 +298,80 @@
         "command": "aip emit sql",
         "blurb": "Primary SQL DDL",
         "slug": "postgresql",
-        "docs": ""
+        "docs": "",
+        "score": "65%"
       },
       {
         "name": "OpenAPI",
         "command": "aip emit openapi",
         "blurb": "HTTP contract",
         "slug": "openapi",
-        "docs": ""
+        "docs": "",
+        "score": "48%"
       },
       {
         "name": "TypeScript",
         "command": "aip emit typescript",
         "blurb": "Types + guards",
         "slug": "typescript",
-        "docs": ""
+        "docs": "",
+        "score": "22%"
       },
       {
         "name": "Go",
         "command": "aip emit go",
         "blurb": "Structs + stubs",
         "docs": "go",
-        "slug": ""
+        "slug": "",
+        "score": "22%"
       },
       {
         "name": "MySQL",
         "command": "aip emit mysql",
         "blurb": "MySQL DDL",
         "docs": "mysql",
-        "slug": ""
+        "slug": "",
+        "score": "61%"
       },
       {
         "name": "Workers",
         "command": "aip emit workers",
         "blurb": "Jobs / queues",
         "docs": "workers",
-        "slug": ""
+        "slug": "",
+        "score": "20%"
       },
       {
         "name": "Python",
         "command": "aip emit python",
         "blurb": "Dataclasses MVP",
         "docs": "python",
-        "slug": ""
+        "slug": "",
+        "score": "22%"
       },
       {
         "name": "PHP",
         "command": "aip emit php",
         "blurb": "Classes MVP",
         "docs": "php",
-        "slug": ""
+        "slug": "",
+        "score": "20%"
       },
       {
         "name": "Docs",
         "command": "aip emit docs",
         "blurb": "Markdown ref",
         "docs": "docs",
-        "slug": ""
+        "slug": "",
+        "score": "34%"
       },
       {
         "name": "Tests",
         "command": "aip emit tests",
         "blurb": "CRUD fixtures",
         "docs": "tests",
-        "slug": ""
+        "slug": "",
+        "score": "39%"
       }
     ],
     "honesty": "Preview depth varies by target. Marketing pages explain why; documentation tracks what already passes."

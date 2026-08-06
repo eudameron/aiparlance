@@ -274,19 +274,22 @@
         "slug": "postgresql",
         "name": "PostgreSQL",
         "command": "aip emit sql",
-        "benefit": "Gere um schema revisável a partir das entities — tabelas, FKs, índices e seeds — antes de escrever migrations na mão."
+        "benefit": "Gere um schema revisável a partir das entities — tabelas, FKs, índices e seeds — antes de escrever migrations na mão.",
+        "score": "65%"
       },
       {
         "slug": "openapi",
         "name": "OpenAPI 3",
         "command": "aip emit openapi",
-        "benefit": "Publique um contrato CRUD que API, clients e agentes compartilham — paths e schemas a partir de uma única spec."
+        "benefit": "Publique um contrato CRUD que API, clients e agentes compartilham — paths e schemas a partir de uma única spec.",
+        "score": "48%"
       },
       {
         "slug": "typescript",
         "name": "TypeScript",
         "command": "aip emit typescript",
-        "benefit": "Mantenha types e guards alinhados ao schema e ao OpenAPI — menos desalinhamento entre camadas."
+        "benefit": "Mantenha types e guards alinhados ao schema e ao OpenAPI — menos desalinhamento entre camadas.",
+        "score": "22%"
       }
     ],
     "matrix": [
@@ -295,70 +298,80 @@
         "command": "aip emit sql",
         "blurb": "DDL SQL principal",
         "slug": "postgresql",
-        "docs": ""
+        "docs": "",
+        "score": "65%"
       },
       {
         "name": "OpenAPI",
         "command": "aip emit openapi",
         "blurb": "Contrato HTTP",
         "slug": "openapi",
-        "docs": ""
+        "docs": "",
+        "score": "48%"
       },
       {
         "name": "TypeScript",
         "command": "aip emit typescript",
         "blurb": "Types + guards",
         "slug": "typescript",
-        "docs": ""
+        "docs": "",
+        "score": "22%"
       },
       {
         "name": "Go",
         "command": "aip emit go",
         "blurb": "Structs + stubs",
         "docs": "go",
-        "slug": ""
+        "slug": "",
+        "score": "22%"
       },
       {
         "name": "MySQL",
         "command": "aip emit mysql",
         "blurb": "DDL MySQL",
         "docs": "mysql",
-        "slug": ""
+        "slug": "",
+        "score": "61%"
       },
       {
         "name": "Workers",
         "command": "aip emit workers",
         "blurb": "Jobs / filas",
         "docs": "workers",
-        "slug": ""
+        "slug": "",
+        "score": "20%"
       },
       {
         "name": "Python",
         "command": "aip emit python",
         "blurb": "Dataclasses MVP",
         "docs": "python",
-        "slug": ""
+        "slug": "",
+        "score": "22%"
       },
       {
         "name": "PHP",
         "command": "aip emit php",
         "blurb": "Classes MVP",
         "docs": "php",
-        "slug": ""
+        "slug": "",
+        "score": "20%"
       },
       {
         "name": "Docs",
         "command": "aip emit docs",
         "blurb": "Ref. Markdown",
         "docs": "docs",
-        "slug": ""
+        "slug": "",
+        "score": "34%"
       },
       {
         "name": "Testes",
         "command": "aip emit tests",
         "blurb": "Fixtures CRUD",
         "docs": "tests",
-        "slug": ""
+        "slug": "",
+        "score": "39%"
       }
     ],
     "honesty": "A profundidade em prévia varia por alvo. O marketing explica o porquê; a documentação registra o que já passa."
