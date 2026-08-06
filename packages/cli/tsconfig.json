@@ -13,6 +13,12 @@
     { "path": "../../transpilers/sql" },
     { "path": "../../transpilers/openapi" },
     { "path": "../../transpilers/typescript" },
-    { "path": "../../transpilers/go" }
+    { "path": "../../transpilers/go" },
+    { "path": "../../transpilers/mysql" },
+    { "path": "../../transpilers/workers" },
+    { "path": "../../transpilers/python" },
+    { "path": "../../transpilers/php" },
+    { "path": "../../transpilers/docs" },
+    { "path": "../../transpilers/tests" }
   ]
 }

@@ -45,6 +45,15 @@ export function emitOpenApi(doc: AipDocument): string {
       .map((b) => (b.kind === "Crud" ? b.entity : ""))
   );
 
+  const api = doc.blocks.find((b) => b.kind === "Api");
+  let pathPrefix = "";
+  if (api && api.kind === "Api") {
+    const prefix = api.members.find((m) => m.kind === "prefix");
+    if (prefix && prefix.kind === "prefix") {
+      pathPrefix = prefix.value.replace(/\/$/, "");
+    }
+  }
+
   const version = doc.app.version ?? "0.1.0";
   const out: OpenApiDoc = {
     openapi: "3.0.3",
@@ -77,7 +86,7 @@ export function emitOpenApi(doc: AipDocument): string {
 
   for (const entity of entities) {
     if (!crudEntities.has(entity.name)) continue;
-    Object.assign(out.paths, crudPaths(entity));
+    Object.assign(out.paths, crudPaths(entity, pathPrefix));
   }
 
   return `${JSON.stringify(out, null, 2)}\n`;
@@ -242,8 +251,11 @@ function primitiveSchema(name: PrimitiveType): JsonSchema {
   }
 }
 
-function crudPaths(entity: EntityBlock): Record<string, unknown> {
-  const collection = `/${tableName(entity.name)}`;
+function crudPaths(
+  entity: EntityBlock,
+  pathPrefix = ""
+): Record<string, unknown> {
+  const collection = `${pathPrefix}/${tableName(entity.name)}`;
   const item = `${collection}/{id}`;
   const tag = entity.name;
   const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });

@@ -1,10 +1,13 @@
 import type {
   AipDocument,
   EntityBlock,
+  Expr,
   FieldDecl,
+  IndexBlock,
+  SeedBlock,
   TypeExpr,
 } from "@aiparlance/parser";
-import { fkColumnName, quoteIdent, tableName } from "./naming.js";
+import { fkColumnName, quoteIdent, tableName, toSnakeCase } from "./naming.js";
 import { formatDefault, sqlType } from "./types.js";
 
 export class EmitSqlError extends Error {
@@ -48,6 +51,18 @@ export function emitSql(doc: AipDocument): string {
 
   for (const entity of ordered) {
     lines.push(...emitCreateTable(entity));
+    lines.push(``);
+  }
+
+  const indexes = doc.blocks.filter((b): b is IndexBlock => b.kind === "Index");
+  for (const idx of indexes) {
+    lines.push(...emitIndex(idx));
+    lines.push(``);
+  }
+
+  const seeds = doc.blocks.filter((b): b is SeedBlock => b.kind === "Seed");
+  for (const seed of seeds) {
+    lines.push(...emitSeed(seed));
     lines.push(``);
   }
 
@@ -134,6 +149,49 @@ function emitCreateTable(entity: EntityBlock): string[] {
     body,
     `);`,
   ];
+}
+
+function emitIndex(idx: IndexBlock): string[] {
+  const table = quoteIdent(tableName(idx.entity));
+  const cols = idx.fields.map((f) => quoteIdent(toSnakeCase(f))).join(", ");
+  const name = quoteIdent(
+    `idx_${tableName(idx.entity)}_${idx.fields.map((f) => toSnakeCase(f)).join("_")}`
+  );
+  return [
+    `-- index ${idx.entity}`,
+    `CREATE INDEX ${name} ON ${table} (${cols});`,
+  ];
+}
+
+function emitSeed(seed: SeedBlock): string[] {
+  const table = quoteIdent(tableName(seed.entity));
+  const cols = seed.assigns
+    .map((a) => quoteIdent(toSnakeCase(a.name)))
+    .join(", ");
+  const vals = seed.assigns.map((a) => exprToSql(a.value)).join(", ");
+  return [
+    `-- seed ${seed.entity}`,
+    `INSERT INTO ${table} (${cols}) VALUES (${vals});`,
+  ];
+}
+
+function exprToSql(expr: Expr): string {
+  switch (expr.kind) {
+    case "string":
+      return `'${expr.value.replace(/'/g, "''")}'`;
+    case "number":
+      return String(expr.value);
+    case "boolean":
+      return expr.value ? "TRUE" : "FALSE";
+    case "duration":
+      return `'${expr.value.amount}${expr.value.unit}'`;
+    case "field_ref":
+      return `'${expr.ref.parts.join(".").replace(/'/g, "''")}'`;
+    case "call":
+      return `'${expr.name}()'`;
+    case "binary":
+      return `(${exprToSql(expr.left)} ${expr.op} ${exprToSql(expr.right)})`;
+  }
 }
 
 function emitColumn(field: FieldDecl, _entityName: string): string {

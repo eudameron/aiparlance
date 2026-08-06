@@ -66,7 +66,7 @@ Go, SQL, OpenAPI, workers, …
 
 `.aip` is the source; the AST is internal. Agents and humans edit `.aip`, not the AST directly.
 
-**Toolchain (v0.1):** Core **parser**, **validator**, **PostgreSQL DDL**, **OpenAPI 3**, **TypeScript**, and **Go** emitters are in the monorepo (`aip parse` / `aip validate` / `aip emit sql|openapi|typescript|go`). Other matrix emitters are not published yet. This document is the normative prose source; see [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf) and [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
+**Toolchain (v0.1):** Core **parser**, **validator**, and Preview emitters for **PostgreSQL**, **MySQL**, **OpenAPI**, **TypeScript**, **Go**, **Python**, **PHP**, **Workers**, **Docs**, and **Tests** ship in the monorepo (`aip parse` / `aip validate` / `aip emit …`). This document is the normative prose source; see [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf) and [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
 
 ---
 
@@ -242,15 +242,15 @@ The semantic validator must reject:
 | Target | Artifacts | Status v0.1 |
 |---|---|---|
 | PostgreSQL | DDL, indexes (Core entities) | Preview (`aip emit sql`) |
-| MySQL | DDL, migrations | Planned (same `database mysql` in `app`; no emitter yet) |
+| MySQL | DDL, migrations | Preview (`aip emit mysql`) |
 | Go | structs, handlers, JWT middleware | Preview (`aip emit go`) |
 | TypeScript | interfaces, guards | Preview (`aip emit typescript`) |
-| Python | models, decorators | Planned |
-| PHP | classes, policies | Planned |
+| Python | models, decorators | Preview (`aip emit python`) |
+| PHP | classes, policies | Preview (`aip emit php`) |
 | OpenAPI | paths, schemas, security | Preview (`aip emit openapi`) |
-| Docs | Markdown / API reference | Planned |
-| Tests | CRUD fixtures | Planned |
-| Workers | queues, jobs from `workflow` | Planned |
+| Docs | Markdown / API reference | Preview (`aip emit docs`) |
+| Tests | CRUD fixtures | Preview (`aip emit tests`) |
+| Workers | queues, jobs from `workflow` | Preview (`aip emit workers`) |
 
 LLM inference cost applies to **editing `.aip`**, not offline transpilation.
 

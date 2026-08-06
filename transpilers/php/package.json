@@ -1,0 +1,25 @@
+{
+  "name": "@aiparlance/php",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AI Parlance → PHP entity classes",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b --pretty false"
+  },
+  "dependencies": {
+    "@aiparlance/parser": "0.0.0",
+    "@aiparlance/sql": "0.0.0",
+    "@aiparlance/validator": "0.0.0"
+  }
+}

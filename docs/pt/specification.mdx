@@ -66,7 +66,7 @@ Go, SQL, OpenAPI, workers, …
 
 O texto `.aip` é a fonte; a AST é representação interna.
 
-**Toolchain (v0.1):** **parser**, **validador**, e emitters **PostgreSQL (DDL)**, **OpenAPI 3**, **TypeScript** e **Go** Core estão no monorepo (`aip parse` / `aip validate` / `aip emit sql|openapi|typescript|go`). Demais emitters da matriz ainda não publicados. Este documento é a fonte normativa em prosa; gramática em [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf) e marcos em [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
+**Toolchain (v0.1):** **parser**, **validador** v0.1 completo (Core + Infra + Security + Behavior) e emitters em Prévia na matriz (`aip parse` / `aip validate` / `aip emit …`) estão no monorepo. Este documento é a fonte normativa em prosa; gramática em [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf) e marcos em [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
 
 ---
 
@@ -240,15 +240,15 @@ O validador deve rejeitar:
 | Alvo | Artefatos | Status v0.1 |
 |---|---|---|
 | PostgreSQL | DDL, índices (entidades Core) | Prévia (`aip emit sql`) |
-| MySQL | DDL, migrations | Planejado (`database mysql` no `app`; sem emitter ainda) |
+| MySQL | DDL, migrations | Prévia (`aip emit mysql`) |
 | Go | structs, handlers, middleware JWT | Prévia (`aip emit go`) |
 | TypeScript | interfaces, guards | Prévia (`aip emit typescript`) |
-| Python | models, decorators | Planejado |
-| PHP | classes, policies | Planejado |
+| Python | models, decorators | Prévia (`aip emit python`) |
+| PHP | classes, policies | Prévia (`aip emit php`) |
 | OpenAPI | paths, schemas, security | Prévia (`aip emit openapi`) |
-| Docs | Markdown / referência API | Planejado |
-| Testes | fixtures CRUD | Planejado |
-| Workers | filas, jobs | Planejado |
+| Docs | Markdown / referência API | Prévia (`aip emit docs`) |
+| Testes | fixtures CRUD | Prévia (`aip emit tests`) |
+| Workers | filas, jobs | Prévia (`aip emit workers`) |
 
 Custo de inferência LLM incide na **edição do `.aip`**, não na transpilação offline.
 

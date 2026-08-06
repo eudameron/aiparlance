@@ -2,21 +2,23 @@
 
 Code generators that turn validated AI Parlance AST into target stacks.
 
-**Matrix:** [Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix).  
-**Roadmap:** [`ROADMAP.md`](../ROADMAP.md).
-
-## Layout
-
 ```text
 transpilers/
-├── sql/           # @aiparlance/sql — PostgreSQL (Preview)
-├── openapi/       # @aiparlance/openapi — OpenAPI 3.x (Preview)
-├── typescript/    # @aiparlance/typescript — interfaces/guards (Preview)
-└── go/            # @aiparlance/go — structs/handlers/JWT stubs (Preview)
+├── sql/           PostgreSQL DDL (+ index/seed)
+├── mysql/         MySQL DDL
+├── openapi/       OpenAPI 3.x
+├── typescript/    interfaces + guards
+├── go/            structs + handlers
+├── python/        dataclasses
+├── php/           classes
+├── workers/       jobs / queues
+├── docs/          Markdown API reference
+└── tests/         CRUD test fixtures
 ```
-
-Input: **validated AST** from `@aiparlance/parser` + `@aiparlance/validator` — not the marketing playground.
 
 ```bash
-node packages/cli/dist/cli.js emit go examples/minimal.aip
+node packages/cli/dist/cli.js emit sql examples/minimal.aip
+node packages/cli/dist/cli.js emit workers examples/ops-reference.aip
 ```
+
+See [`ROADMAP.md`](../ROADMAP.md) and the [transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix).

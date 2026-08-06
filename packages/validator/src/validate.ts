@@ -2,8 +2,13 @@ import type {
   AipDocument,
   DefaultValue,
   EntityBlock,
+  EventBlock,
   FieldDecl,
+  IndexBlock,
+  PolicyBlock,
+  SeedBlock,
   Span,
+  Stmt,
   TypeExpr,
 } from "@aiparlance/parser";
 import type { Diagnostic, ValidateResult } from "./index.js";
@@ -27,6 +32,11 @@ export function validateDocument(doc: AipDocument): ValidateResult {
   const diagnostics: Diagnostic[] = [];
   const entities = new Map<string, EntityBlock>();
   const validationEntities = new Set<string>();
+  const events = new Map<string, EventBlock>();
+  const jobs = new Set<string>();
+  const queues = new Set<string>();
+  const workflows = new Set<string>();
+  void queues;
 
   if (!doc.app.members.some((m) => m.kind === "database")) {
     pushError(
@@ -97,8 +107,97 @@ export function validateDocument(doc: AipDocument): ValidateResult {
         }
         validateValidationBlock(block, entity, diagnostics);
         break;
+      case "Index":
+        validateIndex(block, entities, diagnostics);
+        break;
+      case "Seed":
+        validateSeed(block, entities, diagnostics);
+        break;
+      case "Policy":
+        validatePolicy(block, doc, entities, diagnostics);
+        break;
+      case "Api":
+        // members are structurally validated at parse time
+        break;
+      case "Event":
+        events.set(block.name, block);
+        for (const field of block.fields) {
+          if (field.type.kind === "EntityRef" && !entities.has(field.type.name)) {
+            pushError(
+              diagnostics,
+              "unknown_entity_ref",
+              `event field '${field.name}' references unknown entity '${field.type.name}'`,
+              field.span
+            );
+          }
+          checkBelongsToRef(field.type, entities, field.span, diagnostics);
+        }
+        break;
+      case "Job":
+        jobs.add(block.name);
+        break;
+      case "Queue":
+        queues.add(block.name);
+        break;
+      case "Workflow":
+        workflows.add(block.name);
+        if (!entities.has(block.when.entity)) {
+          pushError(
+            diagnostics,
+            "unknown_entity_ref",
+            `workflow '${block.name}' when references unknown entity '${block.when.entity}'`,
+            block.span
+          );
+        }
+        break;
+      case "Lifecycle":
+        if (!entities.has(block.entity)) {
+          pushError(
+            diagnostics,
+            "unknown_entity_ref",
+            `lifecycle references unknown entity '${block.entity}'`,
+            block.span
+          );
+        }
+        break;
+      case "AiContext":
+        if (!entities.has(block.entity)) {
+          pushError(
+            diagnostics,
+            "unknown_entity_ref",
+            `ai_context references unknown entity '${block.entity}'`,
+            block.span
+          );
+        }
+        break;
       default:
         break;
+    }
+  }
+
+  // Second pass: workflow/lifecycle refs that need collected names
+  for (const block of doc.blocks) {
+    if (block.kind === "Workflow") {
+      for (const stmt of block.body) {
+        validateStmtRefs(stmt, entities, events, jobs, diagnostics);
+      }
+    }
+    if (block.kind === "Lifecycle") {
+      for (const member of block.members) {
+        if (member.kind === "on" && !workflows.has(member.workflow)) {
+          pushError(
+            diagnostics,
+            "unknown_workflow_ref",
+            `lifecycle references unknown workflow '${member.workflow}'`,
+            member.span
+          );
+        }
+        if (member.kind === "before" || member.kind === "after") {
+          for (const stmt of member.body) {
+            validateStmtRefs(stmt, entities, events, jobs, diagnostics);
+          }
+        }
+      }
     }
   }
 
@@ -111,6 +210,174 @@ export function validateDocument(doc: AipDocument): ValidateResult {
 
   const ok = !diagnostics.some((d) => d.severity === "error");
   return { ok, diagnostics };
+}
+
+function entityFieldNames(entity: EntityBlock): Set<string> {
+  const names = new Set(implicitEntityFields(entity));
+  for (const item of entity.body) {
+    if (item.kind === "Field") names.add(item.name);
+  }
+  return names;
+}
+
+function validateIndex(
+  block: IndexBlock,
+  entities: Map<string, EntityBlock>,
+  diagnostics: Diagnostic[]
+): void {
+  const entity = entities.get(block.entity);
+  if (!entity) {
+    pushError(
+      diagnostics,
+      "unknown_entity_ref",
+      `index references unknown entity '${block.entity}'`,
+      block.span
+    );
+    return;
+  }
+  const fields = entityFieldNames(entity);
+  for (const name of block.fields) {
+    if (!fields.has(name)) {
+      pushError(
+        diagnostics,
+        "unknown_field",
+        `index on '${block.entity}' references unknown field '${name}'`,
+        block.span
+      );
+    }
+  }
+}
+
+function validateSeed(
+  block: SeedBlock,
+  entities: Map<string, EntityBlock>,
+  diagnostics: Diagnostic[]
+): void {
+  const entity = entities.get(block.entity);
+  if (!entity) {
+    pushError(
+      diagnostics,
+      "unknown_entity_ref",
+      `seed references unknown entity '${block.entity}'`,
+      block.span
+    );
+    return;
+  }
+  const fields = entityFieldNames(entity);
+  for (const assign of block.assigns) {
+    if (!fields.has(assign.name)) {
+      pushError(
+        diagnostics,
+        "unknown_field",
+        `seed '${block.entity}' assigns unknown field '${assign.name}'`,
+        assign.span
+      );
+    }
+  }
+}
+
+function validatePolicy(
+  block: PolicyBlock,
+  doc: AipDocument,
+  entities: Map<string, EntityBlock>,
+  diagnostics: Diagnostic[]
+): void {
+  const entity = entities.get(block.entity);
+  if (!entity) {
+    pushError(
+      diagnostics,
+      "unknown_entity_ref",
+      `policy references unknown entity '${block.entity}'`,
+      block.span
+    );
+    return;
+  }
+  const hasAuth = doc.app.members.some((m) => m.kind === "auth");
+  const fields = entityFieldNames(entity);
+
+  for (const rule of block.rules) {
+    if (
+      (rule.predicate.kind === "authenticated" ||
+        rule.predicate.kind === "role" ||
+        rule.predicate.kind === "permission" ||
+        rule.predicate.kind === "owner" ||
+        rule.predicate.kind === "owner_or_manager") &&
+      !hasAuth
+    ) {
+      pushError(
+        diagnostics,
+        "policy_requires_auth",
+        `policy '${block.entity}' uses '${rule.predicate.kind}' but app has no auth`,
+        rule.span
+      );
+    }
+    if (
+      rule.predicate.kind === "owner" ||
+      rule.predicate.kind === "owner_or_manager"
+    ) {
+      const parts = rule.predicate.field.parts;
+      // Lead.seller → entity Lead, field seller
+      if (parts.length >= 2) {
+        const fieldName = parts[parts.length - 1]!;
+        if (!fields.has(fieldName)) {
+          pushError(
+            diagnostics,
+            "unknown_field",
+            `policy predicate references unknown field '${parts.join(".")}'`,
+            rule.span
+          );
+        }
+      }
+    }
+  }
+}
+
+function validateStmtRefs(
+  stmt: Stmt,
+  entities: Map<string, EntityBlock>,
+  events: Map<string, EventBlock>,
+  jobs: Set<string>,
+  diagnostics: Diagnostic[]
+): void {
+  switch (stmt.kind) {
+    case "create":
+      if (!entities.has(stmt.entity)) {
+        pushError(
+          diagnostics,
+          "unknown_entity_ref",
+          `create references unknown entity '${stmt.entity}'`,
+          stmt.span
+        );
+      }
+      break;
+    case "emit":
+      if (!events.has(stmt.event)) {
+        pushError(
+          diagnostics,
+          "unknown_event_ref",
+          `emit references unknown event '${stmt.event}'`,
+          stmt.span
+        );
+      }
+      break;
+    case "dispatch":
+      if (!jobs.has(stmt.job)) {
+        pushError(
+          diagnostics,
+          "unknown_job_ref",
+          `dispatch references unknown job '${stmt.job}'`,
+          stmt.span
+        );
+      }
+      break;
+    case "if":
+      for (const s of stmt.body) {
+        validateStmtRefs(s, entities, events, jobs, diagnostics);
+      }
+      break;
+    default:
+      break;
+  }
 }
 
 function validateEntityBody(entity: EntityBlock, diagnostics: Diagnostic[]): void {

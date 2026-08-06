@@ -26,6 +26,12 @@
     "@aiparlance/sql": "0.0.0",
     "@aiparlance/openapi": "0.0.0",
     "@aiparlance/typescript": "0.0.0",
-    "@aiparlance/go": "0.0.0"
+    "@aiparlance/go": "0.0.0",
+    "@aiparlance/mysql": "0.0.0",
+    "@aiparlance/workers": "0.0.0",
+    "@aiparlance/python": "0.0.0",
+    "@aiparlance/php": "0.0.0",
+    "@aiparlance/docs": "0.0.0",
+    "@aiparlance/tests": "0.0.0"
   }
 }

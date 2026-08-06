@@ -11,22 +11,66 @@ import {
   EmitTypeScriptError,
 } from "@aiparlance/typescript";
 import { emitGo, EmitGoError } from "@aiparlance/go";
+import { emitMysql, EmitMysqlError } from "@aiparlance/mysql";
+import { emitWorkers, EmitWorkersError } from "@aiparlance/workers";
+import { emitPython, EmitPythonError } from "@aiparlance/python";
+import { emitPhp, EmitPhpError } from "@aiparlance/php";
+import { emitDocs, EmitDocsError } from "@aiparlance/docs";
+import { emitTests, EmitTestsError } from "@aiparlance/tests";
+import type { AipDocument } from "@aiparlance/parser";
 
 /**
- * AI Parlance CLI — Phase C + follow-ups
+ * AI Parlance CLI — reference toolchain
  */
+
+const EMIT_TARGETS = [
+  "sql",
+  "openapi",
+  "typescript",
+  "go",
+  "mysql",
+  "workers",
+  "python",
+  "php",
+  "docs",
+  "tests",
+] as const;
+
+type EmitTarget = (typeof EMIT_TARGETS)[number];
+
+const emitters: Record<
+  EmitTarget,
+  (doc: AipDocument) => string
+> = {
+  sql: emitSql,
+  openapi: emitOpenApi,
+  typescript: emitTypeScript,
+  go: emitGo,
+  mysql: emitMysql,
+  workers: emitWorkers,
+  python: emitPython,
+  php: emitPhp,
+  docs: emitDocs,
+  tests: emitTests,
+};
 
 export const HELP = `aip — AI Parlance CLI
 
 Usage:
   aip parse <file.aip>                 Parse to AST (JSON on stdout)
   aip validate <file.aip>              Semantic validation
-  aip emit sql <file.aip>              Emit PostgreSQL DDL (M3)
-  aip emit openapi <file.aip>          Emit OpenAPI 3 JSON (M4)
-  aip emit typescript <file.aip>       Emit TypeScript interfaces/guards (M5)
-  aip emit go <file.aip>               Emit Go structs/handlers (follow-up)
+  aip emit sql <file.aip>              PostgreSQL DDL
+  aip emit openapi <file.aip>          OpenAPI 3 JSON
+  aip emit typescript <file.aip>       TypeScript interfaces/guards
+  aip emit go <file.aip>               Go structs/handlers
+  aip emit mysql <file.aip>            MySQL DDL
+  aip emit workers <file.aip>          Job/queue worker stubs
+  aip emit python <file.aip>           Python dataclasses
+  aip emit php <file.aip>              PHP classes
+  aip emit docs <file.aip>             Markdown API reference
+  aip emit tests <file.aip>            CRUD test fixtures
 
-Status: Preview emitters — sql|openapi|typescript|go.
+Status: Preview toolchain — parse, validate, emit (${EMIT_TARGETS.join("|")}).
 Roadmap: https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md
 `;
 
@@ -94,15 +138,13 @@ function cmdValidate(args: string[]): number {
 }
 
 function cmdEmit(args: string[]): number {
+  const list = EMIT_TARGETS.join("|");
   if (args.length < 1) {
-    process.stderr.write(
-      "aip: usage: aip emit <sql|openapi|typescript|go> <file.aip>\n"
-    );
+    process.stderr.write(`aip: usage: aip emit <${list}> <file.aip>\n`);
     return 1;
   }
   const target = args[0]!;
-  const supported = new Set(["sql", "openapi", "typescript", "go"]);
-  if (!supported.has(target)) {
+  if (!EMIT_TARGETS.includes(target as EmitTarget)) {
     process.stderr.write(
       `aip: emit '${target}' is not implemented yet (see ROADMAP.md)\n`
     );
@@ -117,14 +159,7 @@ function cmdEmit(args: string[]): number {
       process.stderr.write(`${formatDiagnostic(d, input.file)}\n`);
     }
     if (!result.ok) return 1;
-    const out =
-      target === "sql"
-        ? emitSql(doc)
-        : target === "openapi"
-          ? emitOpenApi(doc)
-          : target === "typescript"
-            ? emitTypeScript(doc)
-            : emitGo(doc);
+    const out = emitters[target as EmitTarget](doc);
     process.stdout.write(out);
     if (!out.endsWith("\n")) process.stdout.write("\n");
     return 0;
@@ -133,7 +168,13 @@ function cmdEmit(args: string[]): number {
       e instanceof EmitSqlError ||
       e instanceof EmitOpenApiError ||
       e instanceof EmitTypeScriptError ||
-      e instanceof EmitGoError
+      e instanceof EmitGoError ||
+      e instanceof EmitMysqlError ||
+      e instanceof EmitWorkersError ||
+      e instanceof EmitPythonError ||
+      e instanceof EmitPhpError ||
+      e instanceof EmitDocsError ||
+      e instanceof EmitTestsError
     ) {
       process.stderr.write(`aip: ${e.message}\n`);
       return 1;

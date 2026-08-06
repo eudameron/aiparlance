@@ -8,7 +8,7 @@ This roadmap tracked turning AI Parlance from **specification-only** into a **re
 - Transpiler matrix: PostgreSQL, OpenAPI, TypeScript **Preview**; others Planned ([Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix))
 - PostgreSQL is the **primary** SQL target ([Database](https://docs.aiparlance.org/en/database))
 
-**Status today:** Core reference toolchain + **Go** emitter ship (`aip parse` / `validate` / `emit sql|openapi|typescript|go`). Next follow-ups: Infra/Security/Behavior parse depth, then Workers / MySQL / … The marketing playground remains **illustrative only**.
+**Status today:** Full v0.1 parse/validate (Core + Infra + Security + Behavior) and Preview emitters: `sql|openapi|typescript|go|mysql|workers|python|php|docs|tests`. The marketing playground remains **illustrative only**.
 
 The overall language remains **draft** until this reference toolchain ships (per Specification).
 
@@ -197,12 +197,14 @@ Per matrix: **interfaces, guards**. Per Security multi-target notes: guards/deco
 
 | Order | Target | Notes |
 |---|---|---|
-| 1 | **Go** | ✅ Preview — `@aiparlance/go` · `aip emit go` (structs, handlers, auth middleware stubs) |
-| 2 | Expand Security + Behavior parse/validate | Needed for CRM/ops full fidelity |
-| 3 | Workers | From `workflow` / `job` / `queue` (Behavior beta) |
-| 4 | MySQL | Same IR as PostgreSQL; secondary dialect |
-| 5 | Python, PHP | Additional backends |
-| 6 | Docs / Tests emitters | Matrix niceties |
+| 1 | **Go** | ✅ Preview — `@aiparlance/go` · `aip emit go` |
+| 2 | Expand Security + Behavior parse/validate | ✅ Infra + Security + Behavior parse/validate; CRM/ops examples validate |
+| 3 | Workers | ✅ Preview — `@aiparlance/workers` · `aip emit workers` |
+| 4 | MySQL | ✅ Preview — `@aiparlance/mysql` · `aip emit mysql` |
+| 5 | Python, PHP | ✅ Preview — `aip emit python\|php` |
+| 6 | Docs / Tests emitters | ✅ Preview — `aip emit docs\|tests` |
+
+Further polish: deepen emitters (policy → guards, full MySQL migrations, playground wiring, npm publish).
 
 Language features marked **roadmap** in the Specification stay documentation-only until a future language version.
 

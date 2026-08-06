@@ -1,19 +1,40 @@
 import type {
   AipDocument,
+  AiContextBlock,
+  ApiBlock,
+  ApiMember,
   AppBlock,
   AppMember,
   CrudStmt,
   DefaultValue,
+  Duration,
   EntityBlock,
   EntityModifier,
+  EventBlock,
+  Expr,
+  FieldAssign,
   FieldDecl,
   FieldModifier,
+  FieldRef,
+  IndexBlock,
+  JobBlock,
+  LifecycleBlock,
+  LifecycleEvent,
+  LifecycleHook,
+  LifecycleMember,
+  PolicyBlock,
+  PolicyRule,
+  PredicateExpr,
   PrimitiveType,
+  QueueBlock,
+  SeedBlock,
   Span,
+  Stmt,
   TopLevelBlock,
   TypeExpr,
   ValidationBlock,
   ValidationRule,
+  WorkflowBlock,
 } from "./ast.js";
 import { ParseError } from "./errors.js";
 import { tokenize, type Token } from "./lexer.js";
@@ -32,18 +53,9 @@ const PRIMITIVES = new Set<string>([
   "json",
 ]);
 
-const UNSUPPORTED = new Map<string, string>([
-  ["index", "Infra"],
-  ["api", "Infra"],
-  ["seed", "Infra"],
-  ["policy", "Security"],
-  ["workflow", "Behavior"],
-  ["event", "Behavior"],
-  ["lifecycle", "Behavior"],
-  ["job", "Behavior"],
-  ["queue", "Behavior"],
-  ["ai_context", "Behavior"],
-]);
+const LIFECYCLE_EVENTS = new Set(["created", "updated", "deleted"]);
+const LIFECYCLE_HOOKS = new Set(["create", "update", "delete"]);
+const DURATION_UNITS = new Set(["m", "h", "d"]);
 
 export function parseSource(source: string, fileName = "<stdin>"): AipDocument {
   const tokens = tokenize(source, fileName);
@@ -131,24 +143,40 @@ class Parser {
 
   private parseBlock(): TopLevelBlock {
     const tok = this.expect("ident");
-    if (tok.value === "entity") return this.parseEntity(tok);
-    if (tok.value === "crud") return this.parseCrud(tok);
-    if (tok.value === "validation") return this.parseValidation(tok);
-
-    const tier = UNSUPPORTED.get(tok.value);
-    if (tier) {
-      throw this.err(
-        `'${tok.value}' is ${tier}-tier and not parsed in M1 (Core only); see ROADMAP.md`,
-        tok.start,
-        "unsupported_tier"
-      );
+    switch (tok.value) {
+      case "entity":
+        return this.parseEntity(tok);
+      case "crud":
+        return this.parseCrud(tok);
+      case "validation":
+        return this.parseValidation(tok);
+      case "index":
+        return this.parseIndex(tok);
+      case "api":
+        return this.parseApi(tok);
+      case "seed":
+        return this.parseSeed(tok);
+      case "policy":
+        return this.parsePolicy(tok);
+      case "workflow":
+        return this.parseWorkflow(tok);
+      case "event":
+        return this.parseEvent(tok);
+      case "lifecycle":
+        return this.parseLifecycle(tok);
+      case "job":
+        return this.parseJob(tok);
+      case "queue":
+        return this.parseQueue(tok);
+      case "ai_context":
+        return this.parseAiContext(tok);
+      default:
+        throw this.err(
+          `unexpected top-level '${tok.value}'`,
+          tok.start,
+          "unexpected_block"
+        );
     }
-
-    throw this.err(
-      `unexpected top-level '${tok.value}' (expected entity|crud|validation)`,
-      tok.start,
-      "unexpected_block"
-    );
   }
 
   private parseEntity(kw: Token): EntityBlock {
@@ -293,6 +321,471 @@ class Parser {
       rules,
       span: span(kw.start, endTok.end),
     };
+  }
+
+  private parseIndex(kw: Token): IndexBlock {
+    const entity = this.expect("ident").value;
+    this.expect("lbrace");
+    const fields: string[] = [];
+    while (!this.check("rbrace") && !this.check("eof")) {
+      fields.push(this.expect("ident").value);
+    }
+    const endTok = this.expect("rbrace");
+    return {
+      kind: "Index",
+      entity,
+      fields,
+      span: span(kw.start, endTok.end),
+    };
+  }
+
+  private parseApi(kw: Token): ApiBlock {
+    this.expect("lbrace");
+    const members: ApiMember[] = [];
+    while (!this.check("rbrace") && !this.check("eof")) {
+      const key = this.expect("ident");
+      if (key.value === "prefix") {
+        members.push({ kind: "prefix", value: this.expect("string").value });
+      } else if (key.value === "format") {
+        members.push({ kind: "format", value: this.expect("ident").value });
+      } else if (key.value === "rate_limit") {
+        const count = Number(this.expect("number").value);
+        this.expect("slash");
+        const unit = this.expect("ident").value;
+        members.push({ kind: "rate_limit", value: { count, unit } });
+      } else if (key.value === "cors") {
+        this.expect("lbrace");
+        const allows: string[] = [];
+        while (!this.check("rbrace") && !this.check("eof")) {
+          this.expectIdent("allow");
+          allows.push(this.expect("string").value);
+        }
+        this.expect("rbrace");
+        members.push({ kind: "cors", allows });
+      } else {
+        throw this.err(`unexpected api member '${key.value}'`, key.start);
+      }
+    }
+    const endTok = this.expect("rbrace");
+    return { kind: "Api", members, span: span(kw.start, endTok.end) };
+  }
+
+  private parseSeed(kw: Token): SeedBlock {
+    const entity = this.expect("ident").value;
+    this.expect("lbrace");
+    const assigns = this.parseFieldAssignList();
+    const endTok = this.expect("rbrace");
+    return {
+      kind: "Seed",
+      entity,
+      assigns,
+      span: span(kw.start, endTok.end),
+    };
+  }
+
+  private parsePolicy(kw: Token): PolicyBlock {
+    const entity = this.expect("ident").value;
+    this.expect("lbrace");
+    const rules: PolicyRule[] = [];
+    while (!this.check("rbrace") && !this.check("eof")) {
+      const actionTok = this.expect("ident");
+      const predicate = this.parsePredicate();
+      rules.push({
+        action: actionTok.value,
+        predicate,
+        span: span(actionTok.start, this.prev().end),
+      });
+    }
+    const endTok = this.expect("rbrace");
+    return {
+      kind: "Policy",
+      entity,
+      rules,
+      span: span(kw.start, endTok.end),
+    };
+  }
+
+  private parsePredicate(): PredicateExpr {
+    const tok = this.expect("ident");
+    if (tok.value === "public") return { kind: "public" };
+    if (tok.value === "authenticated") return { kind: "authenticated" };
+    if (
+      tok.value === "role" ||
+      tok.value === "permission" ||
+      tok.value === "owner" ||
+      tok.value === "owner_or_manager"
+    ) {
+      this.expect("lparen");
+      if (tok.value === "role" || tok.value === "permission") {
+        const name = this.expect("ident").value;
+        this.expect("rparen");
+        return { kind: tok.value, name };
+      }
+      const field = this.parseFieldRef();
+      this.expect("rparen");
+      return { kind: tok.value, field };
+    }
+    throw this.err(`unknown predicate '${tok.value}'`, tok.start);
+  }
+
+  private parseWorkflow(kw: Token): WorkflowBlock {
+    const name = this.expect("ident").value;
+    this.expect("lbrace");
+    this.expectIdent("when");
+    const entity = this.expect("ident").value;
+    this.expect("dot");
+    const eventTok = this.expect("ident");
+    if (!LIFECYCLE_EVENTS.has(eventTok.value)) {
+      throw this.err(
+        `invalid lifecycle event '${eventTok.value}'`,
+        eventTok.start
+      );
+    }
+    const body: Stmt[] = [];
+    while (!this.check("rbrace") && !this.check("eof")) {
+      body.push(this.parseStmt());
+    }
+    const endTok = this.expect("rbrace");
+    return {
+      kind: "Workflow",
+      name,
+      when: {
+        entity,
+        event: eventTok.value as LifecycleEvent,
+      },
+      body,
+      span: span(kw.start, endTok.end),
+    };
+  }
+
+  private parseEvent(kw: Token): EventBlock {
+    const name = this.expect("ident").value;
+    this.expect("lbrace");
+    const fields: FieldDecl[] = [];
+    while (!this.check("rbrace") && !this.check("eof")) {
+      const ident = this.expect("ident");
+      this.expect("colon");
+      fields.push(this.parseFieldDecl(ident));
+    }
+    const endTok = this.expect("rbrace");
+    return {
+      kind: "Event",
+      name,
+      fields,
+      span: span(kw.start, endTok.end),
+    };
+  }
+
+  private parseLifecycle(kw: Token): LifecycleBlock {
+    const entity = this.expect("ident").value;
+    this.expect("lbrace");
+    const members: LifecycleMember[] = [];
+    while (!this.check("rbrace") && !this.check("eof")) {
+      const key = this.expect("ident");
+      if (key.value === "on") {
+        const eventTok = this.expect("ident");
+        if (!LIFECYCLE_EVENTS.has(eventTok.value)) {
+          throw this.err(
+            `invalid lifecycle event '${eventTok.value}'`,
+            eventTok.start
+          );
+        }
+        this.expect("arrow");
+        this.expectIdent("workflow");
+        const workflow = this.expect("ident").value;
+        members.push({
+          kind: "on",
+          event: eventTok.value as LifecycleEvent,
+          workflow,
+          span: span(key.start, this.prev().end),
+        });
+      } else if (key.value === "before" || key.value === "after") {
+        const hookTok = this.expect("ident");
+        if (!LIFECYCLE_HOOKS.has(hookTok.value)) {
+          throw this.err(`invalid lifecycle hook '${hookTok.value}'`, hookTok.start);
+        }
+        this.expect("lbrace");
+        const body: Stmt[] = [];
+        while (!this.check("rbrace") && !this.check("eof")) {
+          body.push(this.parseStmt());
+        }
+        const end = this.expect("rbrace");
+        members.push({
+          kind: key.value,
+          hook: hookTok.value as LifecycleHook,
+          body,
+          span: span(key.start, end.end),
+        });
+      } else {
+        throw this.err(`unexpected lifecycle member '${key.value}'`, key.start);
+      }
+    }
+    const endTok = this.expect("rbrace");
+    return {
+      kind: "Lifecycle",
+      entity,
+      members,
+      span: span(kw.start, endTok.end),
+    };
+  }
+
+  private parseJob(kw: Token): JobBlock {
+    const name = this.expect("ident").value;
+    this.expect("lbrace");
+    let retries: number | null = null;
+    let timeout: Duration | null = null;
+    while (!this.check("rbrace") && !this.check("eof")) {
+      const key = this.expect("ident");
+      if (key.value === "retries") {
+        retries = Number(this.expect("number").value);
+      } else if (key.value === "timeout") {
+        timeout = this.parseDuration();
+      } else {
+        throw this.err(`unexpected job member '${key.value}'`, key.start);
+      }
+    }
+    const endTok = this.expect("rbrace");
+    return {
+      kind: "Job",
+      name,
+      retries,
+      timeout,
+      span: span(kw.start, endTok.end),
+    };
+  }
+
+  private parseQueue(kw: Token): QueueBlock {
+    const name = this.expect("ident");
+    return {
+      kind: "Queue",
+      name: name.value,
+      span: span(kw.start, name.end),
+    };
+  }
+
+  private parseAiContext(kw: Token): AiContextBlock {
+    const entity = this.expect("ident").value;
+    this.expect("lbrace");
+    this.expectIdent("description");
+    const description = this.expect("string").value;
+    const endTok = this.expect("rbrace");
+    return {
+      kind: "AiContext",
+      entity,
+      description,
+      span: span(kw.start, endTok.end),
+    };
+  }
+
+  private parseStmt(): Stmt {
+    const start = this.peek();
+    if (this.check("ident") && this.peek().value === "var") {
+      this.advance();
+      const name = this.expect("ident").value;
+      this.expect("eq");
+      const value = this.parseExpr();
+      return {
+        kind: "var",
+        name,
+        value,
+        span: span(start.start, this.prev().end),
+      };
+    }
+    if (this.check("ident") && this.peek().value === "if") {
+      this.advance();
+      const condition = this.parseExpr();
+      this.expect("lbrace");
+      const body: Stmt[] = [];
+      while (!this.check("rbrace") && !this.check("eof")) {
+        body.push(this.parseStmt());
+      }
+      const end = this.expect("rbrace");
+      return {
+        kind: "if",
+        condition,
+        body,
+        span: span(start.start, end.end),
+      };
+    }
+    if (this.check("ident") && this.peek().value === "assign") {
+      this.advance();
+      const target = this.parseFieldRef();
+      const value = this.parseExpr();
+      return {
+        kind: "assign",
+        target,
+        value,
+        span: span(start.start, this.prev().end),
+      };
+    }
+    if (this.check("ident") && this.peek().value === "create") {
+      this.advance();
+      const entity = this.expect("ident").value;
+      this.expect("lbrace");
+      const assigns = this.parseFieldAssignList();
+      const end = this.expect("rbrace");
+      return {
+        kind: "create",
+        entity,
+        assigns,
+        span: span(start.start, end.end),
+      };
+    }
+    if (this.check("ident") && this.peek().value === "emit") {
+      this.advance();
+      const event = this.expect("ident").value;
+      this.expect("lbrace");
+      const assigns = this.parseFieldAssignList();
+      const end = this.expect("rbrace");
+      return {
+        kind: "emit",
+        event,
+        assigns,
+        span: span(start.start, end.end),
+      };
+    }
+    if (this.check("ident") && this.peek().value === "notify") {
+      this.advance();
+      this.expect("lparen");
+      const recipient = this.parseExpr();
+      this.expect("comma");
+      const message = this.expect("string").value;
+      this.expect("rparen");
+      return {
+        kind: "notify",
+        recipient,
+        message,
+        span: span(start.start, this.prev().end),
+      };
+    }
+    if (this.check("ident") && this.peek().value === "reject") {
+      this.advance();
+      const message = this.expect("string").value;
+      return {
+        kind: "reject",
+        message,
+        span: span(start.start, this.prev().end),
+      };
+    }
+    if (this.check("ident") && this.peek().value === "dispatch") {
+      this.advance();
+      const job = this.expect("ident").value;
+      let after: Duration | null = null;
+      if (this.check("ident") && this.peek().value === "after") {
+        this.advance();
+        after = this.parseDuration();
+      }
+      return {
+        kind: "dispatch",
+        job,
+        after,
+        span: span(start.start, this.prev().end),
+      };
+    }
+    // expr statement (call)
+    const value = this.parseExpr();
+    if (value.kind !== "call") {
+      throw this.err(
+        "expected statement (var|if|assign|create|emit|notify|reject|dispatch|call)",
+        start.start
+      );
+    }
+    return {
+      kind: "expr",
+      value,
+      span: span(start.start, this.prev().end),
+    };
+  }
+
+  private parseFieldAssignList(): FieldAssign[] {
+    const assigns: FieldAssign[] = [];
+    while (!this.check("rbrace") && !this.check("eof")) {
+      const nameTok = this.expect("ident");
+      this.expect("colon");
+      const value = this.parseExpr();
+      assigns.push({
+        name: nameTok.value,
+        value,
+        span: span(nameTok.start, this.prev().end),
+      });
+    }
+    return assigns;
+  }
+
+  private parseExpr(): Expr {
+    let left = this.parsePrimary();
+    while (this.check("plus") || this.check("minus")) {
+      const op = this.advance().kind === "plus" ? "+" : "-";
+      const right = this.parsePrimary();
+      left = { kind: "binary", op, left, right };
+    }
+    return left;
+  }
+
+  private parsePrimary(): Expr {
+    if (this.match("string")) {
+      return { kind: "string", value: this.prev().value };
+    }
+    if (this.check("number")) {
+      const num = this.expect("number");
+      if (
+        this.check("ident") &&
+        DURATION_UNITS.has(this.peek().value)
+      ) {
+        const unit = this.expect("ident").value as Duration["unit"];
+        return {
+          kind: "duration",
+          value: { amount: Number(num.value), unit },
+        };
+      }
+      return { kind: "number", value: Number(num.value) };
+    }
+    if (this.match("lparen")) {
+      const inner = this.parseExpr();
+      this.expect("rparen");
+      return inner;
+    }
+    if (this.check("ident")) {
+      const id = this.expect("ident");
+      if (id.value === "true") return { kind: "boolean", value: true };
+      if (id.value === "false") return { kind: "boolean", value: false };
+      if (this.match("lparen")) {
+        const args: Expr[] = [];
+        if (!this.check("rparen")) {
+          args.push(this.parseExpr());
+          while (this.match("comma")) args.push(this.parseExpr());
+        }
+        this.expect("rparen");
+        return { kind: "call", name: id.value, args };
+      }
+      // field_ref starting with this ident
+      const parts = [id.value];
+      while (this.match("dot")) {
+        parts.push(this.expect("ident").value);
+      }
+      return { kind: "field_ref", ref: { parts } };
+    }
+    throw this.err("expected expression", this.peek().start);
+  }
+
+  private parseFieldRef(): FieldRef {
+    const parts = [this.expect("ident").value];
+    while (this.match("dot")) {
+      parts.push(this.expect("ident").value);
+    }
+    return { parts };
+  }
+
+  private parseDuration(): Duration {
+    const amount = Number(this.expect("number").value);
+    const unitTok = this.expect("ident");
+    if (!DURATION_UNITS.has(unitTok.value)) {
+      throw this.err(
+        `invalid duration unit '${unitTok.value}' (expected m|h|d)`,
+        unitTok.start
+      );
+    }
+    return { amount, unit: unitTok.value as Duration["unit"] };
   }
 
   private peek(): Token {

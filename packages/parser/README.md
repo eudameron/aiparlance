@@ -4,9 +4,8 @@ Lexer + parser for AI Parlance `.aip` → AST.
 
 | | |
 |---|---|
-| Status | **M1** — Core implemented |
-| Coverage | `app`, `entity`, fields (`primitive` / `enum` / `belongs_to` / entity ref), modifiers, `crud`, `validation`, `timestamps` / `soft_delete` |
-| Deferred | Infra / Security / Behavior blocks → `unsupported_tier` error |
+| Status | Core + Infra + Security + Behavior (v0.1) |
+| Coverage | `app`, `entity`, `crud`, `validation`, `index`, `api`, `seed`, `policy`, `workflow`, `event`, `lifecycle`, `job`, `queue`, `ai_context`, field modifiers, `timestamps` / `soft_delete` |
 | Grammar | [`spec/v0.1/grammar.ebnf`](../../spec/v0.1/grammar.ebnf) |
 
 ```ts
@@ -16,8 +15,7 @@ const doc = parse(source, "minimal.aip");
 ```
 
 ```bash
-# from repo root (after build)
-node packages/cli/dist/cli.js parse examples/minimal.aip
+node packages/cli/dist/cli.js parse examples/crm-reference.aip
 ```
 
 See [`ROADMAP.md`](../../ROADMAP.md).

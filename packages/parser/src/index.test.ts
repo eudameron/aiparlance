@@ -91,21 +91,26 @@ crud User
     );
   });
 
-  it("rejects Security/Behavior blocks with unsupported_tier", () => {
-    try {
-      parse(
-        `
-app Demo @0.1 { database postgres }
-entity User { name: string }
-policy User { read authenticated }
-`,
-        "x.aip"
-      );
-      expect.unreachable();
-    } catch (e) {
-      expect(e).toBeInstanceOf(ParseError);
-      expect((e as ParseError).code).toBe("unsupported_tier");
-    }
+  it("parses crm-reference and ops-reference (Infra/Security/Behavior)", () => {
+    const crm = parse(
+      readFileSync(join(root, "examples/crm-reference.aip"), "utf8"),
+      "examples/crm-reference.aip"
+    );
+    expect(crm.blocks.some((b) => b.kind === "Policy")).toBe(true);
+    expect(crm.blocks.some((b) => b.kind === "Index")).toBe(true);
+    expect(crm.blocks.some((b) => b.kind === "Api")).toBe(true);
+    expect(crm.blocks.some((b) => b.kind === "Workflow")).toBe(true);
+    expect(crm.blocks.some((b) => b.kind === "Event")).toBe(true);
+
+    const ops = parse(
+      readFileSync(join(root, "examples/ops-reference.aip"), "utf8"),
+      "examples/ops-reference.aip"
+    );
+    expect(ops.blocks.some((b) => b.kind === "Seed")).toBe(true);
+    expect(ops.blocks.some((b) => b.kind === "Job")).toBe(true);
+    expect(ops.blocks.some((b) => b.kind === "Queue")).toBe(true);
+    expect(ops.blocks.some((b) => b.kind === "Lifecycle")).toBe(true);
+    expect(ops.blocks.some((b) => b.kind === "AiContext")).toBe(true);
   });
 
   it("reports line/column on errors", () => {

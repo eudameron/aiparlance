@@ -9,10 +9,12 @@ and this project uses a draft **v0.1** language version. A **reference toolchain
 
 ### Added
 
-- Phase C **M6**: CI covers Core-supported examples + SQL / OpenAPI / TypeScript goldens (`scripts/examples.test.ts`); CONTRIBUTING updated for toolchain PRs
+- **Infra / Security / Behavior parse + validate** — `index`, `api`, `seed`, `policy`, `workflow`, `event`, `lifecycle`, `job`, `queue`, `ai_context`; `crm-reference` / `ops-reference` validate
+- SQL: `CREATE INDEX` + `INSERT` seeds; OpenAPI: `api.prefix` on paths
+- Matrix emitters (Preview): `mysql`, `workers`, `python`, `php`, `docs`, `tests`
 - **Go emitter** (`@aiparlance/go`) and `aip emit go` — structs, thin handlers, auth middleware stubs
-- Docs: [Getting started](https://docs.aiparlance.org/en/getting-started) (install, CLI, emit, tests) and [First emitters](https://docs.aiparlance.org/en/first-transpiler) (EN + PT)
-- Site: toolchain section, `/en|pt/first-transpiler` page, copy aligned with Preview emitters
+- Phase C **M6**: CI covers examples + goldens; CONTRIBUTING for toolchain PRs
+- Docs: Getting started + First emitters; site toolchain pages
 
 ### Changed
 
