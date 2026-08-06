@@ -1,0 +1,118 @@
+---
+title: Blog CRUD
+description: CRUD completo de blog — entities, policies, API, seed, workflow
+---
+
+# Blog CRUD
+
+[`examples/blog-crud.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/blog-crud.aip) — Author / Post / Comment com validation, policies, índices, API `/v1`, seed e workflow leve.
+
+**Tiers:** Core + Infra + Security + Behavior (leve).  
+**Tutorial:** [Walkthrough CRUD](/pt/crud-walkthrough).
+
+```bash
+node packages/cli/dist/cli.js validate examples/blog-crud.aip
+node packages/cli/dist/cli.js emit sql examples/blog-crud.aip
+node packages/cli/dist/cli.js emit openapi examples/blog-crud.aip
+node packages/cli/dist/cli.js emit tests examples/blog-crud.aip
+```
+
+```aip
+// AI Parlance — complete blog CRUD (Core + Infra + Security + light Behavior)
+// Walkthrough: docs/en/crud-walkthrough.mdx
+
+app Blog @0.1 {
+  database postgres
+  auth jwt
+}
+
+entity Author {
+  timestamps
+  soft_delete
+  name: string required
+  email: email required unique
+  role: enum(admin, editor, writer) default(writer)
+}
+
+entity Post {
+  timestamps
+  soft_delete
+  title: string required
+  slug: string required unique
+  body: text required
+  status: enum(draft, published, archived) default(draft)
+  author: belongs_to Author
+}
+
+entity Comment {
+  timestamps
+  body: text required
+  post: belongs_to Post
+  author: belongs_to Author optional
+}
+
+crud Author
+crud Post
+crud Comment
+
+validation Post {
+  title required
+  slug required unique
+  body required
+}
+
+policy Post {
+  create authenticated
+  read public
+  update owner_or_manager(Post.author)
+  delete role(admin)
+}
+
+policy Comment {
+  create authenticated
+  read public
+  update owner_or_manager(Comment.author)
+  delete role(admin)
+}
+
+index Post {
+  status
+  slug
+}
+
+index Comment {
+  post
+}
+
+api {
+  prefix "/v1"
+  format json
+  rate_limit 120/minute
+  cors {
+    allow "https://blog.example.com"
+  }
+}
+
+seed Author {
+  name: "Site Admin"
+  email: "admin@blog.example.com"
+  role: admin
+}
+
+workflow PostPublished {
+  when Post.updated
+
+  notify(Post.author, "Post status may have changed")
+  emit PostStatusChanged {
+    post: Post
+    author: Post.author
+  }
+}
+
+event PostStatusChanged {
+  post: Post
+  author: Author
+}
+```
+
+Ver todos: [Exemplos](/pt/examples).

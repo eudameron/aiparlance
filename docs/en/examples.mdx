@@ -1,0 +1,26 @@
+---
+title: Examples
+description: Reference .aip specs in the monorepo — Core smoke to full-tier CRUD
+---
+
+# Examples
+
+All reference specs live in [`examples/`](https://github.com/eudameron/aiparlance/tree/main/examples) and are validated by CI (`npm test` / `scripts/examples.test.ts`).
+
+| Spec | Focus | Doc page |
+|---|---|---|
+| [`minimal.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/minimal.aip) | Smallest Core smoke + emitter goldens | [Minimal](/en/examples/minimal) |
+| [`blog-crud.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/blog-crud.aip) | Complete blog CRUD | [Blog CRUD](/en/examples/blog-crud) |
+| [`inventory-crud.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/inventory-crud.aip) | Inventory + jobs / queues | [Inventory CRUD](/en/examples/inventory-crud) |
+| [`mysql-minimal.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/mysql-minimal.aip) | MySQL dialect (`aip emit mysql`) | [MySQL minimal](/en/examples/mysql-minimal) |
+| [`crm-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/crm-reference.aip) | CRM — policies, API, workflows | [CRM reference](/en/examples/crm-reference) |
+| [`ops-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/ops-reference.aip) | Seed, lifecycle, jobs, `ai_context` | [Ops reference](/en/examples/ops-reference) |
+
+Tutorial that walks through the blog spec: [CRUD walkthrough](/en/crud-walkthrough).
+
+```bash
+node packages/cli/dist/cli.js validate examples/minimal.aip
+node packages/cli/dist/cli.js emit sql examples/blog-crud.aip
+node packages/cli/dist/cli.js emit mysql examples/mysql-minimal.aip
+node packages/cli/dist/cli.js emit workers examples/inventory-crud.aip
+```

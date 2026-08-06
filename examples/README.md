@@ -11,7 +11,8 @@ Reference AI Parlance (`.aip`) specs for learning, validation, and emitter tests
 | [crm-reference.aip](crm-reference.aip) | CRM with policies, indexes, API, workflows, events | validate (Infra/Security/Behavior) |
 | [ops-reference.aip](ops-reference.aip) | Seed, ai_context, jobs, queues, lifecycle | validate + SQL seeds |
 
-Docs walkthrough: [CRUD walkthrough](https://docs.aiparlance.org/en/crud-walkthrough).
+Docs walkthrough: [CRUD walkthrough](https://docs.aiparlance.org/en/crud-walkthrough).  
+Docs menu: [Examples](https://docs.aiparlance.org/en/examples).
 
 ```bash
 npm test

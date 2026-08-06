@@ -1,0 +1,147 @@
+---
+title: Inventory CRUD
+description: Inventário com movimentações, seeds, jobs e filas
+---
+
+# Inventory CRUD
+
+[`examples/inventory-crud.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/inventory-crud.aip) — Warehouse / Product / StockMove / User com policies, índices, seeds, lifecycle, job e fila.
+
+**Tiers:** Core + Infra + Security + Behavior.  
+**Experimente:** `aip emit workers examples/inventory-crud.aip`
+
+```bash
+node packages/cli/dist/cli.js validate examples/inventory-crud.aip
+node packages/cli/dist/cli.js emit sql examples/inventory-crud.aip
+node packages/cli/dist/cli.js emit workers examples/inventory-crud.aip
+```
+
+```aip
+// AI Parlance — inventory CRUD with stock moves + worker hooks
+// Complements blog-crud.aip; exercises indexes, seeds, jobs/queues
+
+app Inventory @0.1 {
+  database postgres
+  auth jwt
+}
+
+entity Warehouse {
+  timestamps
+  name: string required
+  code: string required unique
+}
+
+entity Product {
+  timestamps
+  soft_delete
+  sku: string required unique
+  name: string required
+  unit_price_cents: int required
+  status: enum(active, discontinued) default(active)
+}
+
+entity StockMove {
+  timestamps
+  quantity: int required
+  reason: enum(receive, ship, adjust) required
+  product: belongs_to Product
+  warehouse: belongs_to Warehouse
+  actor: belongs_to User optional
+}
+
+entity User {
+  timestamps
+  name: string required
+  email: email required unique
+  role: enum(admin, manager, clerk) default(clerk)
+}
+
+crud Warehouse
+crud Product
+crud StockMove
+crud User
+
+validation Product {
+  sku required unique
+  name required
+}
+
+policy StockMove {
+  create authenticated
+  read role(manager)
+  update role(manager)
+  delete role(admin)
+}
+
+policy Product {
+  create role(manager)
+  read authenticated
+  update role(manager)
+  delete role(admin)
+}
+
+index Product {
+  sku
+  status
+}
+
+index StockMove {
+  product
+  warehouse
+}
+
+api {
+  prefix "/api"
+  format json
+  rate_limit 200/minute
+}
+
+seed Warehouse {
+  name: "Main DC"
+  code: "DC-01"
+}
+
+seed Product {
+  sku: "SKU-100"
+  name: "Demo Widget"
+  unit_price_cents: 999
+  status: active
+}
+
+seed User {
+  name: "Ops Manager"
+  email: "manager@inventory.example.com"
+  role: manager
+}
+
+queue StockAlerts
+
+job LowStockNotify {
+  retries 3
+  timeout 2m
+}
+
+lifecycle StockMove {
+  on created -> workflow StockMoveCreated
+}
+
+workflow StockMoveCreated {
+  when StockMove.created
+
+  notify(StockMove.actor, "Stock move recorded")
+  dispatch LowStockNotify
+  emit StockMoved {
+    product: StockMove.product
+    warehouse: StockMove.warehouse
+    quantity: StockMove.quantity
+  }
+}
+
+event StockMoved {
+  product: Product
+  warehouse: Warehouse
+  quantity: int
+}
+```
+
+Ver todos: [Exemplos](/pt/examples).

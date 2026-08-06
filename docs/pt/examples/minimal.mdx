@@ -1,0 +1,36 @@
+---
+title: Mínimo
+description: Menor spec Core v0.1 válida — goldens de emit
+---
+
+# Mínimo
+
+[`examples/minimal.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/minimal.aip) — menor app Core válido: uma entity + `crud`. Base dos goldens SQL / OpenAPI / TypeScript / Go.
+
+**Tiers:** só Core.
+
+```bash
+node packages/cli/dist/cli.js validate examples/minimal.aip
+node packages/cli/dist/cli.js emit sql examples/minimal.aip
+node packages/cli/dist/cli.js emit openapi examples/minimal.aip
+node packages/cli/dist/cli.js emit typescript examples/minimal.aip
+node packages/cli/dist/cli.js emit go examples/minimal.aip
+```
+
+```aip
+// AI Parlance minimal spec — Core only (v0.1)
+// Documented in docs/en/introduction.mdx and docs/pt/introduction.mdx
+
+app Demo @0.1 {
+  database postgres
+}
+
+entity User {
+  name: string required
+  email: email required unique
+}
+
+crud User
+```
+
+Ver todos: [Exemplos](/pt/examples).

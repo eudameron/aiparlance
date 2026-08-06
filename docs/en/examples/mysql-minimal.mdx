@@ -1,0 +1,47 @@
+---
+title: MySQL minimal
+description: Minimal MySQL dialect fixture for aip emit mysql
+---
+
+# MySQL minimal
+
+[`examples/mysql-minimal.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/mysql-minimal.aip) — small app with `database mysql` for the MySQL Preview emitter.
+
+**Tiers:** Core + Infra (api, seed).  
+**Requires:** `database mysql` (PostgreSQL emit targets use other examples).
+
+```bash
+node packages/cli/dist/cli.js validate examples/mysql-minimal.aip
+node packages/cli/dist/cli.js emit mysql examples/mysql-minimal.aip
+```
+
+```aip
+// AI Parlance — minimal MySQL dialect fixture for `aip emit mysql`
+
+app MysqlDemo @0.1 {
+  database mysql
+  auth api_key
+}
+
+entity Item {
+  timestamps
+  name: string required
+  sku: string required unique
+  active: bool default(true)
+}
+
+crud Item
+
+api {
+  prefix "/v1"
+  format json
+}
+
+seed Item {
+  name: "Sample"
+  sku: "SKU-1"
+  active: true
+}
+```
+
+See [Database](/en/database) · [Examples](/en/examples).

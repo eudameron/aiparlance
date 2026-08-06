@@ -1,0 +1,108 @@
+---
+title: Ops referência
+description: Extras Infra + Behavior — seed, ai_context, jobs, filas, lifecycle
+---
+
+# Ops referência
+
+[`examples/ops-reference.aip`](https://github.com/eudameron/aiparlance/blob/main/examples/ops-reference.aip) — complementa a referência CRM com seeds, `ai_context`, jobs, filas e hooks de lifecycle.
+
+**Tiers:** Core + Infra + Behavior.  
+**CI:** inserts de seed SQL são assertados nos testes de examples.
+
+```bash
+node packages/cli/dist/cli.js validate examples/ops-reference.aip
+node packages/cli/dist/cli.js emit sql examples/ops-reference.aip
+node packages/cli/dist/cli.js emit workers examples/ops-reference.aip
+```
+
+```aip
+// AI Parlance ops reference — Infra + Behavior extras (v0.1)
+// Complements crm-reference.aip. Normative grammar: spec/v0.1/grammar.ebnf
+
+app OpsDemo @0.1 {
+  database postgres
+  auth jwt
+}
+
+entity User {
+  timestamps
+  soft_delete
+  name: string required
+  email: email required unique
+  role: enum(admin, seller) default(seller)
+}
+
+entity Lead {
+  timestamps
+  soft_delete
+  name: string required
+  phone: phone required unique
+  seller: belongs_to User optional
+}
+
+crud User
+crud Lead
+
+validation User {
+  name required
+  email required unique
+}
+
+seed User {
+  name: "Administrator"
+  email: "admin@example.com"
+  role: admin
+}
+
+ai_context Lead {
+  description "
+    Inbound leads. Normalize phone before insert.
+    Reject duplicates. Assign first available seller.
+  "
+}
+
+queue SendEmail
+
+job SendWelcomeEmail {
+  retries 3
+  timeout 1m
+}
+
+job SendReminder {
+  retries 2
+  timeout 30m
+}
+
+lifecycle Lead {
+  on created -> workflow LeadIntake
+  before create {
+    normalize_phone(Lead.phone)
+  }
+  after update {
+    notify(Lead.seller, "Lead updated")
+  }
+}
+
+workflow LeadIntake {
+  when Lead.created
+
+  if LeadExists(Lead.phone) {
+    reject "Duplicate lead"
+  }
+
+  var seller = available_seller()
+  assign Lead.seller seller
+
+  notify(seller, "New lead assigned")
+  dispatch SendWelcomeEmail
+  dispatch SendReminder after 15m
+}
+
+event LeadReady {
+  lead: Lead
+  seller: User
+}
+```
+
+Relacionado: [Workflows](/pt/workflows) · [Agentes](/pt/agents) · [Exemplos](/pt/examples).

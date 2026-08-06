@@ -37,6 +37,18 @@
             ]
           },
           {
+            "group": "Examples",
+            "pages": [
+              "en/examples",
+              "en/examples/minimal",
+              "en/examples/blog-crud",
+              "en/examples/inventory-crud",
+              "en/examples/mysql-minimal",
+              "en/examples/crm-reference",
+              "en/examples/ops-reference"
+            ]
+          },
+          {
             "group": "Reference",
             "pages": [
               "en/specification",
@@ -70,6 +82,18 @@
               "pt/first-transpiler",
               "pt/crud-walkthrough",
               "pt/cost-impact"
+            ]
+          },
+          {
+            "group": "Exemplos",
+            "pages": [
+              "pt/examples",
+              "pt/examples/minimal",
+              "pt/examples/blog-crud",
+              "pt/examples/inventory-crud",
+              "pt/examples/mysql-minimal",
+              "pt/examples/crm-reference",
+              "pt/examples/ops-reference"
             ]
           },
           {
