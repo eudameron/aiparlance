@@ -7,5 +7,9 @@
   },
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.test.ts"],
-  "references": [{ "path": "../../packages/parser" }]
+  "references": [
+    { "path": "../../packages/parser" },
+    { "path": "../../packages/validator" },
+    { "path": "../sql" }
+  ]
 }

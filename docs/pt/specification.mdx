@@ -66,7 +66,7 @@ Go, SQL, OpenAPI, workers, …
 
 O texto `.aip` é a fonte; a AST é representação interna.
 
-**Toolchain (v0.1):** **parser**, **validador**, **emitter PostgreSQL (DDL)** e **OpenAPI 3** Core estão no monorepo (`aip parse` / `aip validate` / `aip emit sql|openapi`). **TypeScript / demais emitters** ainda não publicados. Este documento é a fonte normativa em prosa; gramática em [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf) e marcos em [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
+**Toolchain (v0.1):** **parser**, **validador**, e emitters **PostgreSQL (DDL)**, **OpenAPI 3** e **TypeScript** Core estão no monorepo (`aip parse` / `aip validate` / `aip emit sql|openapi|typescript`). Demais emitters da matriz ainda não publicados. Este documento é a fonte normativa em prosa; gramática em [spec/v0.1/grammar.ebnf](https://github.com/eudameron/aiparlance/blob/main/spec/v0.1/grammar.ebnf) e marcos em [ROADMAP.md](https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md).
 
 ---
 
@@ -242,7 +242,7 @@ O validador deve rejeitar:
 | PostgreSQL | DDL, índices (entidades Core) | Prévia (`aip emit sql`) |
 | MySQL | DDL, migrations | Planejado (`database mysql` no `app`; sem emitter ainda) |
 | Go | structs, handlers, middleware JWT | Planejado |
-| TypeScript | interfaces, guards | Planejado |
+| TypeScript | interfaces, guards | Prévia (`aip emit typescript`) |
 | Python | models, decorators | Planejado |
 | PHP | classes, policies | Planejado |
 | OpenAPI | paths, schemas, security | Prévia (`aip emit openapi`) |

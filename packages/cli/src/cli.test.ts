@@ -17,8 +17,8 @@ describe("@aiparlance/cli", () => {
     expect(run(["node", "aip", "parse", "does-not-exist.aip"])).toBe(1);
   });
 
-  it("returns 1 for emit typescript until M5", () => {
-    expect(run(["node", "aip", "emit", "typescript", minimalPath])).toBe(1);
+  it("returns 1 for unknown emit target", () => {
+    expect(run(["node", "aip", "emit", "go", minimalPath])).toBe(1);
   });
 });
 
@@ -33,5 +33,9 @@ describe("@aiparlance/cli validate/emit integration", () => {
 
   it("emits openapi for minimal.aip", () => {
     expect(run(["node", "aip", "emit", "openapi", minimalPath])).toBe(0);
+  });
+
+  it("emits typescript for minimal.aip", () => {
+    expect(run(["node", "aip", "emit", "typescript", minimalPath])).toBe(0);
   });
 });

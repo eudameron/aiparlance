@@ -6,6 +6,10 @@ import { parse, ParseError } from "@aiparlance/parser";
 import { formatDiagnostic, validate } from "@aiparlance/validator";
 import { emitSql, EmitSqlError } from "@aiparlance/sql";
 import { emitOpenApi, EmitOpenApiError } from "@aiparlance/openapi";
+import {
+  emitTypeScript,
+  EmitTypeScriptError,
+} from "@aiparlance/typescript";
 
 /**
  * AI Parlance CLI — Phase C
@@ -18,9 +22,9 @@ Usage:
   aip validate <file.aip>              Semantic validation
   aip emit sql <file.aip>              Emit PostgreSQL DDL (M3)
   aip emit openapi <file.aip>          Emit OpenAPI 3 JSON (M4)
-  aip emit typescript <file.aip>       Emit TypeScript (M5 — pending)
+  aip emit typescript <file.aip>       Emit TypeScript interfaces/guards (M5)
 
-Status: Phase C / M4 — parse, validate, emit sql|openapi implemented.
+Status: Phase C / M5 — parse, validate, emit sql|openapi|typescript implemented.
 Roadmap: https://github.com/eudameron/aiparlance/blob/main/ROADMAP.md
 `;
 
@@ -95,9 +99,9 @@ function cmdEmit(args: string[]): number {
     return 1;
   }
   const target = args[0]!;
-  if (target !== "sql" && target !== "openapi") {
+  if (target !== "sql" && target !== "openapi" && target !== "typescript") {
     process.stderr.write(
-      `aip: emit '${target}' is not implemented yet (see ROADMAP.md milestone M5)\n`
+      `aip: emit '${target}' is not implemented yet (see ROADMAP.md)\n`
     );
     return 1;
   }
@@ -110,12 +114,21 @@ function cmdEmit(args: string[]): number {
       process.stderr.write(`${formatDiagnostic(d, input.file)}\n`);
     }
     if (!result.ok) return 1;
-    const out = target === "sql" ? emitSql(doc) : emitOpenApi(doc);
+    const out =
+      target === "sql"
+        ? emitSql(doc)
+        : target === "openapi"
+          ? emitOpenApi(doc)
+          : emitTypeScript(doc);
     process.stdout.write(out);
     if (!out.endsWith("\n")) process.stdout.write("\n");
     return 0;
   } catch (e) {
-    if (e instanceof EmitSqlError || e instanceof EmitOpenApiError) {
+    if (
+      e instanceof EmitSqlError ||
+      e instanceof EmitOpenApiError ||
+      e instanceof EmitTypeScriptError
+    ) {
       process.stderr.write(`aip: ${e.message}\n`);
       return 1;
     }

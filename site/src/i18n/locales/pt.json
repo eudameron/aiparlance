@@ -4,7 +4,7 @@
   "dir": "ltr",
   "siteName": "AI Parlance",
   "title": "AI Parlance — IR AI-first para geração de software",
-  "description": "Descreva apps em specs .aip compactas. A toolchain de referência já faz parse e validação; emitters SQL, OpenAPI e TypeScript vêm a seguir. Menos boilerplate, menos tokens, desenho multi-target consistente.",
+  "description": "Descreva apps em specs .aip compactas. A toolchain de referência já faz parse, validação e emit de SQL, OpenAPI e TypeScript. Menos boilerplate, menos tokens, desenho multi-target consistente.",
   "nav": {
     "benefits": "Benefícios",
     "playground": "Experimentar",
@@ -15,10 +15,10 @@
     "badge": "especificação v0.1",
     "title": "Intenção primeiro.",
     "titleHighlight": "Código depois.",
-    "subtitle": "AI Parlance é uma linguagem de representação intermediária AI-first. Humanos e LLMs escrevem specs .aip compactas; emitters oficiais mirarão SQL, OpenAPI, TypeScript e mais.",
+    "subtitle": "AI Parlance é uma linguagem de representação intermediária AI-first. Humanos e LLMs escrevem specs .aip compactas; emitters oficiais miram SQL, OpenAPI, TypeScript e mais à medida que forem lançados.",
     "ctaDocs": "Ler a especificação",
     "ctaTry": "Abrir o playground",
-    "note": "Parser e validador Core estão no monorepo (`aip parse` / `aip validate`). Emitters e o playground do site ainda são ilustrativos."
+    "note": "Parser, validador e emitters SQL / OpenAPI / TypeScript Core estão no monorepo (`aip parse` / `validate` / `emit`). O playground do site continua ilustrativo."
   },
   "benefits": {
     "title": "Por que AI Parlance",
@@ -38,7 +38,7 @@
       },
       {
         "title": "Validar antes de gerar",
-        "body": "A CLI de referência já valida specs Core (`aip validate`); emitters vêm a seguir."
+        "body": "A CLI de referência valida specs Core (`aip validate`) e emite SQL, OpenAPI e TypeScript (`aip emit`)."
       },
       {
         "title": "Gramática amigável a LLMs",

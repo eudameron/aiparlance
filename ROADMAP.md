@@ -8,7 +8,7 @@ This roadmap turns AI Parlance from **specification-only** into a **reference to
 - Transpiler matrix: all targets currently **Planned** ([Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix))
 - PostgreSQL is the **primary** SQL target ([Database](https://docs.aiparlance.org/en/database))
 
-**Status today:** Phase C **M4** — Core parser, validator, **PostgreSQL DDL**, and **OpenAPI 3** emitters ship (`aip parse` / `validate` / `emit sql|openapi`). TypeScript emitter is next. The marketing playground remains **illustrative only**.
+**Status today:** Phase C **M5** — Core parser, validator, **PostgreSQL DDL**, **OpenAPI 3**, and **TypeScript** emitters ship (`aip parse` / `validate` / `emit sql|openapi|typescript`). Next is M6 (CLI polish, CI, docs matrix). The marketing playground remains **illustrative only**.
 
 The overall language remains **draft** until this reference toolchain ships (per Specification).
 
@@ -165,19 +165,20 @@ Per matrix: **interfaces, guards**. Per Security multi-target notes: guards/deco
 
 **MVP:**
 
-- TypeScript interfaces (or types) per `entity`
-- Runtime guards or zod schemas from field modifiers / `validation`
-- Minimal CRUD handler stubs **or** typed client shapes — keep thin; prefer correctness over framework lock-in (no mandatory Nest/Express in v1)
+- [x] TypeScript interfaces (or types) per `entity` (`Entity` / `EntityCreate` / `EntityUpdate`)
+- [x] Runtime type guards from field modifiers / `validation` (zero deps; zod deferred)
+- [x] Thin typed CRUD path helpers when `crud` is declared (framework-free)
 
 **Accept:**
 
-- Emitted TS typechecks in isolation
-- Golden tests for `minimal.aip`
+- [x] Emitted TS typechecks in isolation
+- [x] Golden tests for `minimal.aip` (`transpilers/typescript/fixtures/minimal.ts`)
 
 **Playground:** only after M5, optionally replace `site/src/lib/transpiler/` with the official packages — never the reverse.
 
----
+**Status:** **M5 complete** — next is M6 (CLI + CI + docs status).
 
+---
 ### M6 — CLI + CI + docs status
 
 - CLI: `parse` | `validate` | `emit <sql|openapi|typescript>`
@@ -225,9 +226,9 @@ Beta syntax may change between v0.x minors; keep emitters tolerant or version-ga
 ## Success criteria (Phase C complete)
 
 - [ ] Reference parser + validator published (TypeScript packages)
-- [ ] `examples/minimal.aip` validates and emits SQL + OpenAPI + TypeScript
-- [ ] PostgreSQL remains documented and implemented as primary SQL target
-- [ ] Transpiler matrix updated for shipped targets (EN + PT)
+- [x] `examples/minimal.aip` validates and emits SQL + OpenAPI + TypeScript
+- [x] PostgreSQL remains documented and implemented as primary SQL target
+- [x] Transpiler matrix updated for shipped targets (EN + PT)
 - [ ] Playground either still labeled illustrative or wired to official packages
 - [ ] CONTRIBUTING updated: toolchain PRs welcome under package guidelines
 

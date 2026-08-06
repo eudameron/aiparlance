@@ -9,12 +9,12 @@ aip parse <file.aip>
 aip validate <file.aip>
 aip emit sql <file.aip>              # PostgreSQL DDL (M3)
 aip emit openapi <file.aip>          # OpenAPI 3 JSON (M4)
-aip emit typescript <file.aip>       # M5 — pending
+aip emit typescript <file.aip>       # TypeScript interfaces/guards (M5)
 ```
 
 ```bash
 npm run build -w @aiparlance/cli
-node packages/cli/dist/cli.js emit openapi examples/minimal.aip
+node packages/cli/dist/cli.js emit typescript examples/minimal.aip
 ```
 
 See [`ROADMAP.md`](../../ROADMAP.md).
