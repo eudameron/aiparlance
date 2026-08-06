@@ -7,7 +7,11 @@ describe("@aiparlance/cli", () => {
     expect(run(["node", "aip", "--help"])).toBe(0);
   });
 
-  it("returns 1 for parse until M1", () => {
-    expect(run(["node", "aip", "parse", "x.aip"])).toBe(1);
+  it("returns 1 for validate until M2", () => {
+    expect(run(["node", "aip", "validate", "x.aip"])).toBe(1);
+  });
+
+  it("returns 1 when parse file is missing", () => {
+    expect(run(["node", "aip", "parse", "does-not-exist.aip"])).toBe(1);
   });
 });

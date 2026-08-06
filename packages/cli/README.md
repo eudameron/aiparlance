@@ -2,29 +2,17 @@
 
 Command-line interface for the reference toolchain.
 
-## UX draft (Phase C)
+## Commands
 
 ```bash
-aip parse <file.aip>
-aip validate <file.aip>
-aip emit sql <file.aip>
-aip emit openapi <file.aip>
-aip emit typescript <file.aip>
+aip parse <file.aip>                 # M1 — AST JSON on stdout
+aip validate <file.aip>              # M2 — pending
+aip emit sql|openapi|typescript …  # M3–M5 — pending
 ```
-
-| Command | Milestone |
-|---|---|
-| `parse` | M1 |
-| `validate` | M2 |
-| `emit sql` | M3 (PostgreSQL) |
-| `emit openapi` | M4 |
-| `emit typescript` | M5 |
-
-**Status:** M0 scaffold — `aip --help` works; other commands exit 1 with a clear message.
 
 ```bash
 npm run build -w @aiparlance/cli
-node packages/cli/dist/cli.js --help
+node packages/cli/dist/cli.js parse examples/minimal.aip
 ```
 
 See [`ROADMAP.md`](../../ROADMAP.md).

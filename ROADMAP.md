@@ -8,7 +8,7 @@ This roadmap turns AI Parlance from **specification-only** into a **reference to
 - Transpiler matrix: all targets currently **Planned** ([Specification § Transpiler matrix](https://docs.aiparlance.org/en/specification#transpiler-matrix))
 - PostgreSQL is the **primary** SQL target ([Database](https://docs.aiparlance.org/en/database))
 
-**Status today:** Phase C **M0 scaffold** is in-repo (`packages/`, `transpilers/` stubs, Vitest, CI). Parser, validator, and emitters are **not implemented** yet. The marketing playground (`site/src/lib/transpiler/`) remains **illustrative only**.
+**Status today:** Phase C **M1** — Core parser ships in `@aiparlance/parser` / `aip parse`. Validator and emitters are **not** implemented yet. The marketing playground (`site/src/lib/transpiler/`) remains **illustrative only**.
 
 The overall language remains **draft** until this reference toolchain ships (per Specification).
 
@@ -79,17 +79,19 @@ Exact npm package names may use an `@aiparlance/*` scope when scaffolding begins
 
 ### M1 — Parser + AST (Core)
 
-**Coverage (Core, stable):** `app`, `entity`, field types (`primitive`, inline `enum`, `belongs_to`), field modifiers, `crud`, `validation` block, line comments `//`.
+**Coverage (Core, stable):** `app`, `entity`, field types (`primitive`, inline `enum`, `belongs_to`), field modifiers, `crud`, `validation` block, line comments `//`, entity modifiers `timestamps` / `soft_delete`.
 
 **Grammar source of truth:** [`spec/v0.1/grammar.ebnf`](spec/v0.1/grammar.ebnf).
 
 **Accept:**
 
-- `aip parse examples/minimal.aip` succeeds and prints/returns AST
-- Rejects malformed Core with actionable errors (line/column)
-- Does **not** yet require full Infra/Security/Behavior parse (may parse-and-ignore or hard-error on unknown blocks — prefer structured “unsupported tier” errors)
+- [x] `aip parse examples/minimal.aip` succeeds and prints AST JSON
+- [x] Rejects malformed Core with actionable errors (line/column)
+- [x] Infra / Security / Behavior top-level blocks → `unsupported_tier` (`ParseError.code`)
 
-**Out:** semantic validation beyond “tree is well-formed”.
+**Out:** semantic validation beyond “tree is well-formed” (M2).
+
+**Status:** **M1 complete** — next is M2 (semantic validator).
 
 ---
 
