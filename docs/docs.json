@@ -107,5 +107,10 @@
     "socials": {
       "github": "https://github.com/eudameron/aiparlance"
     }
+  },
+  "integrations": {
+    "gtm": {
+      "tagId": "GTM-PVKM47VH"
+    }
   }
 }

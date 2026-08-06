@@ -47,6 +47,8 @@ npx mintlify dev
 
 [Mintlify Cloud](https://mintlify.com) — docs root: **`/docs`**. Add custom domain `docs.aiparlance.org` in project settings (DNS CNAME → Mintlify).
 
+Google Tag Manager: `integrations.gtm.tagId` in [`docs.json`](docs.json) (injected on all pages after deploy).
+
 ## Adding a page
 
 1. Add `en/my-page.mdx` and `pt/my-page.mdx` (same slug).
