@@ -33,6 +33,7 @@ and this project uses a draft **v0.1** language version. A **reference toolchain
 - Site PT (`pt.json`): more natural Brazilian Portuguese marketing copy
 - Home toolchain cards: badge shows maturity score % (e.g. PostgreSQL 65%, MySQL 61%)
 - Site nav Emitters → `/emitters`; hub badge removed; CTAs/docs use **Comece aqui** / **Get started here**; drop “dialeto/dialect” wording in docs and site
+- Docs nav: remove CRUD walkthrough from Overview / Visão geral (page remains reachable via Examples links)
 
 ### Policy
 
