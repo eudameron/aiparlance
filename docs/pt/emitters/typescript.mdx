@@ -1,6 +1,6 @@
 ---
 title: Emitter TypeScript
-description: "@aiparlance/typescript — papel app, nota 27/55, objetivos pass/partial/fail"
+description: "@aiparlance/typescript — papel app, nota 36/55, objetivos pass/partial/fail"
 ---
 
 # Emitter TypeScript
@@ -10,108 +10,55 @@ description: "@aiparlance/typescript — papel app, nota 27/55, objetivos pass/p
 | Pacote | `@aiparlance/typescript` |
 | CLI | `aip emit typescript` |
 | Papel | `app` |
-| **Nota** | **27/55** (49%) |
-| Nível | Prévia útil |
-| Ficha de maturidade | [transpilers/typescript/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/typescript/EMITTER_OBJECTIVES.md) |
+| **Nota** | **36/55** (65%) |
+| Faixa | Fatia forte |
+| Scorecard | [transpilers/typescript/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/typescript/EMITTER_OBJECTIVES.md) |
 
 Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-08).
 
 ## Resumo
 
-| ✅ Passou | ⚠️ Parcial | ❌ Falhou | ➖ N/A |
+| ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
 |---|---|---|---|
-| 25 | 6 | 24 | 0 |
+| 36 | 0 | 19 | 0 |
 
-Itens N/A estão fora do papel `app` e não entram no denominador da nota.
+## O que gera
 
-## O que produz
-
-Interfaces, type guards, schemas Zod (peer `zod`), helpers de path com `api.prefix`, consts de policy e `createCrudApp()` / `listenCrudApp()` em memória (validação, soft-delete, headers de auth).
+Interfaces, schemas Zod, helpers de policy e `createCrudApp()` / `listenCrudApp()` com memória ou Postgres (`DATABASE_URL`), JWT (`AIP_JWT_SECRET`), CORS, rate limits, unique→409, paginação e erros tipados. Peers: `zod`, `pg`, `jose`.
 
 ## ✅ Passou
 
 | ID | Objetivo |
 |---|---|
-| `A1` | Gerar as estruturas da entidade (types / structs / schemas / tables) a partir de `entity` |
-| `A2` | Gerar tipos de entrada para criação (`EntityCreate` ou equivalente) |
-| `A3` | Gerar tipos de entrada para atualização (`EntityUpdate` ou equivalente) |
-| `A4` | Gerar enums / variantes restritas a partir de `enum(…)` |
-| `A5` | Gerar `belongs_to` como FKs ou referências |
-| `A6` | Gerar a chave primária implícita `id` |
-| `A7` | Gerar `timestamps` (`created_at` / `updated_at`) |
-| `A8` | Gerar campo/coluna `soft_delete` (`deleted_at`) |
-| `B1` | Respeitar `required` / `optional` |
-| `B3` | Aplicar `validation { }` além de marcar campos como obrigatórios |
-| `B4` | Mapear tipos semânticos (`email`, `phone`, …) de forma distinta |
-| `D1` | CRUD completo para entidades listadas em `crud` (list/create/get/update/delete) |
-| `D2` | Respeitar `api.prefix` |
-| `D7` | Respeitar `api.format` (ex.: JSON) |
-| `E2` | Integrar autenticação na API (requisitos de segurança ou middleware) |
-| `E3` | Refletir `policy` create/read/update/delete |
-| `E4` | Predicados: `public`, `authenticated`, `role(…)` |
-| `E6` | Caminhos consistentes de negação **401/403** (runtime **ou** contrato documenta ambos) |
-| `F1` | Ponto de entrada executável (servidor ou worker) |
-| `F2` | Handlers/jobs fazem trabalho real (não só 501 / `throw`) |
-| `F4` | Validação de request em runtime alinhada com B\* |
-| `F5` | Checagens de policy em runtime alinhadas com E\* |
-| `H3` | Golden / CI para `minimal.aip` (ou equivalente no alvo) |
-| `H4` | O emit funciona nos examples full-tier correspondentes sem crash |
-| `H5` | Nomenclatura alinhada à documentação (tabelas no plural, `*_id`, snake_case) |
-
-## ⚠️ Parcial
-
-| ID | Objetivo |
-|---|---|
-| `A9` | Semântica de soft-delete (leituras padrão filtram linhas deletadas) |
-| `D3` | Respeitar `api.cors` (config ou middleware) |
-| `D6` | Respostas de erro tipadas (4xx/5xx + shape estável do body) |
-| `E1` | Esquema de autenticação a partir de `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
-| `E5` | Predicados: `owner` / `owner_or_manager(…)` |
-| `F3` | Leitura/escrita em DB (ou query gerada / camada ORM) |
+| `A1`–`A9` | Formas de domínio até semântica de soft-delete |
+| `B1`–`B4` | required/optional, unique→409, validation, tipos semânticos |
+| `D1`–`D7` | CRUD, prefix, cors, rate_limit, paginação, erros tipados, JSON |
+| `E1`–`E6` | Auth JWT, policy, owner / owner_or_manager (admin\|editor), 401/403 |
+| `F1`–`F5` | CRUD executável, Postgres ou memória, Zod + policy em runtime |
+| `H3`–`H5` | Goldens / CI / naming |
+| `J1`, `J3` | Env para DB/JWT/PORT; `/health` |
 
 ## ❌ Ainda falhando (aplicáveis)
 
 | ID | Objetivo |
 |---|---|
-| `B2` | Respeitar `unique` |
-| `C1` | Schema persistente (DDL ou ORM / modelos de query) |
-| `C2` | Índices a partir de `index { }` |
-| `C3` | Seeds a partir de `seed { }` |
-| `C4` | Migrations versionadas (**up** ordenado) |
-| `C5` | Migration **down** / rollback |
-| `C6` | Respeitar o alvo definido em `app.database` |
-| `C7` | Transações para writes multi-statement / de workflow |
-| `D4` | Respeitar `api.rate_limit` (config ou aplicação) |
-| `D5` | Paginação e/ou filter/sort em list |
-| `G1` | Emitir artefatos `job` (chamáveis ou agendáveis) |
-| `G2` | Emitir declarações / bindings de `queue` |
-| `G3` | Conectar `dispatch` do workflow |
-| `G4` | Conectar `notify` do workflow |
-| `G5` | Conectar `emit` do workflow + tipos `event` |
-| `G6` | Conectar hooks de `lifecycle` (`on` / `before` / `after`) |
-| `G7` | Expor `ai_context` (emit, embed ou artefato para agentes) |
-| `H1` | Documentação legível de API / domínio |
-| `H2` | Fixtures ou scaffolds de testes automatizados |
-| `I1` | Client / SDK tipado da API (ou codegen a partir do contrato) |
-| `I2` | História de paridade contrato↔runtime (paths/types compartilhados ou check de CI) |
-| `J1` | Config/env para DB URL e secrets (sem hardcoding) |
-| `J2` | Observabilidade mínima (request id e/ou logs estruturados) |
-| `J3` | Endpoint de health/readiness ou hook de liveness do worker |
+| `C1`–`C7` | Camada ORM/query, indexes/seeds/migrations no app, transactions |
+| `G1`–`G7` | Behavior (jobs, queues, workflows, lifecycle, ai_context) |
+| `H1`, `H2` | Docs humanas / scaffolds de teste |
+| `I1`, `I2` | SDK de cliente / matriz completa contract↔runtime |
+| `J2` | Logs estruturados / request id |
 
-Ficha de maturidade completa (incluindo ➖ N/A): [transpilers/typescript/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/typescript/EMITTER_OBJECTIVES.md).
+Scorecard completo: [transpilers/typescript/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/typescript/EMITTER_OBJECTIVES.md).
 
 ## Testes
-
-Golden `minimal.ts` + saída emitida typecheck isolada. CI de examples.
 
 ```bash
 npm test
 node packages/cli/dist/cli.js emit typescript examples/blog-crud.aip
 ```
 
-## Relacionado
+## Relacionados
 
 - [Visão geral dos emitters](/pt/emitters)
 - [EMITTER_OBJECTIVES mestre](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
-- [Primeiros emitters](/pt/first-transpiler)
 - [Comece aqui](/pt/getting-started)

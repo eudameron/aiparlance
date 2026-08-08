@@ -1,6 +1,6 @@
 ---
 title: OpenAPI emitter
-description: "@aiparlance/openapi — role contract, score 20/33, pass/partial/fail objectives"
+description: "@aiparlance/openapi — role contract, score 28/33, pass/partial/fail objectives"
 ---
 
 # OpenAPI emitter
@@ -10,8 +10,8 @@ description: "@aiparlance/openapi — role contract, score 20/33, pass/partial/f
 | Package | `@aiparlance/openapi` |
 | CLI | `aip emit openapi` |
 | Role | `contract` |
-| **Score** | **20/33** (61%) |
-| Band | Strong slice |
+| **Score** | **28/33** (85%) |
+| Band | Happy-path ready |
 | Scorecard | [transpilers/openapi/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/EMITTER_OBJECTIVES.md) |
 
 Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-08).
@@ -20,67 +20,33 @@ Scored against the master checklist ([55 IDs](https://github.com/eudameron/aipar
 
 | ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
 |---|---|---|---|
-| 20 | 3 | 10 | 22 |
-
-N/A items are outside the `contract` role and do not affect the score denominator.
+| 28 | 0 | 5 | 22 |
 
 ## What it produces
 
-OpenAPI 3.0.3 JSON: schemas, CRUD paths, `api.prefix`, auth schemes, per-operation `security` from `policy` (+ `x-aip-policy`, 401/403 on protected ops).
+OpenAPI 3.0.3 JSON: schemas, CRUD paths, `api.prefix`, auth schemes, per-operation `security` from `policy`, `x-aip-cors` / `x-aip-rate-limit`, soft-delete notes, pagination query params, shared `Error` schema, 409/429.
 
 ## ✅ Passed
 
 | ID | Objective |
 |---|---|
-| `A1` | Emit entity shapes (types / structs / schemas / tables) from `entity` |
-| `A2` | Emit create-input shapes (`EntityCreate` or equivalent) |
-| `A3` | Emit update-input shapes (`EntityUpdate` or equivalent) |
-| `A4` | Emit enums / constrained variants from `enum(…)` |
-| `A5` | Emit `belongs_to` as FKs or refs |
-| `A6` | Emit implicit `id` primary key |
-| `A7` | Emit `timestamps` (`created_at` / `updated_at`) |
-| `A8` | Emit `soft_delete` field/column (`deleted_at`) |
-| `B1` | Honor `required` / `optional` |
-| `D1` | Full CRUD surface for `crud` entities (list/create/get/update/delete) |
-| `D2` | Honor `api.prefix` |
-| `D7` | Honor `api.format` (e.g. JSON) |
-| `E1` | Auth scheme from `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
-| `E2` | Wire auth into API (security requirements or middleware) |
-| `E3` | Reflect `policy` create/read/update/delete |
-| `E4` | Predicates: `public`, `authenticated`, `role(…)` |
-| `E6` | Consistent **401/403** denial paths (runtime **or** contract documents both) |
-| `H3` | Golden / CI for `minimal.aip` (or matching twin) |
-| `H4` | Emit succeeds on matching full-tier examples without crash |
-| `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
-
-## ⚠️ Partial
-
-| ID | Objective |
-|---|---|
-| `B2` | Honor `unique` |
-| `B4` | Map semantic types (`email`, `phone`, …) distinctly |
-| `E5` | Predicates: `owner` / `owner_or_manager(…)` |
+| `A1`–`A9` | Entity schemas + soft-delete read semantics in the contract |
+| `B1`, `B2`, `B4` | required/optional, unique→409, `format: email` |
+| `D1`–`D7` | CRUD, prefix, cors, rate_limit, pagination, typed errors, JSON |
+| `E1`–`E6` | Auth schemes, policy security, owner_or_manager scopes, 401/403 |
+| `H3`–`H5` | Goldens / CI / naming |
 
 ## ❌ Still failing (applicable)
 
 | ID | Objective |
 |---|---|
-| `A9` | Soft-delete **semantics** (default reads filter deleted rows) |
-| `B3` | Apply `validation { }` beyond required folding |
-| `D3` | Honor `api.cors` (config or middleware) |
-| `D4` | Honor `api.rate_limit` (config or enforcement) |
-| `D5` | Pagination and/or filter/sort on list |
-| `D6` | Typed error responses (4xx/5xx + stable body shape) |
-| `H1` | Human-readable API / domain documentation |
-| `H2` | Automated test fixtures or scaffolds |
-| `I1` | Typed API client / SDK (or codegen from the contract) |
-| `I2` | Contract↔runtime parity story (shared paths/types or CI check) |
+| `B3` | Richer `validation { }` constraints in schema |
+| `H1`, `H2` | Human docs / fixtures (prefer `docs` / `tests` emitters) |
+| `I1`, `I2` | Client SDK emit / full contract↔runtime CI matrix |
 
-Full ID-by-ID scorecard (including ➖ N/A): [transpilers/openapi/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/EMITTER_OBJECTIVES.md).
+Full scorecard: [transpilers/openapi/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/EMITTER_OBJECTIVES.md).
 
 ## Tests
-
-Golden `minimal.openapi.json` + CI. OpenAPI prefix asserted for crm/blog examples.
 
 ```bash
 npm test
@@ -91,5 +57,4 @@ node packages/cli/dist/cli.js emit openapi examples/blog-crud.aip
 
 - [Emitters overview](/en/emitters)
 - [Master EMITTER_OBJECTIVES](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md)
-- [First emitters](/en/first-transpiler)
 - [Get started here](/en/getting-started)

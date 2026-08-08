@@ -116,5 +116,11 @@ api {
     expect(create.responses?.["401"]).toBeDefined();
     expect(del.security).toEqual([{ bearerAuth: ["role:admin"] }]);
     expect(del["x-aip-policy"]).toBe("role(admin)");
+    const upd = spec.paths["/v1/posts/{id}"]!.put!;
+    expect(upd.security).toEqual([
+      { bearerAuth: ["role:admin", "role:editor", "owner"] },
+    ]);
+    expect(upd["x-aip-policy"]).toContain("owner_or_manager");
+    expect(upd["x-aip-policy"]).toContain("admin|editor");
   });
 });

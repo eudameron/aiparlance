@@ -59,13 +59,20 @@ describe("blog-crud happy path (memory + JWT)", () => {
     expect(sql).toContain("CREATE TABLE posts");
     expect(sql).toContain("CREATE INDEX");
     expect(sql).toContain("INSERT INTO authors"); // HP2 artifact
+    expect(sql).toContain("CREATE OR REPLACE VIEW");
+    expect(sql).toContain("CITEXT");
 
     const openapi = JSON.parse(emitOpenApi(doc));
     expect(openapi.paths["/v1/posts"]).toBeDefined();
-    expect(openapi.paths["/v1/posts"].get.security).toEqual([]);
-    expect(openapi.paths["/v1/posts"].post.security).toEqual([
-      { bearerAuth: [] },
-    ]);
+    expect(openapi["x-aip-cors"].allow).toContain("https://blog.example.com");
+    expect(openapi["x-aip-rate-limit"].count).toBe(120);
+    expect(openapi.components.schemas.Error).toBeDefined();
+    expect(openapi.paths["/v1/posts"].get.parameters).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "limit" }),
+        expect.objectContaining({ name: "offset" }),
+      ])
+    );
 
     const app = await loadBlogApp();
     expect(app.postPaths.collection).toBe("/v1/posts"); // HP3/HP9 paths
@@ -139,8 +146,82 @@ describe("blog-crud happy path (memory + JWT)", () => {
       expect(deleted.status).toBe(204);
 
       const after = await fetch(`${base}/v1/posts`);
-      const rows = (await after.json()) as unknown[];
-      expect(rows.find((r) => (r as { id: string }).id === post.id)).toBeUndefined(); // HP8
+      const page = (await after.json()) as { items: { id: string }[] };
+      expect(page.items.find((r) => r.id === post.id)).toBeUndefined(); // HP8
+
+      // Unique → 409
+      const again = await fetch(`${base}/v1/posts`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${writer}`,
+        },
+        body: JSON.stringify({
+          title: "Hello2",
+          slug: "hello-unique",
+          body: "world",
+          author_id: "00000000-0000-4000-8000-000000000001",
+        }),
+      });
+      expect(again.status).toBe(201);
+      const dup = await fetch(`${base}/v1/posts`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${writer}`,
+        },
+        body: JSON.stringify({
+          title: "Hello3",
+          slug: "hello-unique",
+          body: "world",
+          author_id: "00000000-0000-4000-8000-000000000001",
+        }),
+      });
+      expect(dup.status).toBe(409);
+
+      // owner_or_manager: editor can update another's post
+      const other = await fetch(`${base}/v1/posts`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${writer}`,
+        },
+        body: JSON.stringify({
+          title: "Owned",
+          slug: "owned-by-writer",
+          body: "x",
+          author_id: "00000000-0000-4000-8000-000000000001",
+        }),
+      });
+      const owned = (await other.json()) as { id: string };
+      const editor = await app.signCrudToken(
+        { sub: "00000000-0000-4000-8000-000000000002", role: "editor" },
+        secret
+      );
+      const updated = await fetch(`${base}/v1/posts/${owned.id}`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${editor}`,
+        },
+        body: JSON.stringify({ title: "Edited by manager" }),
+      });
+      expect(updated.status).toBe(200);
+
+      // CORS: allowed origin reflected; disallowed omitted
+      const corsOk = await fetch(`${base}/v1/posts`, {
+        headers: { origin: "https://blog.example.com" },
+      });
+      expect(corsOk.headers.get("access-control-allow-origin")).toBe(
+        "https://blog.example.com"
+      );
+      const corsDeny = await fetch(`${base}/v1/posts`, {
+        headers: { origin: "https://evil.example" },
+      });
+      expect(corsDeny.headers.get("access-control-allow-origin")).toBeNull();
+
+      const health = await fetch(`${base}/v1/health`);
+      expect(health.status).toBe(200);
     } finally {
       await new Promise<void>((resolve) => server.close(() => resolve()));
     }
@@ -174,13 +255,18 @@ describe("blog-crud happy path (Postgres)", () => {
       try {
         const authors = await fetch(`${base}/v1/authors`);
         expect(authors.status).toBe(200);
-        const list = (await authors.json()) as { email: string }[];
-        expect(list.some((a) => a.email === "admin@blog.example.com")).toBe(
-          true
-        );
+        const page = (await authors.json()) as {
+          items: { id: string; email: string }[];
+        };
+        expect(
+          page.items.some((a) => a.email === "admin@blog.example.com")
+        ).toBe(true);
 
         const token = await app.signCrudToken(
-          { sub: list[0] ? String((list[0] as { id?: string }).id ?? "x") : "x", role: "admin" },
+          {
+            sub: page.items[0] ? String(page.items[0].id) : "x",
+            role: "admin",
+          },
           secret
         );
         const create = await fetch(`${base}/v1/posts`, {
@@ -193,7 +279,7 @@ describe("blog-crud happy path (Postgres)", () => {
             title: "PG Post",
             slug: "pg-post",
             body: "from postgres",
-            author_id: (list[0] as { id: string }).id,
+            author_id: page.items[0]!.id,
           }),
         });
         expect(create.status).toBe(201);

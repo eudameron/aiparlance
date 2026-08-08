@@ -9,7 +9,7 @@ const PRIMITIVE_SQL: Record<PrimitiveType, string> = {
   datetime: "TIMESTAMPTZ",
   date: "DATE",
   uuid: "UUID",
-  email: "TEXT",
+  email: "CITEXT",
   phone: "TEXT",
   json: "JSONB",
 };

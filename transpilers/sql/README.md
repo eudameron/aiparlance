@@ -11,6 +11,8 @@ PostgreSQL DDL emitter (**primary** SQL target). Phase D adds a versioned migrat
 | `enum(…)` → `CHECK` | Yes |
 | `belongs_to` → `*_id` FK | Yes |
 | `soft_delete` → `deleted_at` | Yes |
+| Soft-delete `{table}_active` views | Yes |
+| `email` → `CITEXT` | Yes |
 | `index` → `CREATE INDEX` | Yes |
 | `seed` → `INSERT` | Yes |
 | Versioned migrations (`0001_init.up/down`) | Yes (Preview) |

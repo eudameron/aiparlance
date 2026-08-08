@@ -152,10 +152,17 @@ Tracked against [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) v2 — raise **
 - [x] OpenAPI: per-operation security from `policy` + `auth`
 - [x] SQL: documented migration workflow (`aip emit sql --migrations` → `0001_init.up/down`)
 - [x] Golden / integration across the three (`scripts/happy-path.test.ts` — memory+JWT always; Postgres job in CI)
-- [x] Re-score `transpilers/{typescript,openapi,sql}/EMITTER_OBJECTIVES.md` after deepen (2026-08-08: SQL **17/23**, OpenAPI **20/33**, TS **25/55**)
+- [x] Re-score `transpilers/{typescript,openapi,sql}/EMITTER_OBJECTIVES.md` after deepen (2026-08-08 D2.5: SQL **19/23**, OpenAPI **28/33**, TS **36/55**)
 - [x] HP1–HP10 on `blog-crud` — memory+JWT path green in CI; Postgres path green when `DATABASE_URL` is set (CI service)
 
 **Done when:** README can show “validate blog-crud → migrate → run API → OpenAPI matches” with ≤ one thin glue file.
+
+#### D2.5 — Honor blog-crud api/policy surface (P0 deepen)
+
+- [x] Soft-delete semantics across SQL views + OpenAPI notes + TS filters (A9)
+- [x] `api.cors` / `api.rate_limit` in TS runtime + OpenAPI extensions
+- [x] Unique → 409; pagination; typed errors; `owner_or_manager` (admin|editor)
+- [x] SQL `email` → CITEXT; J1 env + `/health` on TS
 
 #### D3 — Playground + npm
 
@@ -197,8 +204,8 @@ Beta syntax may still change between v0.x minors; keep emitters tolerant or vers
 
 ### Phase D (in progress)
 
-- [ ] One documented end-to-end happy path (blog CRUD) — emit deepen done; full migrate→run→match still open
-- [x] Policy reflected in OpenAPI + TS (contract security + in-memory runtime guards)
+- [x] One documented end-to-end happy path (blog CRUD) — memory+JWT CI; Postgres when `DATABASE_URL`
+- [x] Policy reflected in OpenAPI + TS (contract security + runtime guards incl. owner_or_manager)
 - [ ] npm publish of core packages
 - [ ] Docs/roadmap stay in sync after every implementation (process)
 

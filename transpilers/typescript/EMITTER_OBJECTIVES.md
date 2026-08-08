@@ -1,19 +1,19 @@
 # Emitter Objectives — `@aiparlance/typescript`
 
 **CLI:** `aip emit typescript` · **Role:** `app`  
-**Score: 27/55** (49%) · Band: Useful Preview  
+**Score: 36/55** (65%) · Band: Strong slice  
 **Master:** [`EMITTER_OBJECTIVES.md`](../../EMITTER_OBJECTIVES.md) (v2)  
-**Scored:** 2026-08-08
+**Scored:** 2026-08-08 (D2.5)
 
 | Mark | Count |
 |---|---|
-| ✅ Pass | 27 |
-| ⚠️ Partial | 4 |
-| ❌ Fail | 24 |
+| ✅ Pass | 36 |
+| ⚠️ Partial | 0 |
+| ❌ Fail | 19 |
 | ➖ N/A | 0 |
 
 All master sections apply to `app` (including C and G as future ownership).  
-Peer dependency: **`zod`** (emitted schemas + runtime validation).
+Peers: **`zod`**, **`pg`**, **`jose`**.
 
 ---
 
@@ -29,14 +29,14 @@ Peer dependency: **`zod`** (emitted schemas + runtime validation).
 | A6 | ✅ | |
 | A7 | ✅ | |
 | A8 | ✅ | field + runtime soft-delete |
-| A9 | ⚠️ | in-memory list/get filters `deleted_at`; no durable DB |
+| A9 | ✅ | list/get filter `deleted_at` (memory + Postgres) |
 
 ## B — Validation
 
 | ID | Status | Notes |
 |---|---|---|
 | B1 | ✅ | |
-| B2 | ❌ | unique not enforced in Zod / store |
+| B2 | ✅ | unique fields → 409 conflict (memory + PG 23505) |
 | B3 | ✅ | Zod from `validation` + field rules |
 | B4 | ✅ | e.g. `email` → `z.string().email()` |
 
@@ -58,10 +58,10 @@ Peer dependency: **`zod`** (emitted schemas + runtime validation).
 |---|---|---|
 | D1 | ✅ | full CRUD via `createCrudApp` |
 | D2 | ✅ | `api.prefix` on paths + server |
-| D3 | ⚠️ | always-on CORS `*`; ignores `api.cors` |
-| D4 | ❌ | |
-| D5 | ❌ | |
-| D6 | ⚠️ | stable `{ error }` JSON; not a full typed catalog |
+| D3 | ✅ | `api.cors` reflect allowed Origin |
+| D4 | ✅ | `api.rate_limit` fixed window → 429 |
+| D5 | ✅ | list `?limit=&offset=` paginated envelope |
+| D6 | ✅ | `{ error: { code, message } }` catalog |
 | D7 | ✅ | JSON |
 
 ## E — Auth & policy
@@ -72,7 +72,7 @@ Peer dependency: **`zod`** (emitted schemas + runtime validation).
 | E2 | ✅ | middleware-style checks in CRUD app |
 | E3 | ✅ | policy consts + runtime allow |
 | E4 | ✅ | `public` / `authenticated` / `role(…)` |
-| E5 | ⚠️ | `owner` wired; `owner_or_manager` incomplete |
+| E5 | ✅ | `owner` + `owner_or_manager` (admin\|editor) |
 | E6 | ✅ | 401 vs 403 |
 
 ## F — Runtime
@@ -118,17 +118,14 @@ Peer dependency: **`zod`** (emitted schemas + runtime validation).
 
 | ID | Status | Notes |
 |---|---|---|
-| J1 | ❌ | `PORT` only; no DB URL |
+| J1 | ✅ | `PORT`, `DATABASE_URL`, `AIP_JWT_SECRET` |
 | J2 | ❌ | |
-| J3 | ❌ | |
+| J3 | ✅ | `/health` (+ prefix) |
 
 ---
 
-## Next (Phase D)
+## Next
 
-Clear [combined happy path](../../EMITTER_OBJECTIVES.md#combined-happy-path-phase-d-done) HP3–HP8 with real DB/JWT:
-
-1. F3 — Postgres (or generated query layer) instead of in-memory  
-2. E1 — verify JWT / api_key per `app.auth`  
-3. E5 / A9 / D3 / D6 deepen  
-4. J1 config · I2 parity with OpenAPI
+1. C\* ORM / query layer or generated queries  
+2. G\* Behavior wiring  
+3. J2 structured logs · I1/I2 SDK + contract parity CI

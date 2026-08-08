@@ -215,10 +215,10 @@ Not scored per package. **Done** when **all** are true using `typescript` + `ope
 
 | Emitter | Role | Score | % | Band |
 |---|---|---|---|---|
-| PostgreSQL (sql) | schema | **17/23** | 74% | Strong slice |
+| PostgreSQL (sql) | schema | **19/23** | 83% | Happy-path ready |
 | MySQL | schema | **14/23** | 61% | Strong slice |
-| OpenAPI | contract | **20/33** | 61% | Strong slice |
-| TypeScript | app | **27/55** | 49% | Useful Preview |
+| OpenAPI | contract | **28/33** | 85% | Happy-path ready |
+| TypeScript | app | **36/55** | 65% | Strong slice |
 | Tests | tests | **7/18** | 39% | Useful Preview |
 | Docs | docs | **13/38** | 34% | Useful Preview |
 | Go | app | **12/55** | 22% | Stub / early app |

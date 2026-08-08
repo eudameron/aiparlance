@@ -1,15 +1,15 @@
 # Emitter Objectives — `@aiparlance/sql`
 
 **CLI:** `aip emit sql` · **Role:** `schema`  
-**Score: 17/23** (74%) · Band: Strong slice  
+**Score: 19/23** (83%) · Band: Happy-path ready  
 **Master:** [`EMITTER_OBJECTIVES.md`](../../EMITTER_OBJECTIVES.md) (v2)  
-**Scored:** 2026-08-08
+**Scored:** 2026-08-08 (D2.5)
 
 | Mark | Count |
 |---|---|
-| ✅ Pass | 17 |
-| ⚠️ Partial | 1 |
-| ❌ Fail | 5 |
+| ✅ Pass | 19 |
+| ⚠️ Partial | 0 |
+| ❌ Fail | 4 |
 | ➖ N/A | 32 |
 
 ---
@@ -26,7 +26,7 @@
 | A6 | ✅ | |
 | A7 | ✅ | |
 | A8 | ✅ | `deleted_at` column |
-| A9 | ❌ | no default filter semantics |
+| A9 | ✅ | `{table}_active` views filter `deleted_at IS NULL` |
 
 ## B — Validation
 
@@ -35,7 +35,7 @@
 | B1 | ✅ | `NOT NULL` |
 | B2 | ✅ | `UNIQUE` |
 | B3 | ❌ | |
-| B4 | ⚠️ | semantic → `TEXT` |
+| B4 | ✅ | `email` → `CITEXT` (+ citext extension) |
 
 ## C — Persistence
 
@@ -97,9 +97,8 @@
 
 ---
 
-## Next (Phase D / schema)
+## Next
 
-- **A9** — document or emit soft-delete view/policy notes for app emitters  
-- **B3 / B4** — richer CHECKs / types when validation/semantics allow  
-- **C7** — transactions for multi-statement / workflow writes  
-- Incremental migrations beyond full init snapshot
+1. B3 — CHECKs from `validation { }` beyond UNIQUE/required  
+2. C7 — transaction helpers for multi-statement seeds/workflows  
+3. H1/H2 — COMMENT ON / fixture SQL

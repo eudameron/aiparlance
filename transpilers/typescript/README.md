@@ -14,6 +14,13 @@ TypeScript emitter (**app** role). Emits types, Zod schemas, policy helpers, and
 | Postgres CRUD | Yes when `DATABASE_URL` / `store: "pg"` (`pg`) |
 | JWT HS256 | Yes when `AIP_JWT_SECRET` (`jose`); else Bearer + `x-aip-*` Preview headers |
 | Soft-delete filters | Yes |
+| `api.cors` / `api.rate_limit` | Yes (reflect Origin; fixed-window 429) |
+| Unique → 409 | Yes |
+| List pagination | Yes (`?limit=&offset=` → `{ items, limit, offset, total }`) |
+| Typed errors | Yes (`{ error: { code, message } }`) |
+| `owner_or_manager` | Yes (owner **or** role `admin`\|`editor`) |
+| `/health` | Yes (under `api.prefix`) |
+| Env | `PORT`, `DATABASE_URL`, `AIP_JWT_SECRET` |
 
 ```bash
 node packages/cli/dist/cli.js emit typescript examples/blog-crud.aip > app.ts

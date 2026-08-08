@@ -46,12 +46,21 @@ export function emitSql(doc: AipDocument): string {
     `-- Source: ${doc.fileName}`,
     ``,
     `CREATE EXTENSION IF NOT EXISTS pgcrypto;`,
+    `CREATE EXTENSION IF NOT EXISTS citext;`,
     ``,
   ];
 
   for (const entity of ordered) {
     lines.push(...emitCreateTable(entity));
     lines.push(``);
+  }
+
+  for (const entity of ordered) {
+    const view = emitSoftDeleteView(entity);
+    if (view) {
+      lines.push(...view);
+      lines.push(``);
+    }
   }
 
   const indexes = doc.blocks.filter((b): b is IndexBlock => b.kind === "Index");
@@ -107,6 +116,17 @@ export function emitSqlDown(doc: AipDocument): string {
     lines.push(`DROP INDEX IF EXISTS ${name};`);
   }
   if (indexes.length) lines.push(``);
+
+  for (const entity of [...ordered].reverse()) {
+    if (entity.body.some((m) => m.kind === "soft_delete")) {
+      lines.push(
+        `DROP VIEW IF EXISTS ${quoteIdent(`${tableName(entity.name)}_active`)};`
+      );
+    }
+  }
+  if (ordered.some((e) => e.body.some((m) => m.kind === "soft_delete"))) {
+    lines.push(``);
+  }
 
   for (const entity of [...ordered].reverse()) {
     lines.push(`DROP TABLE IF EXISTS ${quoteIdent(tableName(entity.name))} CASCADE;`);
@@ -212,6 +232,19 @@ function emitCreateTable(entity: EntityBlock): string[] {
     `CREATE TABLE ${table} (`,
     body,
     `);`,
+  ];
+}
+
+function emitSoftDeleteView(entity: EntityBlock): string[] | null {
+  if (!entity.body.some((m) => m.kind === "soft_delete")) return null;
+  const table = tableName(entity.name);
+  const view = quoteIdent(`${table}_active`);
+  const src = quoteIdent(table);
+  return [
+    `-- soft-delete view for ${entity.name} (default active rows)`,
+    `CREATE OR REPLACE VIEW ${view} AS`,
+    `  SELECT * FROM ${src}`,
+    `  WHERE ${quoteIdent("deleted_at")} IS NULL;`,
   ];
 }
 

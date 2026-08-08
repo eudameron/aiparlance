@@ -57,22 +57,22 @@
     "items": [
       {
         "name": "PostgreSQL",
-        "badge": "74%",
-        "body": "DDL, índices, seeds e migrations de init. aip emit sql",
+        "badge": "83%",
+        "body": "DDL, views, CITEXT, migrations. aip emit sql",
         "slug": "postgresql",
         "docs": ""
       },
       {
         "name": "OpenAPI 3",
-        "badge": "61%",
-        "body": "Schemas, paths CRUD e security de policy. aip emit openapi",
+        "badge": "85%",
+        "body": "Schemas, security de policy, cors/rate-limit. aip emit openapi",
         "slug": "openapi",
         "docs": ""
       },
       {
         "name": "TypeScript",
-        "badge": "49%",
-        "body": "Zod, policies e CRUD em memória. aip emit typescript",
+        "badge": "65%",
+        "body": "Zod, CRUD JWT/Postgres, policy, CORS. aip emit typescript",
         "slug": "typescript",
         "docs": ""
       },
@@ -275,21 +275,21 @@
         "name": "PostgreSQL",
         "command": "aip emit sql",
         "benefit": "Gere um schema revisável a partir das entities — tabelas, FKs, índices, seeds e migrations init up/down.",
-        "score": "74%"
+        "score": "83%"
       },
       {
         "slug": "openapi",
         "name": "OpenAPI 3",
         "command": "aip emit openapi",
         "benefit": "Publique um contrato CRUD com security por operação a partir de policy — paths e schemas de uma spec.",
-        "score": "61%"
+        "score": "85%"
       },
       {
         "slug": "typescript",
         "name": "TypeScript",
         "command": "aip emit typescript",
         "benefit": "Schemas Zod, guards de policy e um CRUD fino em memória alinhado a SQL e OpenAPI.",
-        "score": "49%"
+        "score": "65%"
       }
     ],
     "matrix": [
@@ -299,7 +299,7 @@
         "blurb": "DDL SQL principal",
         "slug": "postgresql",
         "docs": "",
-        "score": "74%"
+        "score": "83%"
       },
       {
         "name": "OpenAPI",
@@ -307,7 +307,7 @@
         "blurb": "Contrato HTTP",
         "slug": "openapi",
         "docs": "",
-        "score": "61%"
+        "score": "85%"
       },
       {
         "name": "TypeScript",
@@ -315,7 +315,7 @@
         "blurb": "Zod + CRUD em memória",
         "slug": "typescript",
         "docs": "",
-        "score": "49%"
+        "score": "65%"
       },
       {
         "name": "Go",
@@ -390,7 +390,7 @@
       "postgresql": {
         "title": "PostgreSQL a partir de .aip — emitter SQL do AI Parlance",
         "description": "Gere DDL PostgreSQL (tabelas, FKs, índices, seeds) a partir de uma spec AI Parlance compacta. Uma IR, schema revisável, menos boilerplate de migration.",
-        "badge": "SQL principal",
+        "badge": "Alvo SQL principal",
         "headline": "Schema primeiro. Migrations que você revisa.",
         "sub": "Descreva entities em .aip e emita PostgreSQL legível em code review. Índices, seeds e init up/down viajam na mesma fonte da verdade.",
         "benefits": [
@@ -410,7 +410,7 @@
         ],
         "command": "aip emit sql",
         "example": "node packages/cli/dist/cli.js emit sql --migrations examples/blog-crud.aip",
-        "honesty": "Forte em DDL, índices, seeds e 0001_init up/down documentado. Semântica de soft-delete na leitura e CHECKs mais ricos ainda estão no checklist.",
+        "honesty": "Pronto para happy path em DDL: indexes, seeds, email CITEXT, views *_active de soft-delete e 0001_init up/down. CHECKs de validation e transactions ainda abertos.",
         "docsPath": "emitters/sql"
       },
       "openapi": {
@@ -430,25 +430,25 @@
           "Specs em que CRUD é a maior parte da superfície"
         ],
         "notFor": [
-          "Modelo completo de ownership owner/owner_or_manager (parcial na ficha)",
+          "Gerar um SDK tipado de cliente (I1 ainda aberto no scorecard)",
           "Substituir seu gateway ou produto de rate-limit",
           "Stacks só GraphQL (SDL é opção futura)"
         ],
         "command": "aip emit openapi",
         "example": "node packages/cli/dist/cli.js emit openapi examples/blog-crud.aip",
-        "honesty": "Schemas, paths CRUD e policy→security por operação com 401/403. Cors, rate limit, paginação e erros mais ricos ainda abertos.",
+        "honesty": "Contrato pronto para happy path: schemas, CRUD, security de policy, extensões CORS/rate-limit, paginação e schema Error. SDK de cliente e CI de paridade completa ainda abertos.",
         "docsPath": "emitters/openapi"
       },
       "typescript": {
         "title": "TypeScript a partir de .aip — emitter de app do AI Parlance",
         "description": "Gere interfaces TypeScript, schemas Zod e um CRUD fino em memória a partir de entities AI Parlance. Mantenha types alinhados a SQL e OpenAPI a partir de uma spec compacta.",
-        "badge": "Types de app · foco Phase D",
+        "badge": "Tipos de app · foco Phase D",
         "headline": "Types que seguem o domínio — não o contrário.",
         "sub": "Emite interfaces Entity / Create / Update, schemas Zod, helpers de policy e createCrudApp() para demos Preview — sem prender você a Nest ou Express.",
         "benefits": [
           "Reduza o contexto da LLM: edite .aip em vez de regenerar DTOs pela árvore do projeto.",
           "Fique consistente com a nomenclatura do PostgreSQL e do OpenAPI a partir do mesmo AST.",
-          "Valide requests e aplique policies básicas num servidor CRUD em memória hoje."
+          "Valide requests e enforce policies em memória ou Postgres (DATABASE_URL) com JWT quando AIP_JWT_SECRET estiver definido."
         ],
         "forWhom": [
           "Backends TypeScript e apps full-stack no caminho feliz",
@@ -456,13 +456,13 @@
           "Projetos que querem IR agora e runtime com Postgres em seguida"
         ],
         "notFor": [
-          "Servidor de produção com DB pronto — o storage é em memória na prévia",
+          "Emit completo de ORM/query — combine com aip emit sql para schema durável",
           "Substituir seu ORM (combine com emit sql / alvos futuros tipo Drizzle)",
           "Ignorar os limites da prévia — veja a ficha de maturidade nas docs antes de prometer runtime"
         ],
         "command": "aip emit typescript",
         "example": "node packages/cli/dist/cli.js emit typescript examples/blog-crud.aip",
-        "honesty": "Zod, guards de policy e CRUD em memória já saem. Postgres real, verificação JWT e CI HP3–HP8 seguem como follow-up da Phase D.",
+        "honesty": "Fatia forte: Zod, CRUD JWT/Postgres, CORS, rate limits, unique→409, owner_or_manager, paginação. Camada ORM e Behavior ainda abertos.",
         "docsPath": "emitters/typescript"
       }
     }

@@ -90,10 +90,14 @@ describe("examples (CI)", () => {
     expect(sql).toContain("CREATE TABLE posts");
     expect(sql).toContain("INSERT INTO authors");
     expect(sql).toContain("CREATE INDEX");
+    expect(sql).toContain("CREATE OR REPLACE VIEW posts_active");
+    expect(sql).toContain("CITEXT");
     const spec = JSON.parse(emitOpenApi(doc));
     expect(spec.paths["/v1/authors"]).toBeDefined();
     expect(spec.paths["/v1/posts"]).toBeDefined();
     expect(spec.paths["/v1/comments"]).toBeDefined();
+    expect(spec["x-aip-cors"].allow).toContain("https://blog.example.com");
+    expect(spec["x-aip-rate-limit"].count).toBe(120);
     // Policy → per-op security (Phase D2)
     expect(spec.security).toBeUndefined();
     expect(spec.paths["/v1/posts"].get.security).toEqual([]);
@@ -101,10 +105,15 @@ describe("examples (CI)", () => {
     expect(spec.paths["/v1/posts/{id}"].delete.security).toEqual([
       { bearerAuth: ["role:admin"] },
     ]);
+    expect(spec.paths["/v1/posts/{id}"].put.security).toEqual([
+      { bearerAuth: ["role:admin", "role:editor", "owner"] },
+    ]);
     const ts = emitTypeScript(doc);
     expect(ts).toContain('collection: "/v1/posts"');
     expect(ts).toContain("PostCreateSchema");
     expect(ts).toContain("postPolicy");
     expect(ts).toContain("createCrudApp");
+    expect(ts).toContain("owner_or_manager");
+    expect(ts).toContain("__aipCorsAllows");
   });
 });

@@ -60,6 +60,7 @@ crud Lead
     expect(sql).toContain("CREATE TABLE leads");
     expect(sql).toContain("seller_id UUID REFERENCES users (id)");
     expect(sql).toContain("deleted_at TIMESTAMPTZ");
+    expect(sql).toContain("CREATE OR REPLACE VIEW leads_active");
     expect(sql).toContain("CHECK (status IN ('new', 'won'))");
     expect(sql).toContain("DEFAULT 'new'");
     // users before leads
