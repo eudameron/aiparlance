@@ -57,22 +57,22 @@
     "items": [
       {
         "name": "PostgreSQL",
-        "badge": "65%",
-        "body": "DDL, índices e seeds. aip emit sql",
+        "badge": "74%",
+        "body": "DDL, índices, seeds e migrations de init. aip emit sql",
         "slug": "postgresql",
         "docs": ""
       },
       {
         "name": "OpenAPI 3",
-        "badge": "48%",
-        "body": "Schemas e paths CRUD (+ auth). aip emit openapi",
+        "badge": "61%",
+        "body": "Schemas, paths CRUD e security de policy. aip emit openapi",
         "slug": "openapi",
         "docs": ""
       },
       {
         "name": "TypeScript",
-        "badge": "22%",
-        "body": "Interfaces, guards e helpers de path. aip emit typescript",
+        "badge": "45%",
+        "body": "Zod, policies e CRUD em memória. aip emit typescript",
         "slug": "typescript",
         "docs": ""
       },
@@ -274,22 +274,22 @@
         "slug": "postgresql",
         "name": "PostgreSQL",
         "command": "aip emit sql",
-        "benefit": "Gere um schema revisável a partir das entities — tabelas, FKs, índices e seeds — antes de escrever migrations na mão.",
-        "score": "65%"
+        "benefit": "Gere um schema revisável a partir das entities — tabelas, FKs, índices, seeds e migrations init up/down.",
+        "score": "74%"
       },
       {
         "slug": "openapi",
         "name": "OpenAPI 3",
         "command": "aip emit openapi",
-        "benefit": "Publique um contrato CRUD que API, clients e agentes compartilham — paths e schemas a partir de uma única spec.",
-        "score": "48%"
+        "benefit": "Publique um contrato CRUD com security por operação a partir de policy — paths e schemas de uma spec.",
+        "score": "61%"
       },
       {
         "slug": "typescript",
         "name": "TypeScript",
         "command": "aip emit typescript",
-        "benefit": "Mantenha types e guards alinhados ao schema e ao OpenAPI — menos desalinhamento entre camadas.",
-        "score": "22%"
+        "benefit": "Schemas Zod, guards de policy e um CRUD fino em memória alinhado a SQL e OpenAPI.",
+        "score": "45%"
       }
     ],
     "matrix": [
@@ -299,7 +299,7 @@
         "blurb": "DDL SQL principal",
         "slug": "postgresql",
         "docs": "",
-        "score": "65%"
+        "score": "74%"
       },
       {
         "name": "OpenAPI",
@@ -307,15 +307,15 @@
         "blurb": "Contrato HTTP",
         "slug": "openapi",
         "docs": "",
-        "score": "48%"
+        "score": "61%"
       },
       {
         "name": "TypeScript",
         "command": "aip emit typescript",
-        "blurb": "Types + guards",
+        "blurb": "Zod + CRUD em memória",
         "slug": "typescript",
         "docs": "",
-        "score": "22%"
+        "score": "45%"
       },
       {
         "name": "Go",
@@ -391,12 +391,12 @@
         "title": "PostgreSQL a partir de .aip — emitter SQL do AI Parlance",
         "description": "Gere DDL PostgreSQL (tabelas, FKs, índices, seeds) a partir de uma spec AI Parlance compacta. Uma IR, schema revisável, menos boilerplate de migration.",
         "badge": "SQL principal",
-        "headline": "Schema primeiro. Migrations depois — de propósito.",
-        "sub": "Descreva entities em .aip e emita PostgreSQL legível em code review. Índices e seeds viajam na mesma fonte da verdade.",
+        "headline": "Schema primeiro. Migrations que você revisa.",
+        "sub": "Descreva entities em .aip e emita PostgreSQL legível em code review. Índices, seeds e init up/down viajam na mesma fonte da verdade.",
         "benefits": [
           "Corte CREATE TABLE e FKs repetitivos ao iterar o domínio com LLM ou com a equipe.",
           "Mantenha a nomenclatura consistente (tabelas no plural, *_id) entre SQL e os outros emitters.",
-          "Valide a spec antes de tocar no banco — aip validate, depois aip emit sql."
+          "Valide a spec antes de tocar no banco — aip validate, depois aip emit sql --migrations."
         ],
         "forWhom": [
           "APIs novas com Postgres como system of record",
@@ -404,13 +404,13 @@
           "Reviews que precisam de DDL sem comprometer um ORM completo ainda"
         ],
         "notFor": [
-          "Produto de migrations com histórico up/down pronto (a Phase D aprofunda isso)",
+          "Histórico incremental multi-revisão (o emitter gera snapshots init completos)",
           "Apps MySQL — use aip emit mysql com database mysql",
           "Rodar o banco por você — você ainda aplica o SQL"
         ],
         "command": "aip emit sql",
-        "example": "node packages/cli/dist/cli.js emit sql examples/blog-crud.aip",
-        "honesty": "Forte em DDL, índices e seeds. Migrations versionadas e semântica de soft-delete na leitura ainda estão no checklist de maturidade.",
+        "example": "node packages/cli/dist/cli.js emit sql --migrations examples/blog-crud.aip",
+        "honesty": "Forte em DDL, índices, seeds e 0001_init up/down documentado. Semântica de soft-delete na leitura e CHECKs mais ricos ainda estão no checklist.",
         "docsPath": "emitters/sql"
       },
       "openapi": {
@@ -418,11 +418,11 @@
         "description": "Emita schemas e paths CRUD OpenAPI 3 a partir do AI Parlance. Compartilhe um contrato entre backends, clients e agentes — menos YAML sincronizado na mão.",
         "badge": "Contrato de API",
         "headline": "Um contrato. Muitos consumidores.",
-        "sub": "Entities com crud viram paths e schemas. api.prefix e app.auth alimentam o documento para pessoas e ferramentas falarem da mesma superfície.",
+        "sub": "Entities com crud viram paths e schemas. api.prefix, app.auth e policy alimentam security por operação para pessoas e ferramentas falarem da mesma superfície.",
         "benefits": [
           "Pare de reescrever OpenAPI à mão a cada mudança de campo.",
           "Dê aos agentes um mapa HTTP estável em vez de vasculhar arquivos de rotas.",
-          "Alinhe prefixos e auth com o mesmo .aip que alimenta SQL e TypeScript."
+          "Alinhe prefixos, auth e security de policy com o mesmo .aip que alimenta SQL e TypeScript."
         ],
         "forWhom": [
           "Times API-first que tratam OpenAPI como entregável",
@@ -430,39 +430,39 @@
           "Specs em que CRUD é a maior parte da superfície"
         ],
         "notFor": [
-          "Security por operação totalmente alinhada a policy ainda (acompanhado na maturidade)",
+          "Modelo completo de ownership owner/owner_or_manager (parcial na ficha)",
           "Substituir seu gateway ou produto de rate-limit",
           "Stacks só GraphQL (SDL é opção futura)"
         ],
         "command": "aip emit openapi",
         "example": "node packages/cli/dist/cli.js emit openapi examples/blog-crud.aip",
-        "honesty": "Excelente para schemas e paths CRUD. Enriquecimento policy→security e modelos de erro mais ricos são trabalho da Phase D.",
+        "honesty": "Schemas, paths CRUD e policy→security por operação com 401/403. Cors, rate limit, paginação e erros mais ricos ainda abertos.",
         "docsPath": "emitters/openapi"
       },
       "typescript": {
         "title": "TypeScript a partir de .aip — emitter de app do AI Parlance",
-        "description": "Gere interfaces TypeScript e type guards a partir de entities AI Parlance. Mantenha types alinhados a SQL e OpenAPI a partir de uma spec compacta.",
+        "description": "Gere interfaces TypeScript, schemas Zod e um CRUD fino em memória a partir de entities AI Parlance. Mantenha types alinhados a SQL e OpenAPI a partir de uma spec compacta.",
         "badge": "Types de app · foco Phase D",
         "headline": "Types que seguem o domínio — não o contrário.",
-        "sub": "Emite interfaces Entity / Create / Update e guards sem dependência de runtime. Helpers de path sugerem CRUD sem prender você a Nest ou Express.",
+        "sub": "Emite interfaces Entity / Create / Update, schemas Zod, helpers de policy e createCrudApp() para demos Preview — sem prender você a Nest ou Express.",
         "benefits": [
           "Reduza o contexto da LLM: edite .aip em vez de regenerar DTOs pela árvore do projeto.",
           "Fique consistente com a nomenclatura do PostgreSQL e do OpenAPI a partir do mesmo AST.",
-          "Comece enxuto hoje; a Phase D aprofunda rumo a CRUD executável e validação mais forte."
+          "Valide requests e aplique policies básicas num servidor CRUD em memória hoje."
         ],
         "forWhom": [
           "Backends TypeScript e apps full-stack no caminho feliz",
           "Times que combinam agentes com typecheck rigoroso",
-          "Projetos que querem IR agora e emit de runtime mais rico em seguida"
+          "Projetos que querem IR agora e runtime com Postgres em seguida"
         ],
         "notFor": [
-          "Servidor de produção pronto — handlers ainda não são o MVP",
+          "Servidor de produção com DB pronto — o storage é em memória na prévia",
           "Substituir seu ORM (combine com emit sql / alvos futuros tipo Drizzle)",
           "Ignorar os limites da prévia — veja a ficha de maturidade nas docs antes de prometer runtime"
         ],
         "command": "aip emit typescript",
         "example": "node packages/cli/dist/cli.js emit typescript examples/blog-crud.aip",
-        "honesty": "Sólido em types e guards. API executável, validação no estilo Zod e policies são prioridade da Phase D — acompanhadas abertamente nas docs.",
+        "honesty": "Zod, guards de policy e CRUD em memória já saem. Postgres real, verificação JWT e CI HP3–HP8 seguem como follow-up da Phase D.",
         "docsPath": "emitters/typescript"
       }
     }

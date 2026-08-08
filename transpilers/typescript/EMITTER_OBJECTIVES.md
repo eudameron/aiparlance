@@ -1,18 +1,19 @@
 # Emitter Objectives — `@aiparlance/typescript`
 
 **CLI:** `aip emit typescript` · **Role:** `app`  
-**Score: 12/55** (22%) · Band: Stub / early app Preview  
+**Score: 25/55** (45%) · Band: Useful Preview  
 **Master:** [`EMITTER_OBJECTIVES.md`](../../EMITTER_OBJECTIVES.md) (v2)  
-**Scored:** 2026-08-06
+**Scored:** 2026-08-08
 
 | Mark | Count |
 |---|---|
-| ✅ Pass | 12 |
-| ⚠️ Partial | 5 |
-| ❌ Fail | 38 |
+| ✅ Pass | 25 |
+| ⚠️ Partial | 6 |
+| ❌ Fail | 24 |
 | ➖ N/A | 0 |
 
-All master sections apply to `app` (including C and G as future ownership).
+All master sections apply to `app` (including C and G as future ownership).  
+Peer dependency: **`zod`** (emitted schemas + runtime validation).
 
 ---
 
@@ -27,17 +28,17 @@ All master sections apply to `app` (including C and G as future ownership).
 | A5 | ✅ | |
 | A6 | ✅ | |
 | A7 | ✅ | |
-| A8 | ✅ | field only |
-| A9 | ❌ | |
+| A8 | ✅ | field + runtime soft-delete |
+| A9 | ⚠️ | in-memory list/get filters `deleted_at`; no durable DB |
 
 ## B — Validation
 
 | ID | Status | Notes |
 |---|---|---|
 | B1 | ✅ | |
-| B2 | ❌ | |
-| B3 | ⚠️ | required-only |
-| B4 | ⚠️ | |
+| B2 | ❌ | unique not enforced in Zod / store |
+| B3 | ✅ | Zod from `validation` + field rules |
+| B4 | ✅ | e.g. `email` → `z.string().email()` |
 
 ## C — Persistence
 
@@ -55,34 +56,34 @@ All master sections apply to `app` (including C and G as future ownership).
 
 | ID | Status | Notes |
 |---|---|---|
-| D1 | ⚠️ | `entityPaths` only |
-| D2 | ❌ | ignores prefix |
-| D3 | ❌ | |
+| D1 | ✅ | full CRUD via `createCrudApp` |
+| D2 | ✅ | `api.prefix` on paths + server |
+| D3 | ⚠️ | always-on CORS `*`; ignores `api.cors` |
 | D4 | ❌ | |
 | D5 | ❌ | |
-| D6 | ❌ | |
-| D7 | ❌ | |
+| D6 | ⚠️ | stable `{ error }` JSON; not a full typed catalog |
+| D7 | ✅ | JSON |
 
 ## E — Auth & policy
 
 | ID | Status | Notes |
 |---|---|---|
-| E1 | ❌ | |
-| E2 | ❌ | |
-| E3 | ❌ | |
-| E4 | ❌ | |
-| E5 | ❌ | |
-| E6 | ❌ | |
+| E1 | ⚠️ | header actor (`Authorization` / `x-aip-*`); no JWT verify |
+| E2 | ✅ | middleware-style checks in CRUD app |
+| E3 | ✅ | policy consts + runtime allow |
+| E4 | ✅ | `public` / `authenticated` / `role(…)` |
+| E5 | ⚠️ | `owner` wired; `owner_or_manager` incomplete |
+| E6 | ✅ | 401 vs 403 |
 
 ## F — Runtime
 
 | ID | Status | Notes |
 |---|---|---|
-| F1 | ❌ | **P0** |
-| F2 | ❌ | **P0** |
-| F3 | ❌ | **P0** |
-| F4 | ❌ | Zod path |
-| F5 | ❌ | |
+| F1 | ✅ | `createCrudApp` / `listenCrudApp` |
+| F2 | ✅ | real in-memory CRUD (not 501 stubs) |
+| F3 | ⚠️ | in-memory `Map`; not Postgres |
+| F4 | ✅ | Zod `safeParse` on create/update |
+| F5 | ✅ | policy checks on routes |
 
 ## G — Behavior
 
@@ -117,17 +118,17 @@ All master sections apply to `app` (including C and G as future ownership).
 
 | ID | Status | Notes |
 |---|---|---|
-| J1 | ❌ | |
+| J1 | ❌ | `PORT` only; no DB URL |
 | J2 | ❌ | |
 | J3 | ❌ | |
 
 ---
 
-## Next (Phase D P0)
+## Next (Phase D)
 
-Clear [combined happy path](../../EMITTER_OBJECTIVES.md#combined-happy-path-phase-d-done) items HP4–HP8 via:
+Clear [combined happy path](../../EMITTER_OBJECTIVES.md#combined-happy-path-phase-d-done) HP3–HP8 with real DB/JWT:
 
-1. F1–F3 runnable CRUD + DB  
-2. F4 / B3 Zod (or equivalent)  
-3. E\* / F5 policies  
-4. D2 prefix · A9 soft-delete reads · J1 config
+1. F3 — Postgres (or generated query layer) instead of in-memory  
+2. E1 — verify JWT / api_key per `app.auth`  
+3. E5 / A9 / D3 / D6 deepen  
+4. J1 config · I2 parity with OpenAPI

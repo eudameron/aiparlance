@@ -241,13 +241,13 @@ The semantic validator must reject:
 
 | Target | Artifacts | Status v0.1 |
 |---|---|---|
-| PostgreSQL | DDL, indexes, seeds (Core entities + Infra) | Preview (`aip emit sql`) · Phase D: migrations |
+| PostgreSQL | DDL, indexes, seeds, init up/down migrations | Preview (`aip emit sql`) |
 | MySQL | DDL, indexes, seeds | Preview (`aip emit mysql`) |
 | Go | structs, handlers, JWT middleware stubs | Preview (`aip emit go`) |
-| TypeScript | interfaces, guards | Preview (`aip emit typescript`) · Phase D: deepen |
+| TypeScript | interfaces, Zod, in-memory CRUD | Preview (`aip emit typescript`) |
 | Python | models / dataclasses MVP | Preview (`aip emit python`) |
 | PHP | classes MVP | Preview (`aip emit php`) |
-| OpenAPI | paths, schemas, security schemes | Preview (`aip emit openapi`) · Phase D: policy |
+| OpenAPI | paths, schemas, policy security | Preview (`aip emit openapi`) |
 | Docs | Markdown / API reference | Preview (`aip emit docs`) |
 | Tests | CRUD fixtures | Preview (`aip emit tests`) |
 | Workers | queues, jobs from `workflow` | Preview (`aip emit workers`) |

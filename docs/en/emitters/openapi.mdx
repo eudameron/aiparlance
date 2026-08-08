@@ -1,6 +1,6 @@
 ---
 title: OpenAPI emitter
-description: "@aiparlance/openapi — role contract, score 16/33, pass/partial/fail objectives"
+description: "@aiparlance/openapi — role contract, score 20/33, pass/partial/fail objectives"
 ---
 
 # OpenAPI emitter
@@ -10,23 +10,23 @@ description: "@aiparlance/openapi — role contract, score 16/33, pass/partial/f
 | Package | `@aiparlance/openapi` |
 | CLI | `aip emit openapi` |
 | Role | `contract` |
-| **Score** | **16/33** (48%) |
-| Band | Useful Preview |
+| **Score** | **20/33** (61%) |
+| Band | Strong slice |
 | Scorecard | [transpilers/openapi/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/EMITTER_OBJECTIVES.md) |
 
-Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-08).
 
 ## Summary
 
 | ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
 |---|---|---|---|
-| 16 | 3 | 14 | 22 |
+| 20 | 3 | 10 | 22 |
 
 N/A items are outside the `contract` role and do not affect the score denominator.
 
 ## What it produces
 
-OpenAPI 3.0.3 JSON: schemas, CRUD paths, `api.prefix`, auth schemes.
+OpenAPI 3.0.3 JSON: schemas, CRUD paths, `api.prefix`, auth schemes, per-operation `security` from `policy` (+ `x-aip-policy`, 401/403 on protected ops).
 
 ## ✅ Passed
 
@@ -45,6 +45,10 @@ OpenAPI 3.0.3 JSON: schemas, CRUD paths, `api.prefix`, auth schemes.
 | `D2` | Honor `api.prefix` |
 | `D7` | Honor `api.format` (e.g. JSON) |
 | `E1` | Auth scheme from `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
+| `E2` | Wire auth into API (security requirements or middleware) |
+| `E3` | Reflect `policy` create/read/update/delete |
+| `E4` | Predicates: `public`, `authenticated`, `role(…)` |
+| `E6` | Consistent **401/403** denial paths (runtime **or** contract documents both) |
 | `H3` | Golden / CI for `minimal.aip` (or matching twin) |
 | `H4` | Emit succeeds on matching full-tier examples without crash |
 | `H5` | Naming aligned with docs (plural tables, `*_id`, snake_case) |
@@ -55,7 +59,7 @@ OpenAPI 3.0.3 JSON: schemas, CRUD paths, `api.prefix`, auth schemes.
 |---|---|
 | `B2` | Honor `unique` |
 | `B4` | Map semantic types (`email`, `phone`, …) distinctly |
-| `E2` | Wire auth into API (security requirements or middleware) |
+| `E5` | Predicates: `owner` / `owner_or_manager(…)` |
 
 ## ❌ Still failing (applicable)
 
@@ -67,10 +71,6 @@ OpenAPI 3.0.3 JSON: schemas, CRUD paths, `api.prefix`, auth schemes.
 | `D4` | Honor `api.rate_limit` (config or enforcement) |
 | `D5` | Pagination and/or filter/sort on list |
 | `D6` | Typed error responses (4xx/5xx + stable body shape) |
-| `E3` | Reflect `policy` create/read/update/delete |
-| `E4` | Predicates: `public`, `authenticated`, `role(…)` |
-| `E5` | Predicates: `owner` / `owner_or_manager(…)` |
-| `E6` | Consistent **401/403** denial paths (runtime **or** contract documents both) |
 | `H1` | Human-readable API / domain documentation |
 | `H2` | Automated test fixtures or scaffolds |
 | `I1` | Typed API client / SDK (or codegen from the contract) |

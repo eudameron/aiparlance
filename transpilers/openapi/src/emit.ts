@@ -2,6 +2,8 @@ import type {
   AipDocument,
   EntityBlock,
   FieldDecl,
+  PolicyBlock,
+  PredicateExpr,
   PrimitiveType,
   TypeExpr,
 } from "@aiparlance/parser";
@@ -22,14 +24,16 @@ type OpenApiDoc = {
   components: {
     schemas: Record<string, JsonSchema>;
     securitySchemes?: Record<string, unknown>;
+    responses?: Record<string, unknown>;
   };
   security?: Array<Record<string, string[]>>;
 };
 
+type AuthStrategy = "jwt" | "session" | "api_key" | "oauth";
+
 /**
- * Emit OpenAPI 3.0 JSON from a Core AST (Phase C / M4).
- * Assumes the document already passed semantic validation.
- * `api { }` block not parsed yet — paths use `/` root (Syntax CRUD conventions).
+ * Emit OpenAPI 3.0 JSON from a validated AST.
+ * Honors `api.prefix`, `app.auth`, and per-operation `policy` rules.
  */
 export function emitOpenApi(doc: AipDocument): string {
   const entities = doc.blocks.filter(
@@ -44,6 +48,11 @@ export function emitOpenApi(doc: AipDocument): string {
       .filter((b) => b.kind === "Crud")
       .map((b) => (b.kind === "Crud" ? b.entity : ""))
   );
+
+  const policies = new Map<string, PolicyBlock>();
+  for (const b of doc.blocks) {
+    if (b.kind === "Policy") policies.set(b.entity, b);
+  }
 
   const api = doc.blocks.find((b) => b.kind === "Api");
   let pathPrefix = "";
@@ -67,9 +76,23 @@ export function emitOpenApi(doc: AipDocument): string {
   };
 
   const auth = doc.app.members.find((m) => m.kind === "auth");
-  if (auth && auth.kind === "auth") {
-    out.components.securitySchemes = securityScheme(auth.strategy);
-    out.security = securityRequirement(auth.strategy);
+  const strategy =
+    auth && auth.kind === "auth" ? (auth.strategy as AuthStrategy) : null;
+
+  if (strategy) {
+    out.components.securitySchemes = securityScheme(strategy);
+    out.components.responses = {
+      Unauthorized: {
+        description: "Authentication required",
+      },
+      Forbidden: {
+        description: "Authenticated but not allowed by policy",
+      },
+    };
+    // Document-level security only when no policies — otherwise per-op.
+    if (policies.size === 0) {
+      out.security = securityRequirement(strategy);
+    }
   }
 
   for (const entity of entities) {
@@ -86,14 +109,23 @@ export function emitOpenApi(doc: AipDocument): string {
 
   for (const entity of entities) {
     if (!crudEntities.has(entity.name)) continue;
-    Object.assign(out.paths, crudPaths(entity, pathPrefix));
+    Object.assign(
+      out.paths,
+      crudPaths(
+        entity,
+        pathPrefix,
+        policies.get(entity.name),
+        strategy,
+        policies.size > 0
+      )
+    );
   }
 
   return `${JSON.stringify(out, null, 2)}\n`;
 }
 
 function securityScheme(
-  strategy: "jwt" | "session" | "api_key" | "oauth"
+  strategy: AuthStrategy
 ): Record<string, unknown> {
   switch (strategy) {
     case "jwt":
@@ -125,7 +157,7 @@ function securityScheme(
 }
 
 function securityRequirement(
-  strategy: "jwt" | "session" | "api_key" | "oauth"
+  strategy: AuthStrategy
 ): Array<Record<string, string[]>> {
   const key =
     strategy === "jwt" || strategy === "oauth"
@@ -134,6 +166,75 @@ function securityRequirement(
         ? "apiKeyAuth"
         : "cookieAuth";
   return [{ [key]: [] }];
+}
+
+function schemeKey(strategy: AuthStrategy): string {
+  return strategy === "jwt" || strategy === "oauth"
+    ? "bearerAuth"
+    : strategy === "api_key"
+      ? "apiKeyAuth"
+      : "cookieAuth";
+}
+
+function predicateForAction(
+  policy: PolicyBlock | undefined,
+  action: string
+): PredicateExpr | null {
+  if (!policy) return null;
+  const rule = policy.rules.find((r) => r.action === action);
+  return rule?.predicate ?? null;
+}
+
+/** OpenAPI security + auth error responses for one CRUD action. */
+function opSecurity(
+  predicate: PredicateExpr | null,
+  strategy: AuthStrategy | null,
+  hasAnyPolicy: boolean
+): { security?: Array<Record<string, string[]>>; authErrors: boolean } {
+  // No auth configured → open (omit security field).
+  if (!strategy) {
+    return { authErrors: false };
+  }
+
+  // No policy on this entity: if other policies exist, default to authenticated;
+  // if none exist at all, document-level security already applies — omit per-op.
+  if (!predicate) {
+    if (!hasAnyPolicy) {
+      return { authErrors: true };
+    }
+    return {
+      security: securityRequirement(strategy),
+      authErrors: true,
+    };
+  }
+
+  if (predicate.kind === "public") {
+    return { security: [], authErrors: false };
+  }
+
+  // authenticated | role | permission | owner* → require scheme
+  // Scopes: role(name) / permission(name) as optional scope strings for tooling.
+  const scopes: string[] = [];
+  if (predicate.kind === "role") scopes.push(`role:${predicate.name}`);
+  if (predicate.kind === "permission")
+    scopes.push(`permission:${predicate.name}`);
+
+  return {
+    security: [{ [schemeKey(strategy)]: scopes }],
+    authErrors: true,
+  };
+}
+
+function withAuthResponses(
+  responses: Record<string, unknown>,
+  authErrors: boolean
+): Record<string, unknown> {
+  if (!authErrors) return responses;
+  return {
+    ...responses,
+    "401": { $ref: "#/components/responses/Unauthorized" },
+    "403": { $ref: "#/components/responses/Forbidden" },
+  };
 }
 
 function entitySchema(
@@ -253,16 +354,40 @@ function primitiveSchema(name: PrimitiveType): JsonSchema {
 
 function crudPaths(
   entity: EntityBlock,
-  pathPrefix = ""
+  pathPrefix = "",
+  policy: PolicyBlock | undefined,
+  strategy: AuthStrategy | null,
+  docHasPolicies: boolean
 ): Record<string, unknown> {
   const collection = `${pathPrefix}/${tableName(entity.name)}`;
   const item = `${collection}/{id}`;
   const tag = entity.name;
   const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
 
+  const apply = (action: string, op: Record<string, unknown>) => {
+    const pred = predicateForAction(policy, action);
+    const { security, authErrors } = opSecurity(
+      pred,
+      strategy,
+      docHasPolicies
+    );
+    const next = { ...op };
+    if (security !== undefined) next.security = security;
+    next.responses = withAuthResponses(
+      (op.responses as Record<string, unknown>) ?? {},
+      authErrors
+    );
+    if (pred && pred.kind !== "public") {
+      next["x-aip-policy"] = describePredicate(pred);
+    } else if (pred?.kind === "public") {
+      next["x-aip-policy"] = "public";
+    }
+    return next;
+  };
+
   return {
     [collection]: {
-      get: {
+      get: apply("read", {
         operationId: `list${entity.name}`,
         tags: [tag],
         summary: `List ${tableName(entity.name)}`,
@@ -279,8 +404,8 @@ function crudPaths(
             },
           },
         },
-      },
-      post: {
+      }),
+      post: apply("create", {
         operationId: `create${entity.name}`,
         tags: [tag],
         summary: `Create ${entity.name}`,
@@ -302,10 +427,10 @@ function crudPaths(
             },
           },
         },
-      },
+      }),
     },
     [item]: {
-      get: {
+      get: apply("read", {
         operationId: `get${entity.name}`,
         tags: [tag],
         summary: `Get ${entity.name}`,
@@ -321,8 +446,8 @@ function crudPaths(
           },
           "404": { description: "Not found" },
         },
-      },
-      put: {
+      }),
+      put: apply("update", {
         operationId: `update${entity.name}`,
         tags: [tag],
         summary: `Update ${entity.name}`,
@@ -346,8 +471,8 @@ function crudPaths(
           },
           "404": { description: "Not found" },
         },
-      },
-      delete: {
+      }),
+      delete: apply("delete", {
         operationId: `delete${entity.name}`,
         tags: [tag],
         summary: `Delete ${entity.name}`,
@@ -356,9 +481,26 @@ function crudPaths(
           "204": { description: "No content" },
           "404": { description: "Not found" },
         },
-      },
+      }),
     },
   };
+}
+
+function describePredicate(pred: PredicateExpr): string {
+  switch (pred.kind) {
+    case "public":
+      return "public";
+    case "authenticated":
+      return "authenticated";
+    case "role":
+      return `role(${pred.name})`;
+    case "permission":
+      return `permission(${pred.name})`;
+    case "owner":
+      return `owner(${pred.field.parts.join(".")})`;
+    case "owner_or_manager":
+      return `owner_or_manager(${pred.field.parts.join(".")})`;
+  }
 }
 
 function idParam(): Record<string, unknown> {

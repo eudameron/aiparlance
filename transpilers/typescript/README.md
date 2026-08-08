@@ -1,23 +1,25 @@
 # @aiparlance/typescript
 
-TypeScript interfaces + type guards emitter (first application backend). Phase C / M5 MVP. **Phase D** deepens toward Zod / runnable CRUD / policy guards.
+TypeScript emitter (**app** role). Phase D emits types, Zod schemas, policy helpers, and a thin in-memory CRUD HTTP app.
 
-```ts
-import { parse } from "@aiparlance/parser";
-import { emitTypeScript } from "@aiparlance/typescript";
+## Coverage
 
-const doc = parse(source, "app.aip");
-process.stdout.write(emitTypeScript(doc));
+| Feature | Status |
+|---|---|
+| Interfaces `Entity` / `Create` / `Update` | Yes |
+| Type guards | Yes |
+| Zod schemas (`*CreateSchema`, …) | Yes (peer: `zod`) |
+| Path helpers + `api.prefix` | Yes |
+| Policy consts from `.aip` | Yes |
+| Runnable CRUD (`createCrudApp`) | Yes (in-memory Preview) |
+| Soft-delete on list/get/delete | Yes (memory store) |
+| Auth headers (Bearer + `x-aip-user-id` / `x-aip-role`) | Yes (Preview) |
+| Real Postgres / JWT crypto | Not yet |
+
+```bash
+node packages/cli/dist/cli.js emit typescript examples/blog-crud.aip > app.ts
+# requires: npm i zod
+# then: npx tsx -e "import { listenCrudApp } from './app.ts'; listenCrudApp()"
 ```
 
-Or via CLI: `aip emit typescript examples/blog-crud.aip`
-
-Emits per entity:
-
-- `Entity` / `EntityCreate` / `EntityUpdate` interfaces
-- `isEntity` / `isEntityCreate` type guards (zero runtime deps)
-- Thin `entityPaths` helpers when `crud Entity` is declared
-
-Status: **Preview** · Phase D P0 deepen target.
-
-See [`ROADMAP.md`](../../ROADMAP.md) and [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) (**12/55** app).
+See [`ROADMAP.md`](../../ROADMAP.md) and [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) (**25/55**).

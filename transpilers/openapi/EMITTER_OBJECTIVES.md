@@ -1,16 +1,16 @@
 # Emitter Objectives — `@aiparlance/openapi`
 
 **CLI:** `aip emit openapi` · **Role:** `contract`  
-**Score: 16/33** (48%) · Band: Useful Preview  
+**Score: 20/33** (61%) · Band: Strong slice  
 **Master:** [`EMITTER_OBJECTIVES.md`](../../EMITTER_OBJECTIVES.md) (v2)  
-**Scored:** 2026-08-06
+**Scored:** 2026-08-08
 
 | Mark | Count |
 |---|---|
-| ✅ Pass | 16 |
+| ✅ Pass | 20 |
 | ⚠️ Partial | 3 |
-| ❌ Fail | 14 |
-| ➖ N/A | 21 |
+| ❌ Fail | 10 |
+| ➖ N/A | 22 |
 
 ---
 
@@ -60,11 +60,11 @@
 | ID | Status | Notes |
 |---|---|---|
 | E1 | ✅ | securitySchemes |
-| E2 | ⚠️ | not per-operation from policy |
-| E3 | ❌ | |
-| E4 | ❌ | |
-| E5 | ❌ | |
-| E6 | ❌ | |
+| E2 | ✅ | per-operation `security` from policy + auth |
+| E3 | ✅ | policy create/read/update/delete → operation security |
+| E4 | ✅ | `public` / `authenticated` / `role(…)` (+ `x-aip-policy`) |
+| E5 | ⚠️ | `owner` / `owner_or_manager` documented; no full ownership model |
+| E6 | ✅ | 401/403 response docs on protected ops |
 
 ## F — Runtime · G — Behavior
 
@@ -100,6 +100,6 @@
 
 ## Next (Phase D / contract)
 
-- **E2–E6** — policy → per-operation security + 401/403 responses  
+- **E5** — richer owner / owner_or_manager modeling when language allows  
 - **D3–D6** — cors, rate_limit, pagination, error schemas  
 - **I2** — parity check vs TS happy path

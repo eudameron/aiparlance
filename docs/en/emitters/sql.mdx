@@ -1,6 +1,6 @@
 ---
 title: PostgreSQL emitter
-description: "@aiparlance/sql — role schema, score 15/23, pass/partial/fail objectives"
+description: "@aiparlance/sql — role schema, score 17/23, pass/partial/fail objectives"
 ---
 
 # PostgreSQL emitter
@@ -10,23 +10,23 @@ description: "@aiparlance/sql — role schema, score 15/23, pass/partial/fail ob
 | Package | `@aiparlance/sql` |
 | CLI | `aip emit sql` |
 | Role | `schema` |
-| **Score** | **15/23** (65%) |
+| **Score** | **17/23** (74%) |
 | Band | Strong slice |
 | Scorecard | [transpilers/sql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/sql/EMITTER_OBJECTIVES.md) |
 
-Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+Scored against the master checklist ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-08).
 
 ## Summary
 
 | ✅ Pass | ⚠️ Partial | ❌ Fail | ➖ N/A |
 |---|---|---|---|
-| 15 | 1 | 7 | 32 |
+| 17 | 1 | 5 | 32 |
 
 N/A items are outside the `schema` role and do not affect the score denominator.
 
 ## What it produces
 
-PostgreSQL DDL: `CREATE TABLE`, indexes, seeds. Primary SQL target.
+PostgreSQL DDL: `CREATE TABLE`, indexes, seeds, and versioned init migrations (`0001_init.up/down` via `aip emit sql --migrations`). Primary SQL target.
 
 ## ✅ Passed
 
@@ -43,6 +43,8 @@ PostgreSQL DDL: `CREATE TABLE`, indexes, seeds. Primary SQL target.
 | `C1` | Durable schema (DDL or ORM / query models) |
 | `C2` | Indexes from `index { }` |
 | `C3` | Seeds from `seed { }` |
+| `C4` | Versioned migrations (ordered **up**) |
+| `C5` | Migration **down** / rollback |
 | `C6` | Respect `app.database` target |
 | `H3` | Golden / CI for `minimal.aip` (or matching twin) |
 | `H4` | Emit succeeds on matching full-tier examples without crash |
@@ -60,8 +62,6 @@ PostgreSQL DDL: `CREATE TABLE`, indexes, seeds. Primary SQL target.
 |---|---|
 | `A9` | Soft-delete **semantics** (default reads filter deleted rows) |
 | `B3` | Apply `validation { }` beyond required folding |
-| `C4` | Versioned migrations (ordered **up**) |
-| `C5` | Migration **down** / rollback |
 | `C7` | Transactions for multi-statement / workflow writes |
 | `H1` | Human-readable API / domain documentation |
 | `H2` | Automated test fixtures or scaffolds |
@@ -75,6 +75,7 @@ Package Vitest + golden `transpilers/sql/fixtures/minimal.sql`. Repo CI asserts 
 ```bash
 npm test
 node packages/cli/dist/cli.js emit sql examples/blog-crud.aip
+node packages/cli/dist/cli.js emit sql --migrations examples/blog-crud.aip
 ```
 
 ## Related

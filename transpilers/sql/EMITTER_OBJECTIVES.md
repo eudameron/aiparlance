@@ -1,16 +1,16 @@
 # Emitter Objectives — `@aiparlance/sql`
 
 **CLI:** `aip emit sql` · **Role:** `schema`  
-**Score: 15/23** (65%) · Band: Strong slice  
+**Score: 17/23** (74%) · Band: Strong slice  
 **Master:** [`EMITTER_OBJECTIVES.md`](../../EMITTER_OBJECTIVES.md) (v2)  
-**Scored:** 2026-08-06
+**Scored:** 2026-08-08
 
 | Mark | Count |
 |---|---|
-| ✅ Pass | 15 |
+| ✅ Pass | 17 |
 | ⚠️ Partial | 1 |
-| ❌ Fail | 7 |
-| ➖ N/A | 31 |
+| ❌ Fail | 5 |
+| ➖ N/A | 32 |
 
 ---
 
@@ -44,8 +44,8 @@
 | C1 | ✅ | |
 | C2 | ✅ | |
 | C3 | ✅ | |
-| C4 | ❌ | Phase D |
-| C5 | ❌ | |
+| C4 | ✅ | `emitSqlMigrations` → `0001_init.up.sql` |
+| C5 | ✅ | `emitSqlDown` / `0001_init.down.sql` |
 | C6 | ✅ | `postgres` only |
 | C7 | ❌ | |
 
@@ -99,6 +99,7 @@
 
 ## Next (Phase D / schema)
 
-- **C4 / C5** — versioned migrations  
 - **A9** — document or emit soft-delete view/policy notes for app emitters  
-- **B3 / B4** — richer CHECKs / types when validation/semantics allow
+- **B3 / B4** — richer CHECKs / types when validation/semantics allow  
+- **C7** — transactions for multi-statement / workflow writes  
+- Incremental migrations beyond full init snapshot

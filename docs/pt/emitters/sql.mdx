@@ -1,6 +1,6 @@
 ---
 title: Emitter PostgreSQL
-description: "@aiparlance/sql — papel schema, nota 15/23, objetivos pass/partial/fail"
+description: "@aiparlance/sql — papel schema, nota 17/23, objetivos pass/partial/fail"
 ---
 
 # Emitter PostgreSQL
@@ -10,23 +10,23 @@ description: "@aiparlance/sql — papel schema, nota 15/23, objetivos pass/parti
 | Pacote | `@aiparlance/sql` |
 | CLI | `aip emit sql` |
 | Papel | `schema` |
-| **Nota** | **15/23** (65%) |
+| **Nota** | **17/23** (74%) |
 | Nível | Fatia sólida |
 | Ficha de maturidade | [transpilers/sql/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/sql/EMITTER_OBJECTIVES.md) |
 
-Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-08).
 
 ## Resumo
 
 | ✅ Passou | ⚠️ Parcial | ❌ Falhou | ➖ N/A |
 |---|---|---|---|
-| 15 | 1 | 7 | 32 |
+| 17 | 1 | 5 | 32 |
 
 Itens N/A estão fora do papel `schema` e não entram no denominador da nota.
 
 ## O que produz
 
-DDL PostgreSQL: `CREATE TABLE`, índices, seeds. SQL principal.
+DDL PostgreSQL: `CREATE TABLE`, índices, seeds e migrations de init versionadas (`0001_init.up/down` via `aip emit sql --migrations`). SQL principal.
 
 ## ✅ Passou
 
@@ -43,6 +43,8 @@ DDL PostgreSQL: `CREATE TABLE`, índices, seeds. SQL principal.
 | `C1` | Schema persistente (DDL ou ORM / modelos de query) |
 | `C2` | Índices a partir de `index { }` |
 | `C3` | Seeds a partir de `seed { }` |
+| `C4` | Migrations versionadas (**up** ordenado) |
+| `C5` | Migration **down** / rollback |
 | `C6` | Respeitar o alvo definido em `app.database` |
 | `H3` | Golden / CI para `minimal.aip` (ou equivalente no alvo) |
 | `H4` | O emit funciona nos examples full-tier correspondentes sem crash |
@@ -60,8 +62,6 @@ DDL PostgreSQL: `CREATE TABLE`, índices, seeds. SQL principal.
 |---|---|
 | `A9` | Semântica de soft-delete (leituras padrão filtram linhas deletadas) |
 | `B3` | Aplicar `validation { }` além de marcar campos como obrigatórios |
-| `C4` | Migrations versionadas (**up** ordenado) |
-| `C5` | Migration **down** / rollback |
 | `C7` | Transações para writes multi-statement / de workflow |
 | `H1` | Documentação legível de API / domínio |
 | `H2` | Fixtures ou scaffolds de testes automatizados |
@@ -75,6 +75,7 @@ Vitest do pacote + golden `transpilers/sql/fixtures/minimal.sql`. CI do repo cob
 ```bash
 npm test
 node packages/cli/dist/cli.js emit sql examples/blog-crud.aip
+node packages/cli/dist/cli.js emit sql --migrations examples/blog-crud.aip
 ```
 
 ## Relacionado

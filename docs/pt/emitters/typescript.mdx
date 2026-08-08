@@ -1,6 +1,6 @@
 ---
 title: Emitter TypeScript
-description: "@aiparlance/typescript — papel app, nota 12/55, objetivos pass/partial/fail"
+description: "@aiparlance/typescript — papel app, nota 25/55, objetivos pass/partial/fail"
 ---
 
 # Emitter TypeScript
@@ -10,23 +10,23 @@ description: "@aiparlance/typescript — papel app, nota 12/55, objetivos pass/p
 | Pacote | `@aiparlance/typescript` |
 | CLI | `aip emit typescript` |
 | Papel | `app` |
-| **Nota** | **12/55** (22%) |
-| Nível | Stub / app ainda inicial |
+| **Nota** | **25/55** (45%) |
+| Nível | Prévia útil |
 | Ficha de maturidade | [transpilers/typescript/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/typescript/EMITTER_OBJECTIVES.md) |
 
-Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-08).
 
 ## Resumo
 
 | ✅ Passou | ⚠️ Parcial | ❌ Falhou | ➖ N/A |
 |---|---|---|---|
-| 12 | 3 | 40 | 0 |
+| 25 | 6 | 24 | 0 |
 
 Itens N/A estão fora do papel `app` e não entram no denominador da nota.
 
 ## O que produz
 
-Interfaces + type guards + `entityPaths` finos. Alvo P0 da Phase D.
+Interfaces, type guards, schemas Zod (peer `zod`), helpers de path com `api.prefix`, consts de policy e `createCrudApp()` / `listenCrudApp()` em memória (validação, soft-delete, headers de auth).
 
 ## ✅ Passou
 
@@ -41,6 +41,19 @@ Interfaces + type guards + `entityPaths` finos. Alvo P0 da Phase D.
 | `A7` | Gerar `timestamps` (`created_at` / `updated_at`) |
 | `A8` | Gerar campo/coluna `soft_delete` (`deleted_at`) |
 | `B1` | Respeitar `required` / `optional` |
+| `B3` | Aplicar `validation { }` além de marcar campos como obrigatórios |
+| `B4` | Mapear tipos semânticos (`email`, `phone`, …) de forma distinta |
+| `D1` | CRUD completo para entidades listadas em `crud` (list/create/get/update/delete) |
+| `D2` | Respeitar `api.prefix` |
+| `D7` | Respeitar `api.format` (ex.: JSON) |
+| `E2` | Integrar autenticação na API (requisitos de segurança ou middleware) |
+| `E3` | Refletir `policy` create/read/update/delete |
+| `E4` | Predicados: `public`, `authenticated`, `role(…)` |
+| `E6` | Caminhos consistentes de negação **401/403** (runtime **ou** contrato documenta ambos) |
+| `F1` | Ponto de entrada executável (servidor ou worker) |
+| `F2` | Handlers/jobs fazem trabalho real (não só 501 / `throw`) |
+| `F4` | Validação de request em runtime alinhada com B\* |
+| `F5` | Checagens de policy em runtime alinhadas com E\* |
 | `H3` | Golden / CI para `minimal.aip` (ou equivalente no alvo) |
 | `H4` | O emit funciona nos examples full-tier correspondentes sem crash |
 | `H5` | Nomenclatura alinhada à documentação (tabelas no plural, `*_id`, snake_case) |
@@ -49,15 +62,17 @@ Interfaces + type guards + `entityPaths` finos. Alvo P0 da Phase D.
 
 | ID | Objetivo |
 |---|---|
-| `B3` | Aplicar `validation { }` além de marcar campos como obrigatórios |
-| `B4` | Mapear tipos semânticos (`email`, `phone`, …) de forma distinta |
-| `D1` | CRUD completo para entidades listadas em `crud` (list/create/get/update/delete) |
+| `A9` | Semântica de soft-delete (leituras padrão filtram linhas deletadas) |
+| `D3` | Respeitar `api.cors` (config ou middleware) |
+| `D6` | Respostas de erro tipadas (4xx/5xx + shape estável do body) |
+| `E1` | Esquema de autenticação a partir de `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
+| `E5` | Predicados: `owner` / `owner_or_manager(…)` |
+| `F3` | Leitura/escrita em DB (ou query gerada / camada ORM) |
 
 ## ❌ Ainda falhando (aplicáveis)
 
 | ID | Objetivo |
 |---|---|
-| `A9` | Semântica de soft-delete (leituras padrão filtram linhas deletadas) |
 | `B2` | Respeitar `unique` |
 | `C1` | Schema persistente (DDL ou ORM / modelos de query) |
 | `C2` | Índices a partir de `index { }` |
@@ -66,23 +81,8 @@ Interfaces + type guards + `entityPaths` finos. Alvo P0 da Phase D.
 | `C5` | Migration **down** / rollback |
 | `C6` | Respeitar o alvo definido em `app.database` |
 | `C7` | Transações para writes multi-statement / de workflow |
-| `D2` | Respeitar `api.prefix` |
-| `D3` | Respeitar `api.cors` (config ou middleware) |
 | `D4` | Respeitar `api.rate_limit` (config ou aplicação) |
 | `D5` | Paginação e/ou filter/sort em list |
-| `D6` | Respostas de erro tipadas (4xx/5xx + shape estável do body) |
-| `D7` | Respeitar `api.format` (ex.: JSON) |
-| `E1` | Esquema de autenticação a partir de `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
-| `E2` | Integrar autenticação na API (requisitos de segurança ou middleware) |
-| `E3` | Refletir `policy` create/read/update/delete |
-| `E4` | Predicados: `public`, `authenticated`, `role(…)` |
-| `E5` | Predicados: `owner` / `owner_or_manager(…)` |
-| `E6` | Caminhos consistentes de negação **401/403** (runtime **ou** contrato documenta ambos) |
-| `F1` | Ponto de entrada executável (servidor ou worker) |
-| `F2` | Handlers/jobs fazem trabalho real (não só 501 / `throw`) |
-| `F3` | Leitura/escrita em DB (ou query gerada / camada ORM) |
-| `F4` | Validação de request em runtime alinhada com B\* |
-| `F5` | Checagens de policy em runtime alinhadas com E\* |
 | `G1` | Emitir artefatos `job` (chamáveis ou agendáveis) |
 | `G2` | Emitir declarações / bindings de `queue` |
 | `G3` | Conectar `dispatch` do workflow |
@@ -102,7 +102,7 @@ Ficha de maturidade completa (incluindo ➖ N/A): [transpilers/typescript/EMITTE
 
 ## Testes
 
-Golden `minimal.ts` + typecheck isolado da saída. CI de examples.
+Golden `minimal.ts` + saída emitida typecheck isolada. CI de examples.
 
 ```bash
 npm test

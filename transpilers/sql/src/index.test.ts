@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { parse } from "@aiparlance/parser";
 import { validate } from "@aiparlance/validator";
-import { emitSql, EmitSqlError, fkColumnName, tableName } from "./index.js";
+import { emitSql, emitSqlDown, emitSqlMigrations, EmitSqlError, fkColumnName, tableName } from "./index.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "../../..");
 const minimalAip = join(root, "examples/minimal.aip");
@@ -77,5 +77,17 @@ entity User { name: string required }
       "mysql.aip"
     );
     expect(() => emitSql(doc)).toThrow(EmitSqlError);
+  });
+
+  it("emits down migration and migration bundle markers", () => {
+    const source = readFileSync(minimalAip, "utf8");
+    const doc = parse(source, "examples/minimal.aip");
+    const down = emitSqlDown(doc);
+    expect(down).toContain("DROP TABLE IF EXISTS users CASCADE");
+    const bundle = emitSqlMigrations(doc);
+    expect(bundle).toContain("migrations/0001_init.up.sql");
+    expect(bundle).toContain("migrations/0001_init.down.sql");
+    expect(bundle).toContain("CREATE TABLE");
+    expect(bundle).toContain("DROP TABLE");
   });
 });

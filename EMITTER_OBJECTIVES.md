@@ -211,16 +211,16 @@ Not scored per package. **Done** when **all** are true using `typescript` + `ope
 
 ---
 
-## Scoreboard (v2 · 2026-08-06)
+## Scoreboard (v2 · 2026-08-08)
 
 | Emitter | Role | Score | % | Band |
 |---|---|---|---|---|
-| PostgreSQL (sql) | schema | **15/23** | 65% | Strong slice |
+| PostgreSQL (sql) | schema | **17/23** | 74% | Strong slice |
 | MySQL | schema | **14/23** | 61% | Strong slice |
-| OpenAPI | contract | **16/33** | 48% | Useful Preview |
+| OpenAPI | contract | **20/33** | 61% | Strong slice |
+| TypeScript | app | **25/55** | 45% | Useful Preview |
 | Tests | tests | **7/18** | 39% | Useful Preview |
 | Docs | docs | **13/38** | 34% | Useful Preview |
-| TypeScript | app | **12/55** | 22% | Stub / early app |
 | Go | app | **12/55** | 22% | Stub / early app |
 | Python | app | **12/55** | 22% | Stub / early app |
 | PHP | app | **11/55** | 20% | Stub / early app |

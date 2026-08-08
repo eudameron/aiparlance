@@ -9,6 +9,9 @@ and this project uses a draft **v0.1** language version. A **reference toolchain
 
 ### Added
 
+- **Phase D2 deepen:** OpenAPI per-operation `security` from `policy` + `app.auth`, 401/403 responses, `x-aip-policy`
+- **Phase D2 deepen:** SQL `emitSqlDown` / `emitSqlMigrations` and CLI `aip emit sql --migrations` → `0001_init.up/down`
+- **Phase D2 deepen:** TypeScript Zod schemas, `api.prefix` paths, policy consts, in-memory `createCrudApp()` / `listenCrudApp()` (validation, soft-delete, auth headers); peer dep `zod`
 - Docs **Emitters** menu (EN+PT): overview + per-emitter pages with role, score, objectives, and tests
 - Marketing site: emitters hub + featured pages (PostgreSQL, OpenAPI, TypeScript) EN+PT — benefits/SEO; maturity stays in docs
 - PT Emitters docs: objective Pass/Partial/Fail lists translated to Portuguese (sidebar titles polished)
@@ -25,13 +28,14 @@ and this project uses a draft **v0.1** language version. A **reference toolchain
 
 ### Changed
 
-- [`ROADMAP.md`](ROADMAP.md): Phase C marked complete; **Phase D** (depth & distribution) is active
+- Re-scored after D2 deepen (2026-08-08): PostgreSQL **17/23** (74%), OpenAPI **20/33** (61%), TypeScript **25/55** (45%) — scorecards, docs EN+PT, site badges
+- [`ROADMAP.md`](ROADMAP.md): Phase C marked complete; **Phase D** (depth & distribution) is active; D2 deepen checkboxes updated
 - CONTRIBUTING: full-tier examples CI; docs/roadmap sync policy; Phase D PR guidance
 - Docs/site treat all ten Preview emitters and full-tier validate as current reality
 - Transpiler matrix: all listed targets **Preview** (EN + PT); MySQL no longer Planned
 - PT docs (`docs/pt/`): natural Brazilian Portuguese copy — fewer English calques in emitter objectives and narrative pages
 - Site PT (`pt.json`): more natural Brazilian Portuguese marketing copy
-- Home toolchain cards: badge shows maturity score % (e.g. PostgreSQL 65%, MySQL 61%)
+- Home toolchain cards: badge shows maturity score % (e.g. PostgreSQL 74%, OpenAPI 61%, TypeScript 45%, MySQL 61%)
 - Site nav Emitters → `/emitters`; hub badge removed; CTAs/docs use **Comece aqui** / **Get started here**; drop “dialeto/dialect” wording in docs and site
 - Docs nav: remove CRUD walkthrough from Overview / Visão geral (page remains reachable via Examples links)
 

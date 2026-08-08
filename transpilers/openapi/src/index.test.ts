@@ -64,4 +64,57 @@ crud Lead
     expect(spec.components.securitySchemes.bearerAuth).toBeDefined();
     expect(spec.security).toEqual([{ bearerAuth: [] }]);
   });
+
+  it("maps policy rules to per-operation security", () => {
+    const doc = parse(
+      `
+app Blog @0.1 {
+  database postgres
+  auth jwt
+}
+
+entity Author {
+  name: string required
+}
+
+entity Post {
+  title: string required
+  author: belongs_to Author
+}
+
+crud Post
+crud Author
+
+policy Post {
+  create authenticated
+  read public
+  update owner_or_manager(Post.author)
+  delete role(admin)
+}
+
+api {
+  prefix "/v1"
+}
+`,
+      "blog.aip"
+    );
+    expect(validate(doc).ok).toBe(true);
+    const spec = JSON.parse(emitOpenApi(doc)) as {
+      security?: unknown;
+      paths: Record<
+        string,
+        Record<string, { security?: unknown; responses?: Record<string, unknown>; "x-aip-policy"?: string }>
+      >;
+    };
+    expect(spec.security).toBeUndefined();
+    const list = spec.paths["/v1/posts"]!.get!;
+    const create = spec.paths["/v1/posts"]!.post!;
+    const del = spec.paths["/v1/posts/{id}"]!.delete!;
+    expect(list.security).toEqual([]);
+    expect(list["x-aip-policy"]).toBe("public");
+    expect(create.security).toEqual([{ bearerAuth: [] }]);
+    expect(create.responses?.["401"]).toBeDefined();
+    expect(del.security).toEqual([{ bearerAuth: ["role:admin"] }]);
+    expect(del["x-aip-policy"]).toBe("role(admin)");
+  });
 });

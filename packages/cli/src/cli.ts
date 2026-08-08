@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parse, ParseError } from "@aiparlance/parser";
 import { formatDiagnostic, validate } from "@aiparlance/validator";
-import { emitSql, EmitSqlError } from "@aiparlance/sql";
+import { emitSql, emitSqlMigrations, EmitSqlError } from "@aiparlance/sql";
 import { emitOpenApi, EmitOpenApiError } from "@aiparlance/openapi";
 import {
   emitTypeScript,
@@ -59,9 +59,10 @@ export const HELP = `aip — AI Parlance CLI
 Usage:
   aip parse <file.aip>                 Parse to AST (JSON on stdout)
   aip validate <file.aip>              Semantic validation
-  aip emit sql <file.aip>              PostgreSQL DDL
+  aip emit sql <file.aip>              PostgreSQL DDL (up migration)
+  aip emit sql --migrations <file.aip> Up + down migration bundle
   aip emit openapi <file.aip>          OpenAPI 3 JSON
-  aip emit typescript <file.aip>       TypeScript interfaces/guards
+  aip emit typescript <file.aip>       TypeScript types, Zod, CRUD app
   aip emit go <file.aip>               Go structs/handlers
   aip emit mysql <file.aip>            MySQL DDL
   aip emit workers <file.aip>          Job/queue worker stubs
@@ -150,7 +151,20 @@ function cmdEmit(args: string[]): number {
     );
     return 1;
   }
-  const input = readAipFile(args.slice(1), `aip emit ${target} <file.aip>`);
+
+  let rest = args.slice(1);
+  let sqlMigrations = false;
+  if (target === "sql" && rest[0] === "--migrations") {
+    sqlMigrations = true;
+    rest = rest.slice(1);
+  }
+
+  const input = readAipFile(
+    rest,
+    sqlMigrations
+      ? `aip emit sql --migrations <file.aip>`
+      : `aip emit ${target} <file.aip>`
+  );
   if (!input) return 1;
   try {
     const doc = parse(input.source, input.file);
@@ -159,7 +173,10 @@ function cmdEmit(args: string[]): number {
       process.stderr.write(`${formatDiagnostic(d, input.file)}\n`);
     }
     if (!result.ok) return 1;
-    const out = emitters[target as EmitTarget](doc);
+    const out =
+      target === "sql" && sqlMigrations
+        ? emitSqlMigrations(doc)
+        : emitters[target as EmitTarget](doc);
     process.stdout.write(out);
     if (!out.endsWith("\n")) process.stdout.write("\n");
     return 0;

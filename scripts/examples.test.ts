@@ -94,5 +94,17 @@ describe("examples (CI)", () => {
     expect(spec.paths["/v1/authors"]).toBeDefined();
     expect(spec.paths["/v1/posts"]).toBeDefined();
     expect(spec.paths["/v1/comments"]).toBeDefined();
+    // Policy → per-op security (Phase D2)
+    expect(spec.security).toBeUndefined();
+    expect(spec.paths["/v1/posts"].get.security).toEqual([]);
+    expect(spec.paths["/v1/posts"].post.security).toEqual([{ bearerAuth: [] }]);
+    expect(spec.paths["/v1/posts/{id}"].delete.security).toEqual([
+      { bearerAuth: ["role:admin"] },
+    ]);
+    const ts = emitTypeScript(doc);
+    expect(ts).toContain('collection: "/v1/posts"');
+    expect(ts).toContain("PostCreateSchema");
+    expect(ts).toContain("postPolicy");
+    expect(ts).toContain("createCrudApp");
   });
 });

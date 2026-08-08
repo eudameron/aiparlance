@@ -147,13 +147,13 @@ Only if they close ecosystem loops — not for coverage:
 
 Tracked against [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) v2 — raise **schema (SQL)** + **contract (OpenAPI)** + **app (TS)** until the **combined happy path (HP1–HP10)** passes:
 
-- [ ] TS: stronger validation story (Zod or equivalent); policy-aware guards
-- [ ] TS: minimal runnable CRUD handlers (framework chosen and documented)
-- [ ] OpenAPI: per-operation security from `policy` + `auth`
-- [ ] SQL: documented migration workflow (beyond single DDL dump)
-- [ ] Golden / integration tests for `examples/blog-crud.aip` across the three
-- [ ] Re-score `transpilers/{typescript,openapi,sql}/EMITTER_OBJECTIVES.md` after each deepen
-- [ ] HP1–HP10 checklist in `EMITTER_OBJECTIVES.md` all green
+- [x] TS: stronger validation story (Zod or equivalent); policy-aware guards (in-memory)
+- [x] TS: minimal runnable CRUD (`createCrudApp` / `listenCrudApp`, in-memory)
+- [x] OpenAPI: per-operation security from `policy` + `auth`
+- [x] SQL: documented migration workflow (`aip emit sql --migrations` → `0001_init.up/down`)
+- [ ] Golden / integration across the three still partial (`examples.test` smoke improved; full HP4–HP8 runtime CI optional)
+- [x] Re-score `transpilers/{typescript,openapi,sql}/EMITTER_OBJECTIVES.md` after deepen (2026-08-08: SQL **17/23**, OpenAPI **20/33**, TS **25/55**)
+- [ ] HP1–HP10 all green — progress on emit/validate; **HP3–HP8** need real DB/JWT for full Done
 
 **Done when:** README can show “validate blog-crud → migrate → run API → OpenAPI matches” with ≤ one thin glue file.
 
@@ -197,8 +197,8 @@ Beta syntax may still change between v0.x minors; keep emitters tolerant or vers
 
 ### Phase D (in progress)
 
-- [ ] One documented end-to-end happy path (blog CRUD)
-- [ ] Policy reflected in OpenAPI + TS
+- [ ] One documented end-to-end happy path (blog CRUD) — emit deepen done; full migrate→run→match still open
+- [x] Policy reflected in OpenAPI + TS (contract security + in-memory runtime guards)
 - [ ] npm publish of core packages
 - [ ] Docs/roadmap stay in sync after every implementation (process)
 

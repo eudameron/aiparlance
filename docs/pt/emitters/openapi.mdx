@@ -1,6 +1,6 @@
 ---
 title: Emitter OpenAPI
-description: "@aiparlance/openapi — papel contract, nota 16/33, objetivos pass/partial/fail"
+description: "@aiparlance/openapi — papel contract, nota 20/33, objetivos pass/partial/fail"
 ---
 
 # Emitter OpenAPI
@@ -10,23 +10,23 @@ description: "@aiparlance/openapi — papel contract, nota 16/33, objetivos pass
 | Pacote | `@aiparlance/openapi` |
 | CLI | `aip emit openapi` |
 | Papel | `contract` |
-| **Nota** | **16/33** (48%) |
-| Nível | Prévia útil |
+| **Nota** | **20/33** (61%) |
+| Nível | Fatia sólida |
 | Ficha de maturidade | [transpilers/openapi/EMITTER_OBJECTIVES.md](https://github.com/eudameron/aiparlance/blob/main/transpilers/openapi/EMITTER_OBJECTIVES.md) |
 
-Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-06).
+Avaliado pelo checklist mestre ([55 IDs](https://github.com/eudameron/aiparlance/blob/main/EMITTER_OBJECTIVES.md), v2 · 2026-08-08).
 
 ## Resumo
 
 | ✅ Passou | ⚠️ Parcial | ❌ Falhou | ➖ N/A |
 |---|---|---|---|
-| 16 | 3 | 14 | 22 |
+| 20 | 3 | 10 | 22 |
 
 Itens N/A estão fora do papel `contract` e não entram no denominador da nota.
 
 ## O que produz
 
-OpenAPI 3.0.3 JSON: schemas, paths CRUD, `api.prefix`, schemes de auth.
+OpenAPI 3.0.3 JSON: schemas, paths CRUD, `api.prefix`, schemes de auth, `security` por operação a partir de `policy` (+ `x-aip-policy`, 401/403 nas ops protegidas).
 
 ## ✅ Passou
 
@@ -45,6 +45,10 @@ OpenAPI 3.0.3 JSON: schemas, paths CRUD, `api.prefix`, schemes de auth.
 | `D2` | Respeitar `api.prefix` |
 | `D7` | Respeitar `api.format` (ex.: JSON) |
 | `E1` | Esquema de autenticação a partir de `app.auth` (`jwt` / `api_key` / `session` / `oauth`) |
+| `E2` | Integrar autenticação na API (requisitos de segurança ou middleware) |
+| `E3` | Refletir `policy` create/read/update/delete |
+| `E4` | Predicados: `public`, `authenticated`, `role(…)` |
+| `E6` | Caminhos consistentes de negação **401/403** (runtime **ou** contrato documenta ambos) |
 | `H3` | Golden / CI para `minimal.aip` (ou equivalente no alvo) |
 | `H4` | O emit funciona nos examples full-tier correspondentes sem crash |
 | `H5` | Nomenclatura alinhada à documentação (tabelas no plural, `*_id`, snake_case) |
@@ -55,7 +59,7 @@ OpenAPI 3.0.3 JSON: schemas, paths CRUD, `api.prefix`, schemes de auth.
 |---|---|
 | `B2` | Respeitar `unique` |
 | `B4` | Mapear tipos semânticos (`email`, `phone`, …) de forma distinta |
-| `E2` | Integrar autenticação na API (requisitos de segurança ou middleware) |
+| `E5` | Predicados: `owner` / `owner_or_manager(…)` |
 
 ## ❌ Ainda falhando (aplicáveis)
 
@@ -67,10 +71,6 @@ OpenAPI 3.0.3 JSON: schemas, paths CRUD, `api.prefix`, schemes de auth.
 | `D4` | Respeitar `api.rate_limit` (config ou aplicação) |
 | `D5` | Paginação e/ou filter/sort em list |
 | `D6` | Respostas de erro tipadas (4xx/5xx + shape estável do body) |
-| `E3` | Refletir `policy` create/read/update/delete |
-| `E4` | Predicados: `public`, `authenticated`, `role(…)` |
-| `E5` | Predicados: `owner` / `owner_or_manager(…)` |
-| `E6` | Caminhos consistentes de negação **401/403** (runtime **ou** contrato documenta ambos) |
 | `H1` | Documentação legível de API / domínio |
 | `H2` | Fixtures ou scaffolds de testes automatizados |
 | `I1` | Client / SDK tipado da API (ou codegen a partir do contrato) |
