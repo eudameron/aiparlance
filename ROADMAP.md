@@ -151,9 +151,9 @@ Tracked against [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) v2 — raise **
 - [x] TS: minimal runnable CRUD (`createCrudApp` / `listenCrudApp`, in-memory)
 - [x] OpenAPI: per-operation security from `policy` + `auth`
 - [x] SQL: documented migration workflow (`aip emit sql --migrations` → `0001_init.up/down`)
-- [ ] Golden / integration across the three still partial (`examples.test` smoke improved; full HP4–HP8 runtime CI optional)
+- [x] Golden / integration across the three (`scripts/happy-path.test.ts` — memory+JWT always; Postgres job in CI)
 - [x] Re-score `transpilers/{typescript,openapi,sql}/EMITTER_OBJECTIVES.md` after deepen (2026-08-08: SQL **17/23**, OpenAPI **20/33**, TS **25/55**)
-- [ ] HP1–HP10 all green — progress on emit/validate; **HP3–HP8** need real DB/JWT for full Done
+- [x] HP1–HP10 on `blog-crud` — memory+JWT path green in CI; Postgres path green when `DATABASE_URL` is set (CI service)
 
 **Done when:** README can show “validate blog-crud → migrate → run API → OpenAPI matches” with ≤ one thin glue file.
 

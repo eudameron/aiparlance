@@ -1,25 +1,33 @@
 # @aiparlance/typescript
 
-TypeScript emitter (**app** role). Phase D emits types, Zod schemas, policy helpers, and a thin in-memory CRUD HTTP app.
+TypeScript emitter (**app** role). Emits types, Zod schemas, policy helpers, and a thin CRUD HTTP app.
 
 ## Coverage
 
 | Feature | Status |
 |---|---|
-| Interfaces `Entity` / `Create` / `Update` | Yes |
-| Type guards | Yes |
-| Zod schemas (`*CreateSchema`, …) | Yes (peer: `zod`) |
+| Interfaces + type guards | Yes |
+| Zod schemas | Yes (`zod`) |
 | Path helpers + `api.prefix` | Yes |
-| Policy consts from `.aip` | Yes |
-| Runnable CRUD (`createCrudApp`) | Yes (in-memory Preview) |
-| Soft-delete on list/get/delete | Yes (memory store) |
-| Auth headers (Bearer + `x-aip-user-id` / `x-aip-role`) | Yes (Preview) |
-| Real Postgres / JWT crypto | Not yet |
+| Policy consts | Yes |
+| In-memory CRUD | Yes (default without `DATABASE_URL`) |
+| Postgres CRUD | Yes when `DATABASE_URL` / `store: "pg"` (`pg`) |
+| JWT HS256 | Yes when `AIP_JWT_SECRET` (`jose`); else Bearer + `x-aip-*` Preview headers |
+| Soft-delete filters | Yes |
 
 ```bash
 node packages/cli/dist/cli.js emit typescript examples/blog-crud.aip > app.ts
-# requires: npm i zod
-# then: npx tsx -e "import { listenCrudApp } from './app.ts'; listenCrudApp()"
+npm i zod pg jose
+export DATABASE_URL=postgres://…   # optional
+export AIP_JWT_SECRET=dev-secret   # recommended
+npx tsx -e "import { listenCrudApp } from './app.ts'; listenCrudApp()"
 ```
 
-See [`ROADMAP.md`](../../ROADMAP.md) and [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md) (**25/55**).
+Sign a token:
+
+```ts
+import { signCrudToken } from "./app.ts";
+const jwt = await signCrudToken({ sub: "<author-uuid>", role: "admin" });
+```
+
+See [`ROADMAP.md`](../../ROADMAP.md) and [`EMITTER_OBJECTIVES.md`](EMITTER_OBJECTIVES.md).

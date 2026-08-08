@@ -39,9 +39,10 @@ describe("@aiparlance/typescript", () => {
           "ES2022",
           "--module",
           "ESNext",
-          "--moduleResolution",
-          "bundler",
-          file,
+        "--moduleResolution",
+        "bundler",
+          "--esModuleInterop",
+        file,
         ],
         { stdio: "pipe", cwd: pkgDir }
       );

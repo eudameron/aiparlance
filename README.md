@@ -54,6 +54,29 @@ node packages/cli/dist/cli.js emit openapi examples/blog-crud.aip
 node packages/cli/dist/cli.js emit mysql examples/mysql-minimal.aip
 ```
 
+### Blog CRUD happy path (Phase D)
+
+One `.aip` → migrate Postgres → run API (≤ one glue file):
+
+```bash
+npm ci && npm run build
+export DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/aiparlance
+export AIP_JWT_SECRET=dev-secret
+
+node packages/cli/dist/cli.js validate examples/blog-crud.aip
+node packages/cli/dist/cli.js emit sql examples/blog-crud.aip | psql "$DATABASE_URL"
+node packages/cli/dist/cli.js emit typescript examples/blog-crud.aip > /tmp/blog-app.ts
+
+# peer deps for the generated app
+npm i zod pg jose
+
+npx tsx -e "import { listenCrudApp } from '/tmp/blog-app.ts'; listenCrudApp()"
+# GET http://127.0.0.1:3000/v1/posts  (public)
+# POST with Authorization: Bearer $(npx tsx -e "...") using signCrudToken
+```
+
+Without `DATABASE_URL` the generated app uses an in-memory store (still JWT-capable via `AIP_JWT_SECRET`). CI runs `scripts/happy-path.test.ts` (memory always; Postgres on the `happy-path-pg` job).
+
 See [ROADMAP.md](ROADMAP.md) (**Phase C** complete · **Phase D** active) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Official site

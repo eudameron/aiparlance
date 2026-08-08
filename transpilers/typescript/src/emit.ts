@@ -73,6 +73,8 @@ export function emitTypeScript(doc: AipDocument): string {
     `import { z } from "zod";`,
     `import { createServer, type IncomingMessage, type ServerResponse } from "node:http";`,
     `import { randomUUID } from "node:crypto";`,
+    `import pg from "pg";`,
+    `import * as jose from "jose";`,
     "",
   ];
 
@@ -242,15 +244,22 @@ function emitRuntimeApp(
     })
     .join(",\n");
 
-  // silence unused validations param for future field-level zod refinements
   void validations;
 
   return `
-/** In-memory CRUD actor (Preview). Pass Bearer + optional x-aip-user-id / x-aip-role. */
+/** Request actor after auth. */
 export type CrudActor = {
   authenticated: boolean;
   id?: string;
   role?: string;
+};
+
+export type CrudAppOptions = {
+  /** Force store. Default: \`pg\` when DATABASE_URL is set, else \`memory\`. */
+  store?: "memory" | "pg";
+  /** HS256 secret. Default: process.env.AIP_JWT_SECRET. */
+  jwtSecret?: string;
+  databaseUrl?: string;
 };
 
 const __aipResources = {
@@ -259,18 +268,59 @@ ${resourceEntries}
 
 type __AipResourceName = keyof typeof __aipResources;
 
-const __aipStore = new Map<__AipResourceName, Map<string, Record<string, unknown>>>();
+const __aipMem = new Map<__AipResourceName, Map<string, Record<string, unknown>>>();
 for (const name of Object.keys(__aipResources) as __AipResourceName[]) {
-  __aipStore.set(name, new Map());
+  __aipMem.set(name, new Map());
 }
 
-function __aipActor(req: IncomingMessage): CrudActor {
-  const auth = req.headers.authorization;
-  const authenticated = Boolean(auth && String(auth).toLowerCase().startsWith("bearer "));
+let __aipPool: pg.Pool | null = null;
+
+function __aipUsePg(opts?: CrudAppOptions): boolean {
+  const mode = opts?.store ?? (process.env.DATABASE_URL ? "pg" : "memory");
+  return mode === "pg";
+}
+
+function __aipPoolOrThrow(opts?: CrudAppOptions): pg.Pool {
+  if (__aipPool) return __aipPool;
+  const url = opts?.databaseUrl ?? process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error("DATABASE_URL is required for store: pg");
+  }
+  __aipPool = new pg.Pool({ connectionString: url });
+  return __aipPool;
+}
+
+async function __aipActor(req: IncomingMessage, opts?: CrudAppOptions): Promise<CrudActor> {
+  const header = req.headers.authorization;
+  if (!header || !String(header).toLowerCase().startsWith("bearer ")) {
+    return { authenticated: false };
+  }
+  const token = String(header).slice(7).trim();
+  const secret = opts?.jwtSecret ?? process.env.AIP_JWT_SECRET;
+  if (secret) {
+    try {
+      const { payload } = await jose.jwtVerify(
+        token,
+        new TextEncoder().encode(secret)
+      );
+      const id =
+        typeof payload.sub === "string"
+          ? payload.sub
+          : typeof payload.id === "string"
+            ? payload.id
+            : undefined;
+      const role =
+        typeof payload.role === "string" ? payload.role : undefined;
+      return { authenticated: true, id, role };
+    } catch {
+      return { authenticated: false };
+    }
+  }
+  // Preview fallback without AIP_JWT_SECRET: any Bearer + optional x-aip-* headers.
   const idHeader = req.headers["x-aip-user-id"];
   const roleHeader = req.headers["x-aip-role"];
   return {
-    authenticated,
+    authenticated: true,
     id: typeof idHeader === "string" ? idHeader : undefined,
     role: typeof roleHeader === "string" ? roleHeader : undefined,
   };
@@ -321,12 +371,109 @@ function __aipJson(res: ServerResponse, status: number, body: unknown): void {
   res.end(data);
 }
 
+async function __aipList(resource: __AipResourceName, softDelete: boolean, opts?: CrudAppOptions): Promise<Record<string, unknown>[]> {
+  if (!__aipUsePg(opts)) {
+    return [...__aipMem.get(resource)!.values()].filter((row) =>
+      softDelete ? row.deleted_at == null : true
+    );
+  }
+  const pool = __aipPoolOrThrow(opts);
+  const where = softDelete ? " WHERE deleted_at IS NULL" : "";
+  const { rows } = await pool.query(\`SELECT * FROM \${resource}\${where}\`);
+  return rows as Record<string, unknown>[];
+}
+
+async function __aipGet(resource: __AipResourceName, id: string, softDelete: boolean, opts?: CrudAppOptions): Promise<Record<string, unknown> | null> {
+  if (!__aipUsePg(opts)) {
+    const row = __aipMem.get(resource)!.get(id);
+    if (!row) return null;
+    if (softDelete && row.deleted_at != null) return null;
+    return row;
+  }
+  const pool = __aipPoolOrThrow(opts);
+  const where = softDelete
+    ? "WHERE id = $1 AND deleted_at IS NULL"
+    : "WHERE id = $1";
+  const { rows } = await pool.query(\`SELECT * FROM \${resource} \${where}\`, [id]);
+  return (rows[0] as Record<string, unknown>) ?? null;
+}
+
+async function __aipInsert(resource: __AipResourceName, row: Record<string, unknown>, opts?: CrudAppOptions): Promise<Record<string, unknown>> {
+  if (!__aipUsePg(opts)) {
+    __aipMem.get(resource)!.set(String(row.id), row);
+    return row;
+  }
+  const pool = __aipPoolOrThrow(opts);
+  const cols = Object.keys(row);
+  const vals = cols.map((c) => row[c]);
+  const placeholders = cols.map((_, i) => \`$\${i + 1}\`);
+  const { rows } = await pool.query(
+    \`INSERT INTO \${resource} (\${cols.join(", ")}) VALUES (\${placeholders.join(", ")}) RETURNING *\`,
+    vals
+  );
+  return rows[0] as Record<string, unknown>;
+}
+
+async function __aipUpdate(resource: __AipResourceName, id: string, patch: Record<string, unknown>, opts?: CrudAppOptions): Promise<Record<string, unknown> | null> {
+  if (!__aipUsePg(opts)) {
+    const store = __aipMem.get(resource)!;
+    const existing = store.get(id);
+    if (!existing) return null;
+    const row = { ...existing, ...patch };
+    store.set(id, row);
+    return row;
+  }
+  const pool = __aipPoolOrThrow(opts);
+  const cols = Object.keys(patch);
+  if (cols.length === 0) return __aipGet(resource, id, false, opts);
+  const sets = cols.map((c, i) => \`\${c} = $\${i + 1}\`);
+  const vals = [...cols.map((c) => patch[c]), id];
+  const { rows } = await pool.query(
+    \`UPDATE \${resource} SET \${sets.join(", ")} WHERE id = $\${cols.length + 1} RETURNING *\`,
+    vals
+  );
+  return (rows[0] as Record<string, unknown>) ?? null;
+}
+
+async function __aipDelete(resource: __AipResourceName, id: string, softDelete: boolean, opts?: CrudAppOptions): Promise<boolean> {
+  if (!__aipUsePg(opts)) {
+    const store = __aipMem.get(resource)!;
+    const existing = store.get(id);
+    if (!existing) return false;
+    if (softDelete) {
+      store.set(id, {
+        ...existing,
+        deleted_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+    } else {
+      store.delete(id);
+    }
+    return true;
+  }
+  const pool = __aipPoolOrThrow(opts);
+  if (softDelete) {
+    const { rowCount } = await pool.query(
+      \`UPDATE \${resource} SET deleted_at = now(), updated_at = now() WHERE id = $1 AND deleted_at IS NULL\`,
+      [id]
+    );
+    return (rowCount ?? 0) > 0;
+  }
+  const { rowCount } = await pool.query(\`DELETE FROM \${resource} WHERE id = $1\`, [id]);
+  return (rowCount ?? 0) > 0;
+}
+
 /**
- * Thin runnable CRUD app (in-memory). Prefix: ${pathPrefix || "/"}.
- * Auth: Authorization Bearer + optional x-aip-user-id / x-aip-role headers.
+ * Thin runnable CRUD app.
+ * - Store: Postgres when \`DATABASE_URL\` (or \`opts.store: "pg"\`), else in-memory.
+ * - Auth: JWT HS256 when \`AIP_JWT_SECRET\` (claims \`sub\`/\`id\`, \`role\`); else Bearer + x-aip-* Preview headers.
+ * - Prefix: ${pathPrefix || "/"}.
  */
-export function createCrudApp(): ReturnType<typeof createServer> {
+export function createCrudApp(opts?: CrudAppOptions): ReturnType<typeof createServer> {
   const prefix: string = ${JSON.stringify(pathPrefix)};
+  if (__aipUsePg(opts)) {
+    __aipPoolOrThrow(opts);
+  }
   return createServer(async (req, res) => {
     try {
       if (req.method === "OPTIONS") {
@@ -349,8 +496,7 @@ export function createCrudApp(): ReturnType<typeof createServer> {
         __aipJson(res, 404, { error: "not_found" });
         return;
       }
-      const store = __aipStore.get(resource)!;
-      const actor = __aipActor(req);
+      const actor = await __aipActor(req, opts);
       const id = parts[1];
       const method = req.method ?? "GET";
 
@@ -359,10 +505,7 @@ export function createCrudApp(): ReturnType<typeof createServer> {
           __aipJson(res, actor.authenticated ? 403 : 401, { error: "forbidden" });
           return;
         }
-        const rows = [...store.values()].filter((row) =>
-          meta.softDelete ? row.deleted_at == null : true
-        );
-        __aipJson(res, 200, rows);
+        __aipJson(res, 200, await __aipList(resource, meta.softDelete, opts));
         return;
       }
 
@@ -385,8 +528,7 @@ export function createCrudApp(): ReturnType<typeof createServer> {
           updated_at: now,
           ...(meta.softDelete ? { deleted_at: null } : {}),
         };
-        store.set(String(row.id), row);
-        __aipJson(res, 201, row);
+        __aipJson(res, 201, await __aipInsert(resource, row, opts));
         return;
       }
 
@@ -395,8 +537,8 @@ export function createCrudApp(): ReturnType<typeof createServer> {
         return;
       }
 
-      const existing = store.get(id);
-      if (!existing || (meta.softDelete && existing.deleted_at != null && method === "GET")) {
+      const existing = await __aipGet(resource, id, meta.softDelete && method === "GET", opts);
+      if (!existing) {
         __aipJson(res, 404, { error: "not_found" });
         return;
       }
@@ -421,12 +563,12 @@ export function createCrudApp(): ReturnType<typeof createServer> {
           __aipJson(res, 400, { error: "validation_failed", details: parsed.error.flatten() });
           return;
         }
-        const row = {
-          ...existing,
-          ...parsed.data,
-          updated_at: new Date().toISOString(),
-        };
-        store.set(id, row);
+        const row = await __aipUpdate(
+          resource,
+          id,
+          { ...parsed.data, updated_at: new Date().toISOString() },
+          opts
+        );
         __aipJson(res, 200, row);
         return;
       }
@@ -436,34 +578,47 @@ export function createCrudApp(): ReturnType<typeof createServer> {
           __aipJson(res, actor.authenticated ? 403 : 401, { error: "forbidden" });
           return;
         }
-        if (meta.softDelete) {
-          store.set(id, {
-            ...existing,
-            deleted_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          });
-        } else {
-          store.delete(id);
+        const ok = await __aipDelete(resource, id, meta.softDelete, opts);
+        if (!ok) {
+          __aipJson(res, 404, { error: "not_found" });
+          return;
         }
-        res.writeHead(204, {
-          "access-control-allow-origin": "*",
-        });
+        res.writeHead(204, { "access-control-allow-origin": "*" });
         res.end();
         return;
       }
 
       __aipJson(res, 405, { error: "method_not_allowed" });
-    } catch {
-      __aipJson(res, 400, { error: "bad_request" });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "bad_request";
+      __aipJson(res, 400, { error: "bad_request", message });
     }
   });
 }
 
+/** Sign a Preview JWT (HS256). Requires AIP_JWT_SECRET or \`secret\`. */
+export async function signCrudToken(
+  claims: { sub: string; role?: string },
+  secret = process.env.AIP_JWT_SECRET
+): Promise<string> {
+  if (!secret) throw new Error("AIP_JWT_SECRET is required to sign tokens");
+  return new jose.SignJWT({ role: claims.role })
+    .setProtectedHeader({ alg: "HS256" })
+    .setSubject(claims.sub)
+    .setIssuedAt()
+    .setExpirationTime("12h")
+    .sign(new TextEncoder().encode(secret));
+}
+
 /** Listen helper — \`PORT\` env or 3000. */
-export function listenCrudApp(port = Number(process.env.PORT ?? 3000)): void {
-  const server = createCrudApp();
+export function listenCrudApp(
+  port = Number(process.env.PORT ?? 3000),
+  opts?: CrudAppOptions
+): void {
+  const server = createCrudApp(opts);
   server.listen(port, () => {
-    console.log(\`AI Parlance CRUD listening on http://127.0.0.1:\${port}${pathPrefix}\`);
+    const mode = __aipUsePg(opts) ? "pg" : "memory";
+    console.log(\`AI Parlance CRUD (\${mode}) on http://127.0.0.1:\${port}${pathPrefix}\`);
   });
 }
 `.trimStart();

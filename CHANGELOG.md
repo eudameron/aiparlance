@@ -12,6 +12,7 @@ and this project uses a draft **v0.1** language version. A **reference toolchain
 - **Phase D2 deepen:** OpenAPI per-operation `security` from `policy` + `app.auth`, 401/403 responses, `x-aip-policy`
 - **Phase D2 deepen:** SQL `emitSqlDown` / `emitSqlMigrations` and CLI `aip emit sql --migrations` → `0001_init.up/down`
 - **Phase D2 deepen:** TypeScript Zod schemas, `api.prefix` paths, policy consts, in-memory `createCrudApp()` / `listenCrudApp()` (validation, soft-delete, auth headers); peer dep `zod`
+- **Phase D2 happy path:** TypeScript Postgres store (`DATABASE_URL` + `pg`), JWT HS256 (`AIP_JWT_SECRET` + `jose`), `signCrudToken`, `scripts/happy-path.test.ts` + CI Postgres job; README blog-crud end-to-end
 - Docs **Emitters** menu (EN+PT): overview + per-emitter pages with role, score, objectives, and tests
 - Marketing site: emitters hub + featured pages (PostgreSQL, OpenAPI, TypeScript) EN+PT — benefits/SEO; maturity stays in docs
 - PT Emitters docs: objective Pass/Partial/Fail lists translated to Portuguese (sidebar titles polished)

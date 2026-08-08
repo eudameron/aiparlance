@@ -71,7 +71,7 @@
       },
       {
         "name": "TypeScript",
-        "badge": "45%",
+        "badge": "49%",
         "body": "Zod, policies e CRUD em memória. aip emit typescript",
         "slug": "typescript",
         "docs": ""
@@ -289,7 +289,7 @@
         "name": "TypeScript",
         "command": "aip emit typescript",
         "benefit": "Schemas Zod, guards de policy e um CRUD fino em memória alinhado a SQL e OpenAPI.",
-        "score": "45%"
+        "score": "49%"
       }
     ],
     "matrix": [
@@ -315,7 +315,7 @@
         "blurb": "Zod + CRUD em memória",
         "slug": "typescript",
         "docs": "",
-        "score": "45%"
+        "score": "49%"
       },
       {
         "name": "Go",

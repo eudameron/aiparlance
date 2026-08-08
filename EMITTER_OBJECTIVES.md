@@ -218,7 +218,7 @@ Not scored per package. **Done** when **all** are true using `typescript` + `ope
 | PostgreSQL (sql) | schema | **17/23** | 74% | Strong slice |
 | MySQL | schema | **14/23** | 61% | Strong slice |
 | OpenAPI | contract | **20/33** | 61% | Strong slice |
-| TypeScript | app | **25/55** | 45% | Useful Preview |
+| TypeScript | app | **27/55** | 49% | Useful Preview |
 | Tests | tests | **7/18** | 39% | Useful Preview |
 | Docs | docs | **13/38** | 34% | Useful Preview |
 | Go | app | **12/55** | 22% | Stub / early app |

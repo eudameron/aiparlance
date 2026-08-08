@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "AI Parlance → TypeScript types, Zod schemas, and thin CRUD app (Phase D)",
+  "description": "AI Parlance \u2192 TypeScript types, Zod schemas, and thin CRUD app (Phase D)",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -23,6 +23,16 @@
     "@aiparlance/parser": "0.0.0",
     "@aiparlance/sql": "0.0.0",
     "@aiparlance/validator": "0.0.0",
+    "jose": "^6.2.8",
+    "pg": "^8.22.0",
     "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.21.0"
+  },
+  "peerDependencies": {
+    "zod": "^3.24.0",
+    "pg": "^8.0.0",
+    "jose": "^5.0.0 || ^6.0.0"
   }
 }

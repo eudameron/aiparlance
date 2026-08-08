@@ -1,14 +1,14 @@
 # Emitter Objectives — `@aiparlance/typescript`
 
 **CLI:** `aip emit typescript` · **Role:** `app`  
-**Score: 25/55** (45%) · Band: Useful Preview  
+**Score: 27/55** (49%) · Band: Useful Preview  
 **Master:** [`EMITTER_OBJECTIVES.md`](../../EMITTER_OBJECTIVES.md) (v2)  
 **Scored:** 2026-08-08
 
 | Mark | Count |
 |---|---|
-| ✅ Pass | 25 |
-| ⚠️ Partial | 6 |
+| ✅ Pass | 27 |
+| ⚠️ Partial | 4 |
 | ❌ Fail | 24 |
 | ➖ N/A | 0 |
 
@@ -68,7 +68,7 @@ Peer dependency: **`zod`** (emitted schemas + runtime validation).
 
 | ID | Status | Notes |
 |---|---|---|
-| E1 | ⚠️ | header actor (`Authorization` / `x-aip-*`); no JWT verify |
+| E1 | ✅ | JWT HS256 via `jose` when `AIP_JWT_SECRET` |
 | E2 | ✅ | middleware-style checks in CRUD app |
 | E3 | ✅ | policy consts + runtime allow |
 | E4 | ✅ | `public` / `authenticated` / `role(…)` |
@@ -81,7 +81,7 @@ Peer dependency: **`zod`** (emitted schemas + runtime validation).
 |---|---|---|
 | F1 | ✅ | `createCrudApp` / `listenCrudApp` |
 | F2 | ✅ | real in-memory CRUD (not 501 stubs) |
-| F3 | ⚠️ | in-memory `Map`; not Postgres |
+| F3 | ✅ | Postgres via `pg` + `DATABASE_URL`; memory fallback |
 | F4 | ✅ | Zod `safeParse` on create/update |
 | F5 | ✅ | policy checks on routes |
 

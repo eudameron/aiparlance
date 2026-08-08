@@ -68,6 +68,20 @@ node packages/cli/dist/cli.js emit go examples/minimal.aip > /tmp/minimal.go
 
 Passo a passo CRUD completo (entidades, policies, API, seeds, emit): [Passo a passo CRUD](/pt/crud-walkthrough).
 
+### Caminho feliz do blog CRUD (TypeScript + SQL + OpenAPI)
+
+```bash
+export DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/aiparlance
+export AIP_JWT_SECRET=dev-secret
+node packages/cli/dist/cli.js validate examples/blog-crud.aip
+node packages/cli/dist/cli.js emit sql examples/blog-crud.aip | psql "$DATABASE_URL"
+node packages/cli/dist/cli.js emit typescript examples/blog-crud.aip > /tmp/blog-app.ts
+# npm i zod pg jose  (peers do app gerado)
+npx tsx -e "import { listenCrudApp } from '/tmp/blog-app.ts'; listenCrudApp()"
+```
+
+`GET /v1/posts` é público; rotas de escrita pedem `Authorization: Bearer <JWT>` (`signCrudToken` no arquivo gerado). Sem `DATABASE_URL` o app fica em memória.
+
 ---
 
 ## 3. Escreva seu próprio `.aip`
